@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Claude Context Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 4rem;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .comparison-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .icon { font-size: 4rem; margin-bottom: 1rem; }
+
+        .list-item {
+            background: rgba(255,255,255,0.1);
+            padding: 0.8rem 1.5rem;
+            margin: 0.4rem 0;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+            font-size: 1.1rem;
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .list-item:nth-child(1) { animation-delay: 0.1s; }
+        .list-item:nth-child(2) { animation-delay: 0.2s; }
+        .list-item:nth-child(3) { animation-delay: 0.3s; }
+        .list-item:nth-child(4) { animation-delay: 0.4s; }
+        .list-item:nth-child(5) { animation-delay: 0.5s; }
+        .list-item:nth-child(6) { animation-delay: 0.6s; }
+
+        .visual-diagram {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .brain-llm-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .brain-side, .llm-side { text-align: center; flex: 1; }
+
+        .vs {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffd700;
+            margin: 0 2rem;
+        }
+
+        .table-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            color: #333;
+            margin: 2rem 0;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 0.9rem 1rem;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 1rem;
+        }
+
+        tr:hover { background: #f3f4f6; }
+
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .check-icon { color: #4ade80; }
+        .cross-icon { color: #f87171; }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .workflow-step {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+
+        .workflow-arrow { font-size: 2rem; margin: 0 1rem; color: #ffd700; }
+
+        .do-dont-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .do-section {
+            background: rgba(74,222,128,0.2);
+            border: 2px solid #4ade80;
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .dont-section {
+            background: rgba(248,113,113,0.2);
+            border: 2px solid #f87171;
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .context-visualization {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .context-layer { display: flex; align-items: center; gap: 2rem; }
+
+        .context-bar {
+            flex: 1;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-weight: 600;
+        }
+
+        .layer-label { min-width: 200px; font-weight: 600; font-size: 1.2rem; }
+
+        .highlight { color: #ffd700; font-weight: 700; }
+
+        .rag-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .rag-box {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .rag-arrow {
+            font-size: 2.5rem;
+            color: #ffd700;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .emoji { font-size: 3rem; display: inline-block; margin: 0 0.5rem; }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .mode-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .mode-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 350px;
+        }
+
+        .divider {
+            width: 2px;
+            height: 350px;
+            background: linear-gradient(180deg, transparent, #ffd700, transparent);
+        }
+
+        .new-badge {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="presentation">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Mastering Context Management</h1>
+            <div class="subtitle">Your Brain's New Power Tool</div>
+            <h2 style="margin-top: 2rem;">Claude's 200K Token Window</h2>
+            <p style="font-size: 1.5rem; opacity: 0.9; margin-top: 2rem;">
+                A comprehensive guide to working smarter with AI
+            </p>
+            <p style="font-size: 1.2rem; opacity: 0.7; margin-top: 1rem;">
+                Press → or use arrow keys to continue
+            </p>
+        </div>
+
+        <!-- Slide 2: Brain vs LLM -->
+        <div class="slide">
+            <h2>Your Brain vs Claude</h2>
+            <div class="brain-llm-comparison">
+                <div class="brain-side">
+                    <div class="icon">🧠</div>
+                    <h3>Human Brain</h3>
+                    <div class="list-item">Working Memory: 7±2 items</div>
+                    <div class="list-item">Unlimited long-term storage</div>
+                    <div class="list-item">Creates new connections</div>
+                    <div class="list-item">Learns continuously</div>
+                    <div class="list-item">True creative thinking</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="llm-side">
+                    <div class="icon">🤖</div>
+                    <h3>Claude (LLM)</h3>
+                    <div class="list-item">Context: 200K tokens</div>
+                    <div class="list-item">Fixed training knowledge</div>
+                    <div class="list-item">Pattern recognition at scale</div>
+                    <div class="list-item">No session memory</div>
+                    <div class="list-item">Probabilistic output</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: What is an LLM -->
+        <div class="slide">
+            <h2>What is a Large Language Model?</h2>
+            <div class="visual-diagram">
+                <h3 style="color: #667eea; margin-bottom: 2rem;">Think of it as...</h3>
+                <div style="font-size: 1.3rem; line-height: 2.2;">
+                    <p>📚 A collaborator who has processed <strong>millions of books and repositories</strong></p>
+                    <p>🎯 Trained to <strong>predict the next token</strong> based on patterns</p>
+                    <p>🔍 Recognizes patterns from <strong>vast training data</strong></p>
+                    <p>⚡ Responds instantly but <strong>doesn't truly "understand"</strong> in a human sense</p>
+                    <p>🎭 Generates plausible output through <strong>statistical probability</strong></p>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; font-size: 1.2rem; text-align: center;">
+                <strong>Key Insight:</strong> It's not thinking — it's <span class="highlight">pattern matching</span> at massive scale
+            </div>
+        </div>
+
+        <!-- Slide 4: LLM Limitations -->
+        <div class="slide">
+            <h2>What LLMs Cannot Do</h2>
+            <div style="columns: 2; column-gap: 3rem; margin-top: 2rem;">
+                <div class="list-item"><span class="cross-icon">✗</span> Formal proofs or deterministic logic</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Real-time learning during conversation</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Form lasting memories across sessions</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Verify code executes correctly (without tools)</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Browse the web (without tools)</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Guarantee mathematical accuracy</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Remember previous conversations</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Update base knowledge after training</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Understand causation (only correlation)</div>
+                <div class="list-item"><span class="cross-icon">✗</span> Hold more than ~200K tokens in context</div>
+            </div>
+            <div style="margin-top: 2rem; font-size: 1.1rem; opacity: 0.85; text-align: center;">
+                Note: Claude 4.x with <span class="highlight">Extended Thinking</span> significantly improves multi-step reasoning — covered later in this deck
+            </div>
+        </div>
+
+        <!-- Slide 5: Overcoming Limitations -->
+        <div class="slide">
+            <h2>Overcoming Limitations with Context Engineering</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Limitation</th>
+                            <th>Context Engineering Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>❌ Probabilistic reasoning</td>
+                            <td><strong>✅ Extended Thinking</strong> — enable reasoning tokens for complex problems</td>
+                        </tr>
+                        <tr>
+                            <td>❌ No real-time learning</td>
+                            <td><strong>✅ Maintain CLAUDE.md</strong> — update project context after each session</td>
+                        </tr>
+                        <tr>
+                            <td>❌ No lasting memory</td>
+                            <td><strong>✅ Skills &amp; Markdown docs</strong> — document decisions and lessons in persistent files</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Can't verify execution</td>
+                            <td><strong>✅ Bash tool</strong> — execute and verify code immediately</td>
+                        </tr>
+                        <tr>
+                            <td>❌ No browsing (standalone)</td>
+                            <td><strong>✅ MCP Servers / WebFetch</strong> — integrate real-time external data</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Context window limits</td>
+                            <td><strong>✅ RAG + Sub-Agents</strong> — load only relevant files; isolate large tasks</td>
+                        </tr>
+                        <tr>
+                            <td>❌ No persistent state</td>
+                            <td><strong>✅ Session summaries</strong> — end with "save to PROGRESS.md", start new with context</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Expensive repeated context</td>
+                            <td><strong>✅ Prompt Caching</strong> — cache stable context at ~10% of normal token cost</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 6: LLM Strengths -->
+        <div class="slide">
+            <h2>What LLMs Excel At</h2>
+            <div style="columns: 2; column-gap: 3rem; margin-top: 2rem;">
+                <div class="list-item"><span class="check-icon">✓</span> Pattern recognition at scale</div>
+                <div class="list-item"><span class="check-icon">✓</span> Code generation &amp; completion</div>
+                <div class="list-item"><span class="check-icon">✓</span> Refactoring &amp; language translation</div>
+                <div class="list-item"><span class="check-icon">✓</span> Documentation &amp; explanation</div>
+                <div class="list-item"><span class="check-icon">✓</span> Summarization</div>
+                <div class="list-item"><span class="check-icon">✓</span> Consistency enforcement across codebases</div>
+                <div class="list-item"><span class="check-icon">✓</span> Rapid prototyping</div>
+                <div class="list-item"><span class="check-icon">✓</span> Multi-language proficiency</div>
+                <div class="list-item"><span class="check-icon">✓</span> 24/7 availability</div>
+                <div class="list-item"><span class="check-icon">✓</span> Objective code reviews</div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Context Window Comparison — UPDATED -->
+        <div class="slide">
+            <h2>Context Windows: Model Comparison</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Context Window</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #fef9e7;">
+                            <td><strong>Claude Opus 4.7</strong></td>
+                            <td><strong style="color: #667eea;">200K tokens</strong></td>
+                            <td>Complex reasoning, architecture decisions</td>
+                        </tr>
+                        <tr style="background: #fef9e7;">
+                            <td><strong>Claude Sonnet 4.6</strong></td>
+                            <td><strong style="color: #667eea;">200K tokens</strong></td>
+                            <td>Balanced everyday coding tasks</td>
+                        </tr>
+                        <tr style="background: #fef9e7;">
+                            <td><strong>Claude Haiku 4.5</strong></td>
+                            <td><strong style="color: #667eea;">200K tokens</strong></td>
+                            <td>Fast, lightweight, high-volume automation</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-4o</td>
+                            <td>128K tokens</td>
+                            <td>General purpose, multimodal</td>
+                        </tr>
+                        <tr>
+                            <td>Gemini 1.5 Pro</td>
+                            <td>1M+ tokens</td>
+                            <td>Extremely large documents</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 1.2rem;">
+                <strong>Pick the right Claude model:</strong>
+                Quick tasks → <span class="highlight">Haiku</span> &nbsp;|&nbsp;
+                Feature work → <span class="highlight">Sonnet</span> &nbsp;|&nbsp;
+                Complex decisions → <span class="highlight">Opus</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: Token Budget -->
+        <div class="slide">
+            <h2>Your 200K Token Budget</h2>
+            <div class="context-visualization">
+                <div class="context-layer">
+                    <div class="layer-label">Project Context (20K)</div>
+                    <div class="context-bar" style="background: #4ade80;">
+                        CLAUDE.md, Sprint Goals, Tech Stack
+                    </div>
+                </div>
+                <div class="context-layer">
+                    <div class="layer-label">Active Work (50K)</div>
+                    <div class="context-bar" style="background: #3b82f6;">
+                        Files Being Modified, Tests, Recent Changes
+                    </div>
+                </div>
+                <div class="context-layer">
+                    <div class="layer-label">Conversation (80K)</div>
+                    <div class="context-bar" style="background: #8b5cf6;">
+                        Q&amp;A, Generated Code, Debugging History
+                    </div>
+                </div>
+                <div class="context-layer">
+                    <div class="layer-label">Reserve (50K)</div>
+                    <div class="context-bar" style="background: #ec4899;">
+                        Tool Outputs, Errors, Search Results, Buffer
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; font-size: 1.3rem;">
+                <span class="highlight">Smart allocation</span> = Better, more coherent responses
+            </div>
+        </div>
+
+        <!-- Slide 9: Markdown Files -->
+        <div class="slide">
+            <h2>Strategy #1: Markdown Files</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Your Long-Term Memory</h3>
+                    <div class="visual-diagram" style="margin-top: 1rem;">
+                        <div style="color: #333; font-size: 1.1rem; line-height: 2;">
+                            <p><strong>README.md</strong> — Architecture overview</p>
+                            <p><strong>CONVENTIONS.md</strong> — Coding standards</p>
+                            <p><strong>DECISIONS.md</strong> — Why we chose X</p>
+                            <p><strong>TROUBLESHOOTING.md</strong> — Common fixes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <h3>Benefits</h3>
+                    <div style="margin-top: 1rem;">
+                        <div class="list-item">Human &amp; AI readable</div>
+                        <div class="list-item">Version controlled with git</div>
+                        <div class="list-item">Searchable with Grep</div>
+                        <div class="list-item">Universal format — works everywhere</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; font-size: 1.2rem;">
+                Brain Analogy: Notebooks you reference when needed — not carried everywhere
+            </div>
+        </div>
+
+        <!-- Slide 10: CLAUDE.md — UPDATED -->
+        <div class="slide">
+            <h2>Strategy #2: CLAUDE.md (Working Memory) <span class="new-badge">UPDATED</span></h2>
+            <div class="comparison-grid" style="gap: 2rem;">
+                <div>
+                    <div class="info-box">
+                        <p><strong>Placed at project root</strong> — Claude Code reads it automatically every session</p>
+                        <p style="margin-top: 0.5rem;">Also supports <code>~/.claude/CLAUDE.md</code> for global preferences</p>
+                    </div>
+                    <div class="list-item">Tech stack &amp; conventions</div>
+                    <div class="list-item">Common commands (dev, test, migrate)</div>
+                    <div class="list-item">Current sprint goals &amp; active context</div>
+                    <div class="list-item">Important rules (never commit .env, etc.)</div>
+                </div>
+                <div>
+                    <div class="code-block">
+<span style="color: #4ade80;"># Project: MyApp</span>
+
+<span style="color: #3b82f6;">## Tech Stack</span>
+Backend: FastAPI + PostgreSQL
+Frontend: React + TypeScript
+
+<span style="color: #3b82f6;">## Conventions</span>
+- Use async/await for DB ops
+- Follow PEP 8
+- Functional React components
+
+<span style="color: #3b82f6;">## Common Commands</span>
+- Dev: `npm run dev`
+- Tests: `pytest -v`
+- Migrate: `alembic upgrade head`
+
+<span style="color: #3b82f6;">## Active Context</span>
+Working on: backend/auth/service.py
+Next: Implement refresh token logic
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Skills — UPDATED path -->
+        <div class="slide">
+            <h2>Strategy #3: Skills (Procedural Memory) <span class="new-badge">UPDATED</span></h2>
+            <div class="comparison-grid">
+                <div>
+                    <h3>What are Skills?</h3>
+                    <div class="list-item">Step-by-step documented procedures</div>
+                    <div class="list-item">Reusable across conversations</div>
+                    <div class="list-item">Located in <code>.claude/skills/</code></div>
+                    <div class="list-item">Reference by name — no re-explaining</div>
+                    <div style="margin-top: 2rem; font-size: 1rem; opacity: 0.85;">
+                        Correct path: <code>.claude/skills/[skill-name]/SKILL.md</code>
+                    </div>
+                </div>
+                <div>
+                    <h3>Examples</h3>
+                    <div class="list-item">deploy-to-production.md</div>
+                    <div class="list-item">run-test-suite.md</div>
+                    <div class="list-item">debug-workflow.md</div>
+                    <div class="list-item">create-feature.md</div>
+                    <div class="list-item">security-review.md</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; font-size: 1.2rem;">
+                Brain Analogy: Muscle memory — execute without cluttering working memory
+            </div>
+        </div>
+
+        <!-- Slide 12: Tools — UPDATED names -->
+        <div class="slide">
+            <h2>Strategy #4: Tools (Actual Claude Code Tools) <span class="new-badge">UPDATED</span></h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Purpose</th>
+                            <th>Example Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Read</strong></td>
+                            <td>Read file contents</td>
+                            <td>Read source file before editing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Edit</strong></td>
+                            <td>Precise string replacement</td>
+                            <td>Fix a specific bug in a file</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Write</strong></td>
+                            <td>Create or overwrite files</td>
+                            <td>Create a new component</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bash</strong></td>
+                            <td>Run shell commands</td>
+                            <td>Run tests, git operations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grep</strong></td>
+                            <td>Search file contents with regex</td>
+                            <td>Find all usages of a function</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Glob</strong></td>
+                            <td>Find files by pattern</td>
+                            <td>List all <code>*.test.ts</code> files</td>
+                        </tr>
+                        <tr>
+                            <td><strong>WebFetch / WebSearch</strong></td>
+                            <td>Fetch URLs or search the web</td>
+                            <td>Read live API documentation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 1.2rem;">
+                Golden Rule: Use tools to <span class="highlight">gather current state</span>, let Claude do the analysis
+            </div>
+        </div>
+
+        <!-- Slide 13: MCP Servers -->
+        <div class="slide">
+            <h2>Strategy #5: MCP Servers</h2>
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="emoji">💾</div>
+                    <h3>Database MCP</h3>
+                    <p>Query schemas, run SQL, analyze query performance</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">🐙</div>
+                    <h3>GitHub MCP</h3>
+                    <p>Create issues/PRs, search repos, read commit history</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">💬</div>
+                    <h3>Slack MCP</h3>
+                    <p>Send messages, read channels, create notifications</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">📁</div>
+                    <h3>Google Drive MCP</h3>
+                    <p>Read/write documents, search files</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">🏢</div>
+                    <h3>Custom Domain MCP</h3>
+                    <p>Company APIs, internal tools, legacy systems</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">💡</div>
+                    <h3>Context Benefit</h3>
+                    <p>On-demand access — no need to paste entire schemas into context</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 1.2rem;">
+                Brain Analogy: Experts on speed dial — call them when needed
+            </div>
+        </div>
+
+        <!-- Slide 14: Prompt Caching — NEW -->
+        <div class="slide">
+            <h2>Strategy #6: Prompt Caching <span class="new-badge">NEW</span></h2>
+            <div class="comparison-grid">
+                <div>
+                    <h3>How It Works</h3>
+                    <div class="list-item">Mark stable context as cacheable</div>
+                    <div class="list-item">First request: Claude processes &amp; caches block (5-min TTL)</div>
+                    <div class="list-item">Subsequent requests: reuse cache — only new parts processed</div>
+                    <div class="list-item" style="border-left-color: #4ade80;">Cached tokens cost ~10% of normal price</div>
+                    <div style="margin-top: 2rem;" class="info-box">
+                        100K-token context reused 10× =
+                        <span class="highlight">~9× cost reduction</span>
+                    </div>
+                </div>
+                <div>
+                    <h3>What to Cache</h3>
+                    <div class="list-item">System prompt + conventions (sent every message)</div>
+                    <div class="list-item">Large codebase loaded for repeated analysis</div>
+                    <div class="list-item">Documentation blocks referenced across turns</div>
+                    <div class="list-item"><span class="cross-icon">✗</span> Don't cache: per-message user input</div>
+                    <div style="margin-top: 1rem; opacity: 0.85; font-size: 1rem;">
+                        Use <code>"cache_control": {"type": "ephemeral"}</code> in API calls to mark cacheable blocks
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Hooks — NEW -->
+        <div class="slide">
+            <h2>Strategy #7: Hooks — Automated Workflows <span class="new-badge">NEW</span></h2>
+            <div class="comparison-grid">
+                <div>
+                    <h3>What Are Hooks?</h3>
+                    <p style="margin-bottom: 1rem; font-size: 1.1rem;">Shell commands that run automatically in response to Claude Code events — configured in <code>.claude/settings.json</code></p>
+                    <div class="list-item"><strong>PreToolUse</strong> — before Claude calls a tool</div>
+                    <div class="list-item"><strong>PostToolUse</strong> — after a tool call completes</div>
+                    <div class="list-item"><strong>Stop</strong> — when Claude finishes a response</div>
+                    <div class="list-item"><strong>Notification</strong> — when Claude sends a notification</div>
+                    <div style="margin-top: 1.5rem;" class="info-box">
+                        Key rule: If you want something to happen <em>every time</em>, use a hook — not a CLAUDE.md note
+                    </div>
+                </div>
+                <div>
+                    <h3>Practical Examples</h3>
+                    <div class="list-item">Auto-lint / format after every Edit</div>
+                    <div class="list-item">Run tests after code changes</div>
+                    <div class="list-item">Desktop notification when Claude finishes</div>
+                    <div class="list-item">Log all tool calls for auditing</div>
+                    <div class="list-item">Block dangerous commands via PreToolUse</div>
+                    <div style="margin-top: 1rem;" class="code-block" style="font-size: 0.85rem;">
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit",
+      "hooks": [{"type": "command",
+        "command": "npm run lint --fix"}]
+    }]
+  }
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Extended Thinking — NEW -->
+        <div class="slide">
+            <h2>Strategy #8: Extended Thinking <span class="new-badge">NEW</span></h2>
+            <div class="comparison-grid">
+                <div>
+                    <h3>What Is It?</h3>
+                    <p style="margin-bottom: 1rem; font-size: 1.1rem;">Dedicated reasoning tokens Claude uses <em>before</em> producing its final answer — enabling deeper, more reliable multi-step analysis</p>
+                    <div class="list-item">Complex debugging with multiple interacting components</div>
+                    <div class="list-item">Architectural decisions with many tradeoffs</div>
+                    <div class="list-item">Security analysis of intricate systems</div>
+                    <div class="list-item">Algorithm design and optimization</div>
+                    <div style="margin-top: 1.5rem;" class="info-box">
+                        Best model: <span class="highlight">Claude Opus 4.7</span><br>
+                        Tradeoff: Uses more tokens and takes longer — use for high-stakes decisions
+                    </div>
+                </div>
+                <div>
+                    <h3>How to Request It</h3>
+                    <p style="margin-bottom: 1rem; font-size: 1rem; opacity: 0.9;">In conversation:</p>
+                    <div class="info-box" style="font-style: italic; margin-bottom: 1.5rem;">
+                        "Think carefully about this before responding: what are the architectural tradeoffs between approach A and B?"
+                    </div>
+                    <p style="margin-bottom: 0.5rem; font-size: 1rem; opacity: 0.9;">Via API:</p>
+                    <div class="code-block">
+thinking={
+  "type": "enabled",
+  "budget_tokens": 10000
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Sub-Agents — NEW -->
+        <div class="slide">
+            <h2>Strategy #9: Sub-Agents — Parallel Workers <span class="new-badge">NEW</span></h2>
+            <div class="comparison-grid">
+                <div>
+                    <h3>What Are Sub-Agents?</h3>
+                    <p style="margin-bottom: 1rem; font-size: 1.1rem;">Claude spawns independent agents with their own isolated context windows to handle parallel or isolated subtasks</p>
+                    <div class="list-item">Each sub-agent has its own 200K context</div>
+                    <div class="list-item">Prevents exploratory work polluting main context</div>
+                    <div class="list-item">Run multiple analyses in parallel</div>
+                    <div class="list-item">Main agent synthesizes results</div>
+                    <div style="margin-top: 1.5rem;" class="info-box">
+                        Context benefit: Large file searches &amp; reads stay in sub-agent context — your main conversation stays clean
+                    </div>
+                </div>
+                <div>
+                    <h3>Example Pattern</h3>
+                    <div class="code-block">
+Main Agent
+├── Sub-agent 1:
+│   "Audit auth module
+│    for security issues"
+│
+├── Sub-agent 2:
+│   "Audit payments module
+│    for security issues"
+│
+└── Sub-agent 3:
+    "Audit API layer
+     for security issues"
+         ↓
+Main Agent synthesizes
+all three findings
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Plan vs Edit Mode -->
+        <div class="slide">
+            <h2>Strategy #10: Plan vs Edit Mode</h2>
+            <div class="mode-comparison">
+                <div class="mode-card">
+                    <h3>Plan Mode</h3>
+                    <div style="margin-top: 1rem; font-size: 1.1rem;">
+                        <p><strong>When:</strong> New features, refactoring, architecture</p>
+                        <p style="margin: 0.5rem 0;"><strong>What:</strong> Analysis → Plan → Approval → Code</p>
+                        <div class="list-item">Analyzes codebase holistically</div>
+                        <div class="list-item">Creates implementation_plan.md</div>
+                        <div class="list-item">Identifies risks &amp; dependencies</div>
+                        <div class="list-item">Waits for your approval</div>
+                        <p style="margin-top: 1rem;"><strong>Speed:</strong> Slower, deliberate (System 2)</p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="mode-card">
+                    <h3>Edit Mode</h3>
+                    <div style="margin-top: 1rem; font-size: 1.1rem;">
+                        <p><strong>When:</strong> Bug fixes, small refactors, docs updates</p>
+                        <p style="margin: 0.5rem 0;"><strong>What:</strong> Immediate precise file edits</p>
+                        <div class="list-item">Fast iterations</div>
+                        <div class="list-item">Direct targeted edits</div>
+                        <div class="list-item">Single-file focus</div>
+                        <div class="list-item">Immediate changes</div>
+                        <p style="margin-top: 1rem;"><strong>Speed:</strong> Fast, automatic (System 1)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: RAG Explanation -->
+        <div class="slide">
+            <h2>Strategy #11: RAG (Retrieval-Augmented Generation)</h2>
+            <div class="rag-diagram">
+                <div class="rag-box" style="background: rgba(74,222,128,0.2);">
+                    Your Question: "How does auth work?"
+                </div>
+                <div class="rag-arrow">↓</div>
+                <div class="rag-box" style="background: rgba(59,130,246,0.2);">
+                    Vector Search finds 5 most relevant files
+                </div>
+                <div class="rag-arrow">↓</div>
+                <div class="rag-box" style="background: rgba(139,92,246,0.2);">
+                    Only 5K tokens loaded (not 60K!)
+                </div>
+                <div class="rag-arrow">↓</div>
+                <div class="rag-box" style="background: rgba(236,72,153,0.2);">
+                    Claude analyzes with focused, minimal context
+                </div>
+                <div class="rag-arrow">↓</div>
+                <div class="rag-box" style="background: rgba(255,215,0,0.3);">
+                    Comprehensive answer — 195K tokens preserved
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: When to Use RAG -->
+        <div class="slide">
+            <h2>When to Use RAG?</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Project Size</th>
+                            <th>Use RAG?</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Small (&lt;20 files)</td>
+                            <td style="color: #f87171; font-weight: bold;">No</td>
+                            <td>Everything fits comfortably in context</td>
+                        </tr>
+                        <tr>
+                            <td>Medium (20–100 files)</td>
+                            <td style="color: #4ade80; font-weight: bold;">Yes</td>
+                            <td>Selective loading saves significant context</td>
+                        </tr>
+                        <tr>
+                            <td>Large (100+ files)</td>
+                            <td style="color: #4ade80; font-weight: bold;">Essential</td>
+                            <td>Only efficient path forward</td>
+                        </tr>
+                        <tr>
+                            <td>Documentation Search</td>
+                            <td style="color: #4ade80; font-weight: bold;">Yes</td>
+                            <td>Find answers without reading everything</td>
+                        </tr>
+                        <tr>
+                            <td>Legacy Codebase</td>
+                            <td style="color: #4ade80; font-weight: bold;">Essential</td>
+                            <td>Navigate unfamiliar code quickly</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 1.2rem;">
+                <strong>Tools:</strong> Pinecone, Weaviate, ChromaDB, FAISS &nbsp;|&nbsp;
+                <strong>Frameworks:</strong> LangChain, LlamaIndex
+            </div>
+        </div>
+
+        <!-- Slide 21: Do's and Don'ts — UPDATED -->
+        <div class="slide">
+            <h2>The Golden Rules <span class="new-badge">UPDATED</span></h2>
+            <div class="do-dont-grid">
+                <div class="do-section">
+                    <h3 style="color: #4ade80; margin-bottom: 1rem;">DO's</h3>
+                    <div style="font-size: 1.05rem; line-height: 2;">
+                        <p>✓ Keep CLAUDE.md updated at project root</p>
+                        <p>✓ Use Plan Mode for complex &amp; architectural work</p>
+                        <p>✓ Provide clear, scoped context in requests</p>
+                        <p>✓ Use Hooks for automated repeatable actions</p>
+                        <p>✓ Verify all AI-generated code before shipping</p>
+                        <p>✓ Break large tasks into focused conversations</p>
+                        <p>✓ Use Sub-Agents for parallel analysis</p>
+                        <p>✓ Cache large, stable context to reduce cost</p>
+                    </div>
+                </div>
+                <div class="dont-section">
+                    <h3 style="color: #f87171; margin-bottom: 1rem;">DON'Ts</h3>
+                    <div style="font-size: 1.05rem; line-height: 2;">
+                        <p>✗ Dump entire codebases — use RAG instead</p>
+                        <p>✗ Skip planning for big architectural changes</p>
+                        <p>✗ Mix multiple unrelated concerns in one chat</p>
+                        <p>✗ Trust AI output blindly — always test</p>
+                        <p>✗ Rely on conversation history as documentation</p>
+                        <p>✗ Use Edit Mode for multi-file architecture changes</p>
+                        <p>✗ Ask Claude to "remember" things — use hooks or CLAUDE.md</p>
+                        <p>✗ Let AI make final architectural decisions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Real Example - Bad -->
+        <div class="slide">
+            <h2>Inefficient Approach (Context Overload)</h2>
+            <div class="visual-diagram">
+                <h3 style="color: #f87171;">Request: "Build me an authentication system"</h3>
+                <div style="margin-top: 2rem; font-size: 1.2rem; line-height: 2.2;">
+                    <p>❌ Loads ALL user files (20 files, 30K tokens)</p>
+                    <p>❌ Loads ALL API endpoints (15 files, 20K tokens)</p>
+                    <p>❌ Loads ALL tests (25 files, 25K tokens)</p>
+                    <p>❌ Loads database models (10 files, 10K tokens)</p>
+                    <p>❌ Loads documentation (5 files, 15K tokens)</p>
+                </div>
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(248,113,113,0.2); border-radius: 10px;">
+                    <p style="font-size: 1.3rem;">Total: 75 files, <strong style="color: #f87171;">100K tokens consumed upfront</strong></p>
+                    <p style="font-size: 1.3rem;">Only 100K left for actual conversation</p>
+                    <p style="font-size: 1.3rem;">Result: Messy, scattered, incomplete responses</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Real Example - Good -->
+        <div class="slide">
+            <h2>Efficient Approach (Structured Context)</h2>
+            <div class="workflow-diagram" style="flex-direction: column; gap: 0.5rem;">
+                <div class="workflow-step" style="background: rgba(74,222,128,0.2);">
+                    <strong>Conversation 1: Planning (20K)</strong>
+                    <p>Create implementation_plan.md in Plan Mode</p>
+                </div>
+                <div class="workflow-arrow">↓</div>
+                <div class="workflow-step" style="background: rgba(59,130,246,0.2);">
+                    <strong>Conversation 2: Models &amp; DB (40K)</strong>
+                    <p>Implement Phase 1 from plan</p>
+                </div>
+                <div class="workflow-arrow">↓</div>
+                <div class="workflow-step" style="background: rgba(139,92,246,0.2);">
+                    <strong>Conversation 3: Auth Service (35K)</strong>
+                    <p>JWT, password hashing, endpoints</p>
+                </div>
+                <div class="workflow-arrow">↓</div>
+                <div class="workflow-step" style="background: rgba(236,72,153,0.2);">
+                    <strong>Conversation 4: Testing (30K)</strong>
+                    <p>Verify everything works end-to-end</p>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(74,222,128,0.2); border-radius: 10px;">
+                <p style="font-size: 1.2rem;">✅ Each conversation uses &lt;50% context</p>
+                <p style="font-size: 1.2rem;">✅ Clear documentation trail — easy to review and debug</p>
+                <p style="font-size: 1.2rem;">✅ Fully working auth system delivered</p>
+            </div>
+        </div>
+
+        <!-- Slide 24: The Partnership -->
+        <div class="slide">
+            <h2>The Human-AI Partnership</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="icon">🧠</div>
+                    <h3>You Excel At:</h3>
+                    <div class="list-item">Strategic thinking &amp; vision</div>
+                    <div class="list-item">Business context &amp; stakeholder needs</div>
+                    <div class="list-item">Creative problem-solving</div>
+                    <div class="list-item">Recognizing subtle domain bugs</div>
+                    <div class="list-item">Final verification &amp; accountability</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="icon">🤖</div>
+                    <h3>Claude Excels At:</h3>
+                    <div class="list-item">Pattern recognition at scale</div>
+                    <div class="list-item">Code generation &amp; refactoring</div>
+                    <div class="list-item">Consistency across large codebases</div>
+                    <div class="list-item">Rapid prototyping</div>
+                    <div class="list-item">Recall from vast training data</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem; font-size: 1.5rem;">
+                <strong>You provide the vision &amp; verification</strong><br>
+                <span class="highlight">Claude provides the velocity &amp; consistency</span>
+            </div>
+        </div>
+
+        <!-- Slide 25: Final Slide — UPDATED -->
+        <div class="slide">
+            <h1 style="font-size: 3rem;">Code Smarter, Not Harder</h1>
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="font-size: 1.8rem; margin: 1rem 0;">
+                    <em>"The best code is not written — it's orchestrated."</em>
+                </p>
+                <p style="font-size: 1.4rem; margin: 1.5rem 0;">
+                    You're the conductor &nbsp; Claude is your orchestra
+                </p>
+            </div>
+            <div style="margin-top: 2rem; font-size: 1.1rem;">
+                <h3 style="margin-bottom: 1rem;">Your Next Steps:</h3>
+                <div class="list-item">✅ Create <strong>CLAUDE.md</strong> at your project root using the template</div>
+                <div class="list-item">✅ Document one common procedure as a <strong>skill</strong> in .claude/skills/</div>
+                <div class="list-item">✅ Try <strong>Plan Mode</strong> for your next feature</div>
+                <div class="list-item">✅ Configure at least one <strong>hook</strong> (e.g. auto-lint on edit)</div>
+                <div class="list-item">✅ Set up <strong>RAG</strong> if you have 50+ files</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides"></span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn">← Previous</button>
+        <button class="nav-btn" id="next-btn">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const currentSlideSpan = document.getElementById('current-slide');
+        const totalSlidesSpan = document.getElementById('total-slides');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        totalSlidesSpan.textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlideSpan.textContent = index + 1;
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === totalSlides - 1;
+            prevBtn.style.opacity = index === 0 ? '0.5' : '1';
+            nextBtn.style.opacity = index === totalSlides - 1 ? '0.5' : '1';
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) { currentSlide++; showSlide(currentSlide); }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) { currentSlide--; showSlide(currentSlide); }
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        });
+
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
