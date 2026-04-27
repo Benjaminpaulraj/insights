@@ -1,3 +1,10 @@
+---
+title: "Why Every Great Empire Eventually Falls — And Where Countries Stand Today"
+description: "Why empires rise and fall, what stage America is in right now, and which countries are rising next"
+pubDate: "Apr 27 2026"
+heroImage: "../../assets/blog-placeholder-1.jpg"
+---
+
 # Why Every Great Empire Eventually Falls — And Where Countries Stand Today
 
 > **Reading time:** ~12 minutes

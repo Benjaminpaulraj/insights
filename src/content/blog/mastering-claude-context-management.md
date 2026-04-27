@@ -1,3 +1,10 @@
+---
+title: "Mastering Context Management in Claude: Your Brain's New Power Tool"
+description: "Understanding LLM limitations and context management strategies"
+pubDate: "Apr 27 2026"
+heroImage: "../../assets/blog-placeholder-2.jpg"
+---
+
 # Mastering Context Management in Claude: Your Brain's New Power Tool
 
 ## Introduction: The Neural Network Meets Your Network of Neurons
