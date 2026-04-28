@@ -3,7 +3,10 @@
     "allow": [
       "WebFetch(domain:www.youtube.com)",
       "WebSearch",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(npm run *)",
+      "Bash(lsof -iTCP -sTCP:LISTEN)",
+      "Bash(git add *)"
     ]
   }
 }

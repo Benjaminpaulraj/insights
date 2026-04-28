@@ -4,43 +4,61 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Why Every Great Empire Eventually Falls — And Where Countries Stand Today</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0a0e1a;
-      --surface:   #0d1224;
-      --border:    #1e2a45;
-      --border-2:  #151f35;
+      --bg:        #080c18;
+      --surface:   #0c1020;
+      --surface-2: #101525;
+      --border:    #1a2640;
+      --border-2:  #131d30;
       --text:      #e2e8f0;
       --muted:     #94a3b8;
       --faint:     #64748b;
       --label:     #475569;
-      --s1: #22c55e; --s1-bg: rgba(34,197,94,0.08);   --s1-border: rgba(34,197,94,0.25);
-      --s2: #3b82f6; --s2-bg: rgba(59,130,246,0.08);  --s2-border: rgba(59,130,246,0.25);
-      --s3: #f59e0b; --s3-bg: rgba(245,158,11,0.08);  --s3-border: rgba(245,158,11,0.3);
-      --s4: #ef4444; --s4-bg: rgba(239,68,68,0.08);   --s4-border: rgba(239,68,68,0.25);
-      --s5: #a855f7; --s5-bg: rgba(168,85,247,0.08);  --s5-border: rgba(168,85,247,0.3);
+      --s1: #22c55e; --s1-bg: rgba(34,197,94,0.07);   --s1-border: rgba(34,197,94,0.22);
+      --s2: #3b82f6; --s2-bg: rgba(59,130,246,0.07);  --s2-border: rgba(59,130,246,0.22);
+      --s3: #f59e0b; --s3-bg: rgba(245,158,11,0.07);  --s3-border: rgba(245,158,11,0.28);
+      --s4: #ef4444; --s4-bg: rgba(239,68,68,0.07);   --s4-border: rgba(239,68,68,0.22);
+      --s5: #a855f7; --s5-bg: rgba(168,85,247,0.07);  --s5-border: rgba(168,85,247,0.28);
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans:  'Inter', 'Segoe UI', system-ui, sans-serif;
+      --radius: 12px;
+      --transition: 0.2s ease;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Georgia', 'Times New Roman', serif;
+      font-family: var(--serif);
       background: var(--bg);
       color: var(--text);
-      line-height: 1.8;
+      line-height: 1.85;
       font-size: 18px;
     }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-fast { transition-duration: 0.35s; }
+    .reveal-slow { transition-duration: 0.75s; }
 
     /* ── PROGRESS BAR ── */
     #progress {
       position: fixed;
       top: 0; left: 0;
       height: 3px;
-      background: linear-gradient(90deg, #22c55e, #3b82f6, #f59e0b, #ef4444, #a855f7);
+      background: linear-gradient(90deg, #22c55e 0%, #3b82f6 35%, #f59e0b 65%, #ef4444 85%, #a855f7 100%);
       width: 0%;
-      z-index: 100;
+      z-index: 200;
       transition: width 0.1s linear;
     }
 
@@ -48,75 +66,140 @@
     nav {
       position: sticky;
       top: 0;
-      background: rgba(10,14,26,0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(8,12,24,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      z-index: 50;
+      z-index: 100;
       padding: 0 24px;
     }
     .nav-inner {
-      max-width: 780px;
+      max-width: 820px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 52px;
+      height: 54px;
     }
     .nav-brand {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 12px;
-      letter-spacing: 2px;
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
+      font-weight: 600;
       color: var(--faint);
     }
     .nav-meta {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: var(--sans);
       font-size: 12px;
       color: var(--label);
     }
 
+    /* ── LAYOUT WITH TOC ── */
+    .page-shell {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      grid-template-areas: "content toc";
+      gap: 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+    .page-content { grid-area: content; min-width: 0; }
+    .page-toc     { grid-area: toc; }
+
+    @media (max-width: 1000px) {
+      .page-shell { grid-template-columns: 1fr; grid-template-areas: "content"; }
+      .page-toc   { display: none; }
+    }
+
+    /* ── TABLE OF CONTENTS ── */
+    .toc-sidebar {
+      position: sticky;
+      top: 70px;
+      padding: 24px 0 24px 28px;
+      font-family: var(--sans);
+      max-height: calc(100vh - 90px);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .toc-sidebar::-webkit-scrollbar { display: none; }
+    .toc-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--label);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .toc-list li a {
+      display: block;
+      font-size: 12px;
+      color: var(--faint);
+      text-decoration: none;
+      padding: 4px 0 4px 12px;
+      border-left: 2px solid var(--border);
+      line-height: 1.4;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .toc-list li a:hover { color: var(--muted); border-left-color: var(--s2); }
+    .toc-list li a.active { color: var(--text); border-left-color: var(--s2); font-weight: 500; }
+
     /* ── HERO ── */
     .hero {
-      padding: 80px 24px 60px;
-      max-width: 780px;
-      margin: 0 auto;
+      padding: 88px 24px 60px;
+      max-width: 820px;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(59,130,246,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 60%, rgba(168,85,247,0.05) 0%, transparent 60%);
+      pointer-events: none;
     }
     .hero-eyebrow {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 22px;
       flex-wrap: wrap;
     }
     .tag {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 11px;
-      letter-spacing: 1.5px;
+      font-family: var(--sans);
+      font-size: 10px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
       font-weight: 700;
-      border-radius: 4px;
-      padding: 3px 10px;
+      border-radius: 5px;
+      padding: 4px 11px;
     }
     .tag-history  { background: var(--s2-bg); color: #60a5fa; border: 1px solid var(--s2-border); }
     .tag-analysis { background: var(--s3-bg); color: #fbbf24; border: 1px solid var(--s3-border); }
     .tag-geopolitics { background: var(--s4-bg); color: #f87171; border: 1px solid var(--s4-border); }
 
     .hero h1 {
-      font-size: clamp(28px, 4.5vw, 48px);
-      font-weight: 700;
-      line-height: 1.15;
+      font-family: var(--serif);
+      font-size: clamp(30px, 4.8vw, 52px);
+      font-weight: 800;
+      line-height: 1.12;
       letter-spacing: -0.5px;
-      margin-bottom: 20px;
-      background: linear-gradient(135deg, #f1f5f9 30%, #94a3b8);
+      margin-bottom: 22px;
+      background: linear-gradient(135deg, #f8fafc 20%, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .hero-sub {
-      font-size: 19px;
+      font-family: var(--sans);
+      font-size: 18px;
       color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 32px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      font-weight: 400;
     }
     .hero-byline {
       display: flex;
@@ -124,105 +207,145 @@
       gap: 16px;
       padding-top: 24px;
       border-top: 1px solid var(--border);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: var(--sans);
     }
     .avatar {
-      width: 40px; height: 40px;
+      width: 42px; height: 42px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #22c55e, #3b82f6);
+      background: linear-gradient(135deg, #1d4ed8, #22c55e);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
+      font-size: 18px; flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
     }
     .byline-text { font-size: 13px; color: var(--muted); }
-    .byline-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+    .byline-text strong { color: var(--text); display: block; margin-bottom: 2px; font-weight: 600; }
 
     /* ── HERO DIVIDER ── */
     .hero-divider {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 0 24px 48px;
+      max-width: 820px;
+      padding: 0 24px 52px;
     }
     .hero-divider hr {
       border: none;
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
     }
 
     /* ── ARTICLE BODY ── */
     article {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 0 24px 100px;
+      max-width: 820px;
+      padding: 0 24px 120px;
     }
 
     article p {
-      margin-bottom: 1.6em;
+      margin-bottom: 1.65em;
       color: var(--text);
     }
+
     article p.lead {
-      font-size: 20px;
+      font-family: var(--sans);
+      font-size: 19px;
       color: #cbd5e1;
-      border-left: 3px solid var(--border);
-      padding-left: 20px;
+      border-left: 3px solid rgba(59,130,246,0.4);
+      padding-left: 22px;
       margin-bottom: 2em;
-      line-height: 1.7;
+      line-height: 1.75;
+      font-weight: 400;
     }
 
     article h2 {
-      font-size: clamp(22px, 3vw, 30px);
+      font-family: var(--serif);
+      font-size: clamp(22px, 3vw, 32px);
       font-weight: 700;
       color: #f1f5f9;
-      margin: 3em 0 0.8em;
-      line-height: 1.25;
+      margin: 3.5em 0 0.9em;
+      line-height: 1.2;
       letter-spacing: -0.3px;
     }
     article h2:first-of-type { margin-top: 1.5em; }
 
     article h3 {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: var(--sans);
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text);
       margin: 2em 0 0.6em;
     }
 
     article h3.section-label {
-      font-size: 12px;
-      letter-spacing: 2px;
+      font-size: 11px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       color: var(--faint);
-      margin: 2.5em 0 0.6em;
+      margin: 2.5em 0 0.75em;
+      font-weight: 600;
     }
 
+    /* ── BLOCKQUOTE ── */
     blockquote {
-      margin: 2.5em 0;
-      padding: 24px 28px;
+      margin: 3em 0;
+      padding: 36px 36px 28px;
       background: var(--surface);
-      border-left: 4px solid #3b82f6;
-      border-radius: 0 10px 10px 0;
+      border-left: none;
+      border-radius: var(--radius);
+      border: 1px solid var(--s2-border);
+      position: relative;
+      overflow: hidden;
+    }
+    blockquote::before {
+      content: '\201C';
+      position: absolute;
+      top: -10px; left: 24px;
+      font-family: var(--serif);
+      font-size: 96px;
+      line-height: 1;
+      color: rgba(59,130,246,0.2);
+      font-weight: 800;
+      user-select: none;
+    }
+    blockquote::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--s2), transparent);
     }
     blockquote p {
-      font-size: 20px;
+      font-family: var(--serif);
+      font-size: 21px;
       font-style: italic;
-      color: #cbd5e1;
+      color: #e2e8f0;
       margin: 0;
-      line-height: 1.6;
+      line-height: 1.65;
+      position: relative;
+      z-index: 1;
     }
     blockquote cite {
       display: block;
-      margin-top: 10px;
-      font-size: 13px;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      margin-top: 14px;
+      font-size: 12px;
+      font-family: var(--sans);
       color: var(--faint);
       font-style: normal;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 1;
     }
 
     article strong { color: #f1f5f9; font-weight: 700; }
 
     article .stat {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: var(--sans);
       font-weight: 700;
       color: #fbbf24;
+    }
+
+    article ul {
+      margin: 1em 0 1.6em;
+      padding-left: 1.5em;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
     }
 
     /* ── FIVE STAGES LIST ── */
@@ -230,22 +353,34 @@
       margin: 1.5em 0 2em;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      gap: 10px;
+      font-family: var(--sans);
     }
     .stage-item {
-      padding: 16px 20px;
-      border-radius: 10px;
+      padding: 18px 22px;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
       background: var(--surface);
       position: relative;
       overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
     }
+    .stage-item:hover {
+      transform: translateX(4px);
+      box-shadow: -4px 0 0 0 currentColor;
+    }
+    .si-s1:hover { box-shadow: -4px 0 0 0 var(--s1); border-color: var(--s1-border); }
+    .si-s2:hover { box-shadow: -4px 0 0 0 var(--s2); border-color: var(--s2-border); }
+    .si-s3:hover { box-shadow: -4px 0 0 0 var(--s3); border-color: var(--s3-border); }
+    .si-s4:hover { box-shadow: -4px 0 0 0 var(--s4); border-color: var(--s4-border); }
+    .si-s5:hover { box-shadow: -4px 0 0 0 var(--s5); border-color: var(--s5-border); }
+
     .stage-item::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
+      top: 0; left: 0;
+      width: 4px; bottom: 0;
+      border-radius: var(--radius) 0 0 var(--radius);
     }
     .si-s1::before { background: var(--s1); }
     .si-s2::before { background: var(--s2); }
@@ -259,23 +394,24 @@
       gap: 12px;
       margin-bottom: 8px;
     }
-    .stage-item-num  { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--label); }
+    .stage-item-num  { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--label); font-weight: 600; }
     .si-s1 .stage-item-name { color: var(--s1); font-size: 15px; font-weight: 700; }
     .si-s2 .stage-item-name { color: var(--s2); font-size: 15px; font-weight: 700; }
     .si-s3 .stage-item-name { color: var(--s3); font-size: 15px; font-weight: 700; }
     .si-s4 .stage-item-name { color: var(--s4); font-size: 15px; font-weight: 700; }
     .si-s5 .stage-item-name { color: var(--s5); font-size: 15px; font-weight: 700; }
-    .stage-item-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .stage-item-desc { font-size: 14px; color: var(--muted); line-height: 1.7; padding-left: 12px; }
     .stage-item-desc strong { color: var(--text); }
     .stage-simple {
-      margin-top: 8px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.03);
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.025);
       border: 1px solid var(--border-2);
       font-size: 13px;
       color: var(--faint);
-      line-height: 1.5;
+      line-height: 1.55;
+      margin-left: 12px;
     }
     .stage-simple em { color: var(--muted); font-style: italic; }
 
@@ -285,41 +421,43 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      margin: 3.5em 0 1em;
-      padding-bottom: 16px;
+      margin: 4em 0 1em;
+      padding-bottom: 18px;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
     }
-    .empire-header-left h2 { margin: 0 0 4px; font-size: clamp(20px, 3vw, 26px); }
-    .empire-dates { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; color: var(--faint); }
-    .empire-lifespan-badge { font-family: 'Segoe UI', system-ui, sans-serif; flex-shrink: 0; text-align: right; }
+    .empire-header-left h2 { margin: 0 0 4px; font-size: clamp(20px, 3vw, 28px); }
+    .empire-dates { font-family: var(--sans); font-size: 12px; color: var(--faint); letter-spacing: 0.3px; }
+    .empire-lifespan-badge { font-family: var(--sans); flex-shrink: 0; text-align: right; }
     .empire-lifespan-badge .years {
-      font-size: 32px; font-weight: 700; display: block; line-height: 1;
+      font-size: 36px; font-weight: 700; display: block; line-height: 1;
       background: linear-gradient(135deg, #f59e0b, #ef4444);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .empire-lifespan-badge .years-label { font-size: 11px; color: var(--label); letter-spacing: 1px; text-transform: uppercase; }
+    .empire-lifespan-badge .years-label { font-size: 10px; color: var(--label); letter-spacing: 1.5px; text-transform: uppercase; }
 
     /* ── STAGE TIMELINE STRIP ── */
     .stage-strip {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 4px;
-      margin: 1.2em 0 2em;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      margin: 1.4em 0 2.2em;
+      font-family: var(--sans);
     }
     .strip-cell {
-      border-radius: 8px;
-      padding: 10px 10px 8px;
+      border-radius: 10px;
+      padding: 12px 11px 10px;
       position: relative;
       overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
     }
+    .strip-cell:hover { transform: translateY(-2px); }
     .strip-cell::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 3px;
-      border-radius: 8px 8px 0 0;
+      border-radius: 10px 10px 0 0;
     }
     .sc-s1 { background: var(--s1-bg); border: 1px solid var(--s1-border); }
     .sc-s2 { background: var(--s2-bg); border: 1px solid var(--s2-border); }
@@ -332,41 +470,42 @@
     .sc-s4::before { background: var(--s4); }
     .sc-s5::before { background: var(--s5); }
 
-    .strip-stage { font-size: 10px; color: var(--label); letter-spacing: 0.5px; margin-bottom: 2px; }
-    .strip-dates { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+    .strip-stage { font-size: 9px; color: var(--label); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; font-weight: 600; }
+    .strip-dates { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
     .sc-s1 .strip-dates { color: var(--s1); }
     .sc-s2 .strip-dates { color: var(--s2); }
     .sc-s3 .strip-dates { color: var(--s3); }
     .sc-s4 .strip-dates { color: var(--s4); }
     .sc-s5 .strip-dates { color: var(--s5); }
-    .strip-event { font-size: 11px; color: var(--faint); line-height: 1.35; }
+    .strip-event { font-size: 11px; color: var(--faint); line-height: 1.4; }
 
-    .sc-s4-active { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.5); }
-    .sc-s5-dim { opacity: 0.45; }
+    .sc-s4-active { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.45); }
+    .sc-s5-dim { opacity: 0.4; }
 
     .here-pill {
-      display: inline-flex; align-items: center; gap: 4px; margin-top: 5px;
-      background: rgba(239,68,68,0.18); border: 1px solid rgba(239,68,68,0.5);
-      border-radius: 10px; padding: 2px 7px;
-      font-size: 9px; font-weight: 700; color: #f87171; letter-spacing: 0.5px;
+      display: inline-flex; align-items: center; gap: 5px; margin-top: 6px;
+      background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.45);
+      border-radius: 10px; padding: 2px 8px;
+      font-size: 9px; font-weight: 700; color: #f87171; letter-spacing: 0.8px;
     }
     .pulse-dot {
-      width: 5px; height: 5px; border-radius: 50%; background: #ef4444;
-      animation: pulse 1.5s infinite;
+      width: 6px; height: 6px; border-radius: 50%; background: #ef4444;
+      animation: pulse 1.5s ease-in-out infinite;
     }
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(1.5); }
+      50%       { opacity: 0.35; transform: scale(1.6); }
     }
 
-    .outlier { display: inline-block; background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 4px; padding: 1px 7px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 10px; font-weight: 700; margin-left: 6px; }
-    .fast    { display: inline-block; background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.25); border-radius: 4px; padding: 1px 7px; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 10px; font-weight: 700; margin-left: 6px; }
+    .outlier { display: inline-block; background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.28); border-radius: 5px; padding: 1px 8px; font-family: var(--sans); font-size: 10px; font-weight: 700; margin-left: 6px; }
+    .fast    { display: inline-block; background: rgba(239,68,68,0.09); color: #f87171; border: 1px solid rgba(239,68,68,0.22); border-radius: 5px; padding: 1px 8px; font-family: var(--sans); font-size: 10px; font-weight: 700; margin-left: 6px; }
 
     /* ── CALLOUT BOXES ── */
     .callout {
-      margin: 2.5em 0; padding: 20px 24px;
-      border-radius: 10px; border: 1px solid var(--border);
-      background: var(--surface); font-family: 'Segoe UI', system-ui, sans-serif;
+      margin: 2.5em 0; padding: 22px 26px;
+      border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--surface); font-family: var(--sans);
+      transition: border-color var(--transition);
     }
     .callout-warn   { border-left: 4px solid #f59e0b; }
     .callout-danger { border-left: 4px solid #ef4444; }
@@ -374,37 +513,37 @@
     .callout-purple { border-left: 4px solid #a855f7; }
     .callout-green  { border-left: 4px solid #22c55e; }
     .callout-label {
-      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-      font-weight: 700; margin-bottom: 8px;
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 700; margin-bottom: 10px;
     }
     .callout-warn   .callout-label { color: #fbbf24; }
     .callout-danger .callout-label { color: #f87171; }
     .callout-info   .callout-label { color: #60a5fa; }
     .callout-purple .callout-label { color: #c084fc; }
     .callout-green  .callout-label { color: #4ade80; }
-    .callout p { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    .callout p + p { margin-top: 8px; }
+    .callout p { font-size: 14px; color: var(--muted); line-height: 1.75; margin: 0; }
+    .callout p + p { margin-top: 9px; }
     .callout strong { color: var(--text); }
 
     /* ── LIFESPAN COMPARISON TABLE ── */
     .lifespan-table-wrap {
-      overflow-x: auto; border-radius: 10px; border: 1px solid var(--border);
-      margin: 2.5em 0; font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border);
+      margin: 2.5em 0; font-family: var(--sans);
     }
     .lifespan-table-wrap table { width: 100%; border-collapse: collapse; min-width: 500px; }
     .lifespan-table-wrap thead th {
-      background: #111827; padding: 12px 16px; text-align: left;
-      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      background: #0e1425; padding: 12px 18px; text-align: left;
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--faint); font-weight: 600; border-bottom: 1px solid var(--border);
     }
     .lifespan-table-wrap tbody tr { border-bottom: 1px solid var(--border-2); transition: background 0.15s; }
     .lifespan-table-wrap tbody tr:last-child { border-bottom: none; }
-    .lifespan-table-wrap tbody tr:hover { background: #0d1527; }
-    .lifespan-table-wrap td { padding: 12px 16px; font-size: 13px; color: var(--muted); vertical-align: middle; }
-    .lifespan-table-wrap td:first-child { font-weight: 700; color: var(--text); }
+    .lifespan-table-wrap tbody tr:hover { background: rgba(59,130,246,0.04); }
+    .lifespan-table-wrap td { padding: 13px 18px; font-size: 13px; color: var(--muted); vertical-align: middle; }
+    .lifespan-table-wrap td:first-child { font-weight: 600; color: var(--text); }
     .bar-cell { min-width: 160px; }
-    .bar-bg { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #f59e0b, #ef4444); }
+    .bar-bg { background: var(--border-2); border-radius: 6px; height: 7px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #f59e0b, #ef4444); transition: width 1s ease; }
     .bar-america .bar-fill { background: linear-gradient(90deg, #ef4444, #a855f7); }
     .yrs-label { font-size: 12px; font-weight: 700; color: #fbbf24; }
     .yrs-america { color: #f87171; }
@@ -412,96 +551,118 @@
 
     /* ── VERDICT BOX ── */
     .verdict {
-      margin: 1.5em 0 2.5em; padding: 16px 20px;
-      background: rgba(15,23,42,0.8); border: 1px solid var(--border);
-      border-radius: 8px; font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 13px; color: var(--muted); line-height: 1.6;
+      margin: 1.5em 0 2.5em; padding: 18px 22px;
+      background: rgba(14,20,37,0.6); border: 1px solid var(--border);
+      border-radius: 10px; font-family: var(--sans);
+      font-size: 13px; color: var(--muted); line-height: 1.65;
+      border-left: 3px solid var(--border);
     }
-    .verdict-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--label); margin-bottom: 5px; }
+    .verdict-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--label); margin-bottom: 6px; }
     .verdict strong { color: var(--text); }
 
     /* ── KEY FINDINGS GRID ── */
     .findings-grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 12px; margin: 2.5em 0; font-family: 'Segoe UI', system-ui, sans-serif;
+      gap: 12px; margin: 2.5em 0; font-family: var(--sans);
     }
     @media (max-width: 560px) { .findings-grid { grid-template-columns: 1fr; } }
     .finding-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 18px; position: relative; overflow: hidden;
+      border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
     }
-    .finding-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 10px 10px 0 0; }
+    .finding-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+    .fc-green:hover  { border-color: rgba(34,197,94,0.35); }
+    .fc-blue:hover   { border-color: rgba(59,130,246,0.35); }
+    .fc-amber:hover  { border-color: rgba(245,158,11,0.35); }
+    .fc-red:hover    { border-color: rgba(239,68,68,0.35); }
+    .finding-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: var(--radius) var(--radius) 0 0; }
     .fc-green::before  { background: var(--s1); }
     .fc-blue::before   { background: var(--s2); }
     .fc-amber::before  { background: var(--s3); }
     .fc-red::before    { background: var(--s4); }
-    .finding-num { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--label); margin-bottom: 6px; }
-    .finding-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
-    .finding-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .finding-num { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--label); margin-bottom: 7px; font-weight: 600; }
+    .finding-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+    .finding-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
     /* ── PROBLEM CARDS (America Stage 4) ── */
     .problem-card {
-      margin: 1.5em 0; padding: 20px 24px;
+      margin: 1.5em 0; padding: 22px 26px;
       background: var(--surface); border: 1px solid var(--border);
-      border-left: 4px solid #ef4444; border-radius: 0 10px 10px 0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      border-left: 4px solid #ef4444; border-radius: 0 var(--radius) var(--radius) 0;
+      font-family: var(--sans);
+      transition: border-left-width var(--transition);
     }
+    .problem-card:hover { border-left-width: 6px; }
     .problem-card h3 {
-      font-size: 14px; font-weight: 700; color: #f87171;
-      text-transform: uppercase; letter-spacing: 1px;
-      margin: 0 0 10px; font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 13px; font-weight: 700; color: #f87171;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      margin: 0 0 10px; font-family: var(--sans);
     }
-    .problem-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0; }
+    .problem-card p { font-size: 14px; color: var(--muted); line-height: 1.75; margin: 0; }
     .problem-card p + p { margin-top: 8px; }
     .problem-card strong { color: var(--text); }
 
     /* ── SIMPLE TABLE (Why Nobody Fixes It) ── */
     .simple-table-wrap {
-      overflow-x: auto; border-radius: 10px; border: 1px solid var(--border);
-      margin: 2em 0; font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border);
+      margin: 2em 0; font-family: var(--sans);
     }
     .simple-table-wrap table { width: 100%; border-collapse: collapse; min-width: 480px; }
     .simple-table-wrap thead th {
-      background: #111827; padding: 10px 16px; text-align: left;
-      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      background: #0e1425; padding: 11px 18px; text-align: left;
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--faint); font-weight: 600; border-bottom: 1px solid var(--border);
     }
-    .simple-table-wrap tbody tr { border-bottom: 1px solid var(--border-2); }
+    .simple-table-wrap tbody tr { border-bottom: 1px solid var(--border-2); transition: background 0.15s; }
     .simple-table-wrap tbody tr:last-child { border-bottom: none; }
-    .simple-table-wrap td { padding: 11px 16px; font-size: 13px; color: var(--muted); vertical-align: top; line-height: 1.5; }
-    .simple-table-wrap td:first-child { font-weight: 700; color: var(--text); white-space: nowrap; }
+    .simple-table-wrap tbody tr:hover { background: rgba(239,68,68,0.03); }
+    .simple-table-wrap td { padding: 12px 18px; font-size: 13px; color: var(--muted); vertical-align: top; line-height: 1.55; }
+    .simple-table-wrap td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
     .simple-table-wrap td:last-child { color: #f87171; }
 
     /* ── COUNTRY CARDS (Stage 1 Rising) ── */
     .country-card {
-      margin: 2em 0; padding: 22px 24px;
+      margin: 2em 0; padding: 24px 26px;
       background: var(--surface); border: 1px solid var(--s1-border);
-      border-radius: 10px; position: relative; overflow: hidden;
+      border-radius: var(--radius); position: relative; overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .country-card:hover {
+      border-color: rgba(34,197,94,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
     }
     .country-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--s1); }
     .country-card h3 {
       font-size: 17px; font-weight: 700; color: var(--s1);
-      margin: 0 0 10px; font-family: 'Segoe UI', system-ui, sans-serif;
+      margin: 0 0 10px; font-family: var(--sans);
     }
-    .country-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0 0 10px; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .country-card p { font-size: 14px; color: var(--muted); line-height: 1.75; margin: 0 0 10px; font-family: var(--sans); }
     .country-card p:last-child { margin-bottom: 0; }
     .country-card strong { color: var(--text); }
     .country-stats {
-      display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0;
+      display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0;
     }
     .cstat {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 12px; padding: 3px 10px; border-radius: 4px;
+      font-family: var(--sans);
+      font-size: 11px; padding: 4px 11px; border-radius: 5px;
       background: var(--s1-bg); color: #4ade80; border: 1px solid var(--s1-border);
+      font-weight: 500;
     }
 
     /* ── WORLD MAP STAGE SECTIONS ── */
     .world-stage {
-      margin: 2em 0; border-radius: 10px; overflow: hidden;
-      border: 1px solid var(--border); font-family: 'Segoe UI', system-ui, sans-serif;
+      margin: 2em 0; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--border); font-family: var(--sans);
+      transition: border-color var(--transition);
     }
+    .world-stage:hover { border-color: rgba(255,255,255,0.1); }
     .world-stage-header {
-      padding: 12px 20px; display: flex; align-items: center; gap: 10px;
+      padding: 13px 22px; display: flex; align-items: center; gap: 10px;
     }
     .ws-s1 .world-stage-header { background: var(--s1-bg); border-bottom: 1px solid var(--s1-border); }
     .ws-s2 .world-stage-header { background: var(--s2-bg); border-bottom: 1px solid var(--s2-border); }
@@ -513,59 +674,64 @@
     .ws-s3 .world-stage-title { color: var(--s3); }
     .ws-s4 .world-stage-title { color: var(--s4); }
     .ws-s5 .world-stage-title { color: var(--s5); }
-    .world-stage-title { font-size: 14px; font-weight: 700; }
-    .world-stage-sub { font-size: 12px; color: var(--faint); margin-left: auto; }
+    .world-stage-title { font-size: 13px; font-weight: 700; }
+    .world-stage-sub { font-size: 11px; color: var(--faint); margin-left: auto; }
     .world-stage table { width: 100%; border-collapse: collapse; }
     .world-stage thead th {
-      background: rgba(0,0,0,0.2); padding: 8px 16px; text-align: left;
-      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      background: rgba(0,0,0,0.25); padding: 9px 18px; text-align: left;
+      font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
       color: var(--label); font-weight: 600; border-bottom: 1px solid var(--border-2);
     }
-    .world-stage tbody tr { border-bottom: 1px solid var(--border-2); }
+    .world-stage tbody tr { border-bottom: 1px solid var(--border-2); transition: background 0.15s; }
     .world-stage tbody tr:last-child { border-bottom: none; }
-    .world-stage td { padding: 9px 16px; font-size: 13px; color: var(--muted); vertical-align: top; line-height: 1.5; }
-    .world-stage td:first-child { font-weight: 700; color: var(--text); white-space: nowrap; }
+    .world-stage tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .world-stage td { padding: 10px 18px; font-size: 13px; color: var(--muted); vertical-align: top; line-height: 1.55; }
+    .world-stage td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
 
     /* ── QUICK SUMMARY ── */
     .quick-table-wrap {
-      overflow-x: auto; border-radius: 10px; border: 1px solid var(--border);
-      margin: 2em 0; font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border);
+      margin: 2em 0; font-family: var(--sans);
     }
     .quick-table-wrap table { width: 100%; border-collapse: collapse; min-width: 400px; }
     .quick-table-wrap thead th {
-      background: #111827; padding: 10px 16px; text-align: left;
-      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      background: #0e1425; padding: 11px 18px; text-align: left;
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--faint); font-weight: 600; border-bottom: 1px solid var(--border);
     }
-    .quick-table-wrap tbody tr { border-bottom: 1px solid var(--border-2); }
+    .quick-table-wrap tbody tr { border-bottom: 1px solid var(--border-2); transition: background 0.15s; }
     .quick-table-wrap tbody tr:last-child { border-bottom: none; }
-    .quick-table-wrap td { padding: 10px 16px; font-size: 13px; color: var(--muted); vertical-align: middle; line-height: 1.5; }
+    .quick-table-wrap tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .quick-table-wrap td { padding: 11px 18px; font-size: 13px; color: var(--muted); vertical-align: middle; line-height: 1.55; }
     .quick-table-wrap td:first-child { font-weight: 700; font-size: 14px; }
 
     /* ── TAKEAWAY BOX ── */
     .takeaway {
-      margin: 1.2em 0; padding: 16px 20px;
+      margin: 1.2em 0; padding: 18px 22px;
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 14px; color: var(--muted); line-height: 1.65;
+      border-radius: 10px; font-family: var(--sans);
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+      transition: border-color var(--transition);
     }
+    .takeaway:hover { border-color: rgba(255,255,255,0.1); }
     .takeaway strong { color: var(--text); }
 
     /* ── SOURCES ── */
     .sources {
       margin-top: 4em; padding-top: 2em;
-      border-top: 1px solid var(--border); font-family: 'Segoe UI', system-ui, sans-serif;
+      border-top: 1px solid var(--border); font-family: var(--sans);
     }
-    .sources h3 { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--label); margin-bottom: 12px; }
+    .sources h3 { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--label); margin-bottom: 14px; font-weight: 600; }
     .sources ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .sources li { font-size: 12px; color: var(--faint); padding-left: 14px; position: relative; line-height: 1.5; }
+    .sources li { font-size: 12px; color: var(--faint); padding-left: 16px; position: relative; line-height: 1.55; }
     .sources li::before { content: '·'; position: absolute; left: 0; color: var(--label); }
 
     /* ── FOOTER ── */
     footer {
-      text-align: center; padding: 32px 24px; color: var(--label);
-      font-size: 12px; font-family: 'Segoe UI', system-ui, sans-serif;
+      text-align: center; padding: 36px 24px; color: var(--label);
+      font-size: 12px; font-family: var(--sans);
       border-top: 1px solid var(--border);
+      line-height: 1.8;
     }
 
     /* ── RESPONSIVE ── */
@@ -573,7 +739,9 @@
       body { font-size: 16px; }
       .stage-strip { grid-template-columns: 1fr 1fr; }
       .stage-strip .sc-s5 { grid-column: span 2; }
-      .empire-lifespan-badge .years { font-size: 24px; }
+      .empire-lifespan-badge .years { font-size: 26px; }
+      blockquote::before { font-size: 64px; }
+      blockquote p { font-size: 18px; }
     }
   </style>
 </head>
@@ -588,848 +756,875 @@
   </div>
 </nav>
 
-<header class="hero">
-  <div class="hero-eyebrow">
-    <span class="tag tag-history">History</span>
-    <span class="tag tag-analysis">Analysis</span>
-    <span class="tag tag-geopolitics">Geopolitics</span>
-  </div>
-  <h1>Why Every Great Empire Eventually Falls — And Where Countries Stand Today</h1>
-  <p class="hero-sub">A British general studied every major empire in history and found the same five stages, every single time. Here is what he found, which countries are rising and falling right now, and what it means for America.</p>
-  <div class="hero-byline">
-    <div class="avatar">⚔️</div>
-    <div class="byline-text">
-      <strong>Historical Analysis</strong>
-      Based on Sir John Glubb's "The Fate of Empires" (1976) · Verified against SIPRI, CBO, Pew Research data
-    </div>
-  </div>
-</header>
+<div class="page-shell">
+  <div class="page-content">
 
-<div class="hero-divider"><hr /></div>
-
-<article>
-
-  <p class="lead">Every great empire in history — Rome, Britain, the Mongols, the Ottomans — went through the same five stages before collapsing. A British general named Sir John Glubb spent his career studying this pattern. His conclusion is simple, and it applies directly to today.</p>
-
-  <p>In 1976, Glubb published a short book called <em>The Fate of Empires</em> with one central claim:</p>
-
-  <blockquote>
-    <p>"Every empire, without exception, goes through the same five stages — in the same order, every single time."</p>
-    <cite>— Sir John Bagot Glubb, The Fate of Empires (1976)</cite>
-  </blockquote>
-
-  <p>He also said the average empire lasts about <strong>250 years.</strong> America is currently <strong>250 years old.</strong> That is why people are talking about this framework right now.</p>
-
-  <!-- ══ SECTION 1: THE FIVE STAGES ══ -->
-  <h2>The Five Stages — In Plain Language</h2>
-
-  <p>Think of an empire like a company. It starts with energy and ambition, builds success, gets comfortable, then slowly declines. Here is how Glubb described each stage:</p>
-
-  <div class="stages-list">
-    <div class="stage-item si-s1">
-      <div class="stage-item-header">
-        <span class="stage-item-num">Stage 1</span>
-        <span class="stage-item-name">The Hungry Years 🟢</span>
+    <header class="hero reveal">
+      <div class="hero-eyebrow">
+        <span class="tag tag-history">History</span>
+        <span class="tag tag-analysis">Analysis</span>
+        <span class="tag tag-geopolitics">Geopolitics</span>
       </div>
-      <div class="stage-item-desc">The country is poor but ambitious. Everyone is working hard. There is <strong>no corruption yet because there is no money to steal.</strong> The army is motivated. The leaders are focused. The mission is clear.</div>
-      <div class="stage-simple"><em>Simple version: Think of a startup with nothing to lose and everything to gain. They work 18-hour days. No ego. Just results.</em></div>
-    </div>
-
-    <div class="stage-item si-s2">
-      <div class="stage-item-header">
-        <span class="stage-item-num">Stage 2</span>
-        <span class="stage-item-name">The Trading Years 🔵</span>
+      <h1>Why Every Great Empire Eventually Falls — And Where Countries Stand Today</h1>
+      <p class="hero-sub">A British general studied every major empire in history and found the same five stages, every single time. Here is what he found, which countries are rising and falling right now, and what it means for America.</p>
+      <div class="hero-byline">
+        <div class="avatar">⚔️</div>
+        <div class="byline-text">
+          <strong>Historical Analysis</strong>
+          Based on Sir John Glubb's "The Fate of Empires" (1976) · Verified against SIPRI, CBO, Pew Research data
+        </div>
       </div>
-      <div class="stage-item-desc">Military strength turns into economic strength. The country starts controlling trade. People get richer. A middle class appears. This is the golden era — the country is <strong>both powerful and wealthy at the same time.</strong></div>
-      <div class="stage-simple"><em>Simple version: The startup just became a successful business. Money is coming in. Employees are well-paid. Everyone is proud of what they built.</em></div>
-    </div>
+    </header>
 
-    <div class="stage-item si-s3">
-      <div class="stage-item-header">
-        <span class="stage-item-num">Stage 3</span>
-        <span class="stage-item-name">The Comfortable Years 🟡</span>
+    <div class="hero-divider"><hr /></div>
+
+    <article>
+
+      <p class="lead reveal">Every great empire in history — Rome, Britain, the Mongols, the Ottomans — went through the same five stages before collapsing. A British general named Sir John Glubb spent his career studying this pattern. His conclusion is simple, and it applies directly to today.</p>
+
+      <p class="reveal">In 1976, Glubb published a short book called <em>The Fate of Empires</em> with one central claim:</p>
+
+      <blockquote class="reveal">
+        <p>"Every empire, without exception, goes through the same five stages — in the same order, every single time."</p>
+        <cite>— Sir John Bagot Glubb, The Fate of Empires (1976)</cite>
+      </blockquote>
+
+      <p class="reveal">He also said the average empire lasts about <strong>250 years.</strong> America is currently <strong>250 years old.</strong> That is why people are talking about this framework right now.</p>
+
+      <!-- ══ SECTION 1: THE FIVE STAGES ══ -->
+      <h2 id="toc-stages" class="reveal">The Five Stages — In Plain Language</h2>
+
+      <p class="reveal">Think of an empire like a company. It starts with energy and ambition, builds success, gets comfortable, then slowly declines. Here is how Glubb described each stage:</p>
+
+      <div class="stages-list">
+        <div class="stage-item si-s1 reveal">
+          <div class="stage-item-header">
+            <span class="stage-item-num">Stage 1</span>
+            <span class="stage-item-name">The Hungry Years 🟢</span>
+          </div>
+          <div class="stage-item-desc">The country is poor but ambitious. Everyone is working hard. There is <strong>no corruption yet because there is no money to steal.</strong> The army is motivated. The leaders are focused. The mission is clear.</div>
+          <div class="stage-simple"><em>Simple version: Think of a startup with nothing to lose and everything to gain. They work 18-hour days. No ego. Just results.</em></div>
+        </div>
+
+        <div class="stage-item si-s2 reveal">
+          <div class="stage-item-header">
+            <span class="stage-item-num">Stage 2</span>
+            <span class="stage-item-name">The Trading Years 🔵</span>
+          </div>
+          <div class="stage-item-desc">Military strength turns into economic strength. The country starts controlling trade. People get richer. A middle class appears. This is the golden era — the country is <strong>both powerful and wealthy at the same time.</strong></div>
+          <div class="stage-simple"><em>Simple version: The startup just became a successful business. Money is coming in. Employees are well-paid. Everyone is proud of what they built.</em></div>
+        </div>
+
+        <div class="stage-item si-s3 reveal">
+          <div class="stage-item-header">
+            <span class="stage-item-num">Stage 3</span>
+            <span class="stage-item-name">The Comfortable Years 🟡</span>
+          </div>
+          <div class="stage-item-desc">Wealth creates comfort. Comfort creates laziness. People start thinking <strong>"we have always been the best, so we will always be the best."</strong> Spending goes up. Hard work goes down. The warning signs are there but nobody wants to hear them.</div>
+          <div class="stage-simple"><em>Simple version: The successful business starts getting sloppy. Managers fly first class. Nobody questions wasteful spending. The hunger is gone.</em></div>
+        </div>
+
+        <div class="stage-item si-s4 reveal">
+          <div class="stage-item-header">
+            <span class="stage-item-num">Stage 4</span>
+            <span class="stage-item-name">The Broken Years 🔴</span>
+          </div>
+          <div class="stage-item-desc">Four problems appear at the same time and make each other worse: military spends more but achieves less, debt piles up beyond control, the currency loses trust, and society splits apart. The worst part? <strong>Nobody fixes it</strong> — because the people who could fix it are the same people benefiting from the broken system.</div>
+          <div class="stage-simple"><em>Simple version: The company is bleeding money, the CEO is getting huge bonuses, and the board refuses to change anything because they all own stock in the failing divisions.</em></div>
+        </div>
+
+        <div class="stage-item si-s5 reveal">
+          <div class="stage-item-header">
+            <span class="stage-item-num">Stage 5</span>
+            <span class="stage-item-name">The Fall 🟣</span>
+          </div>
+          <div class="stage-item-desc">Three things happen at once: the currency collapses, allies start leaving, and the country tears itself apart from the inside. <strong>It does not happen overnight.</strong> But once all three start, history shows it does not reverse.</div>
+          <div class="stage-simple"><em>Simple version: The company files for bankruptcy. Not in one day — but looking back, all the signs were there for years.</em></div>
+        </div>
       </div>
-      <div class="stage-item-desc">Wealth creates comfort. Comfort creates laziness. People start thinking <strong>"we have always been the best, so we will always be the best."</strong> Spending goes up. Hard work goes down. The warning signs are there but nobody wants to hear them.</div>
-      <div class="stage-simple"><em>Simple version: The successful business starts getting sloppy. Managers fly first class. Nobody questions wasteful spending. The hunger is gone.</em></div>
-    </div>
 
-    <div class="stage-item si-s4">
-      <div class="stage-item-header">
-        <span class="stage-item-num">Stage 4</span>
-        <span class="stage-item-name">The Broken Years 🔴</span>
+      <!-- ══ SECTION 2: HOW LONG DO EMPIRES LAST ══ -->
+      <h2 id="toc-lifespan" class="reveal">How Long Do Empires Actually Last?</h2>
+
+      <p class="reveal">Glubb said 250 years on average. But here is the truth — the real range is enormous:</p>
+
+      <div class="lifespan-table-wrap reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>Empire</th>
+              <th>Period</th>
+              <th class="bar-cell">Lifespan</th>
+              <th>Compared to Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Roman Empire</td>
+              <td>509 BCE – 476 CE</td>
+              <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div></td>
+              <td><span class="yrs-label">~985 yrs</span> <span class="outlier">Nearly 4× longer</span></td>
+            </tr>
+            <tr>
+              <td>Ottoman Empire</td>
+              <td>1299 – 1922</td>
+              <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:63%"></div></div></td>
+              <td><span class="yrs-label">~623 yrs</span> <span class="outlier">2.5× longer ⚠️</span></td>
+            </tr>
+            <tr>
+              <td>Abbasid Caliphate</td>
+              <td>750 – 1258 CE</td>
+              <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:52%"></div></div></td>
+              <td><span class="yrs-label">~508 yrs</span> <span class="outlier">2× longer</span></td>
+            </tr>
+            <tr>
+              <td>Spanish Empire</td>
+              <td>1492 – 1898</td>
+              <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:41%"></div></div></td>
+              <td><span class="yrs-label">~406 yrs</span></td>
+            </tr>
+            <tr>
+              <td>British Empire</td>
+              <td>1588 – 1947</td>
+              <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:36%"></div></div></td>
+              <td><span class="yrs-label">~359 yrs</span></td>
+            </tr>
+            <tr class="row-america-t">
+              <td>United States ●</td>
+              <td>1776 – present</td>
+              <td class="bar-cell bar-america"><div class="bar-bg"><div class="bar-fill" style="width:25%"></div></div></td>
+              <td><span class="yrs-label yrs-america">~250 yrs</span> Right at the average</td>
+            </tr>
+            <tr>
+              <td>Mongol Empire</td>
+              <td>1206 – 1368</td>
+              <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:16%"></div></div></td>
+              <td><span class="yrs-label">~162 yrs</span> <span class="fast">⚡ Fastest collapse</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="stage-item-desc">Four problems appear at the same time and make each other worse: military spends more but achieves less, debt piles up beyond control, the currency loses trust, and society splits apart. The worst part? <strong>Nobody fixes it</strong> — because the people who could fix it are the same people benefiting from the broken system.</div>
-      <div class="stage-simple"><em>Simple version: The company is bleeding money, the CEO is getting huge bonuses, and the board refuses to change anything because they all own stock in the failing divisions.</em></div>
-    </div>
 
-    <div class="stage-item si-s5">
-      <div class="stage-item-header">
-        <span class="stage-item-num">Stage 5</span>
-        <span class="stage-item-name">The Fall 🟣</span>
+      <p class="reveal"><strong>What this tells us:</strong> 250 years is a rough average, not a deadline. Some empires lasted 1,000 years. Some fell in 162. America being at the "average" age is interesting — but it is not a death sentence.</p>
+
+      <!-- ══ SECTION 3: SIX EMPIRES ══ -->
+      <h2 id="toc-empires" class="reveal">Six Empires — What Happened to Each One</h2>
+
+      <!-- ROME -->
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>🏛️ Rome — Nearly 1,000 Years</h2>
+          <div class="empire-dates">509 BCE – 476 CE (Western Roman Empire)</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years">~985</span>
+          <span class="years-label">years</span>
+        </div>
       </div>
-      <div class="stage-item-desc">Three things happen at once: the currency collapses, allies start leaving, and the country tears itself apart from the inside. <strong>It does not happen overnight.</strong> But once all three start, history shows it does not reverse.</div>
-      <div class="stage-simple"><em>Simple version: The company files for bankruptcy. Not in one day — but looking back, all the signs were there for years.</em></div>
-    </div>
-  </div>
-
-  <!-- ══ SECTION 2: HOW LONG DO EMPIRES LAST ══ -->
-  <h2>How Long Do Empires Actually Last?</h2>
-
-  <p>Glubb said 250 years on average. But here is the truth — the real range is enormous:</p>
-
-  <div class="lifespan-table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Empire</th>
-          <th>Period</th>
-          <th class="bar-cell">Lifespan</th>
-          <th>Compared to Average</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Roman Empire</td>
-          <td>509 BCE – 476 CE</td>
-          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div></td>
-          <td><span class="yrs-label">~985 yrs</span> <span class="outlier">Nearly 4× longer</span></td>
-        </tr>
-        <tr>
-          <td>Ottoman Empire</td>
-          <td>1299 – 1922</td>
-          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:63%"></div></div></td>
-          <td><span class="yrs-label">~623 yrs</span> <span class="outlier">2.5× longer ⚠️</span></td>
-        </tr>
-        <tr>
-          <td>Abbasid Caliphate</td>
-          <td>750 – 1258 CE</td>
-          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:52%"></div></div></td>
-          <td><span class="yrs-label">~508 yrs</span> <span class="outlier">2× longer</span></td>
-        </tr>
-        <tr>
-          <td>Spanish Empire</td>
-          <td>1492 – 1898</td>
-          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:41%"></div></div></td>
-          <td><span class="yrs-label">~406 yrs</span></td>
-        </tr>
-        <tr>
-          <td>British Empire</td>
-          <td>1588 – 1947</td>
-          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:36%"></div></div></td>
-          <td><span class="yrs-label">~359 yrs</span></td>
-        </tr>
-        <tr class="row-america-t">
-          <td>United States ●</td>
-          <td>1776 – present</td>
-          <td class="bar-cell bar-america"><div class="bar-bg"><div class="bar-fill" style="width:25%"></div></div></td>
-          <td><span class="yrs-label yrs-america">~250 yrs</span> Right at the average</td>
-        </tr>
-        <tr>
-          <td>Mongol Empire</td>
-          <td>1206 – 1368</td>
-          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:16%"></div></div></td>
-          <td><span class="yrs-label">~162 yrs</span> <span class="fast">⚡ Fastest collapse</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p><strong>What this tells us:</strong> 250 years is a rough average, not a deadline. Some empires lasted 1,000 years. Some fell in 162. America being at the "average" age is interesting — but it is not a death sentence.</p>
-
-  <!-- ══ SECTION 3: SIX EMPIRES ══ -->
-  <h2>Six Empires — What Happened to Each One</h2>
-
-  <!-- ROME -->
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>🏛️ Rome — Nearly 1,000 Years</h2>
-      <div class="empire-dates">509 BCE – 476 CE (Western Roman Empire)</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years">~985</span>
-      <span class="years-label">years</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">509–264 BCE</div>
-      <div class="strip-event">Fought massive wars and kept winning even after crushing defeats</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">264–133 BCE</div>
-      <div class="strip-event">Controlled all trade around the Mediterranean Sea</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">133–31 BCE</div>
-      <div class="strip-event">Romans grew rich and started fighting each other for power</div>
-    </div>
-    <div class="strip-cell sc-s4">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">31 BCE–235 CE</div>
-      <div class="strip-event">Started printing fake money. Bread and entertainment replaced hard work.</div>
-    </div>
-    <div class="strip-cell sc-s5">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">235–476 CE</div>
-      <div class="strip-event">26 emperors in 50 years. Armies weakened. Barbarians took over.</div>
-    </div>
-  </div>
-
-  <p>Rome started as a scrappy city-state that refused to quit. It lost catastrophically to Carthage at Cannae — 80,000 soldiers killed in one day — and kept fighting. That refusal to stop is Stage 1 in its purest form.</p>
-
-  <p>Stage 4 is where the Roman parallel to today is sharpest. <strong>The Roman government debased its currency — it reduced the silver content of its coins from 85% to just 5%</strong> — to pay its bills. Military spending stayed enormous, but the quality of the army declined. Bread and entertainment (the Colosseum, chariot races) became official state policy to keep the population distracted. Twenty-six different emperors in 50 years during Stage 5. Most died violently in office.</p>
-
-  <div class="verdict">
-    <div class="verdict-label">Key Lesson from Rome</div>
-    The government started printing fake money to cover its debts. Society split into rich and poor. The military spent more and achieved less. Sound familiar?
-  </div>
-
-  <!-- BRITAIN -->
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>🇬🇧 Britain — 359 Years</h2>
-      <div class="empire-dates">1588 – 1947</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years">~359</span>
-      <span class="years-label">years</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">1588–1650</div>
-      <div class="strip-event">Defeated the Spanish Armada and started building a global empire</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">1650–1750</div>
-      <div class="strip-event">The East India Company made Britain the richest trading nation on earth</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">1750–1850</div>
-      <div class="strip-event">The Industrial Revolution made Britain the "workshop of the world"</div>
-    </div>
-    <div class="strip-cell sc-s4">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">1850–1939</div>
-      <div class="strip-event">Expensive wars with fewer results. Debt grew. Military strength faded.</div>
-    </div>
-    <div class="strip-cell sc-s5">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">1939–1949</div>
-      <div class="strip-event">WWII destroyed British finances. India left. The dollar replaced the pound.</div>
-    </div>
-  </div>
-
-  <p>The most instructive lesson from Britain is not the rise — it is the <strong>speed of collapse.</strong> In 1939, Britain was still the largest empire in human history. By 1949 — just <strong>ten years later</strong> — India was independent, Palestine had collapsed, and the dollar had replaced the pound as the world's reserve currency.</p>
-
-  <div class="callout callout-danger">
-    <div class="callout-label">The Most Shocking Fact About Britain</div>
-    <p>Britain went from being the largest empire in human history to a mid-sized power in a single decade. The conditions for collapse had been building for 90 years. The actual collapse took 10. <strong>Collapse can be very sudden.</strong></p>
-  </div>
-
-  <!-- OTTOMAN -->
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>🕌 The Ottoman Empire — 623 Years <span class="outlier">↑ 2.5× average</span></h2>
-      <div class="empire-dates">1299 – 1922</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years">~623</span>
-      <span class="years-label">years</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">1299–1453</div>
-      <div class="strip-event">Conquered Constantinople and built an empire across three continents</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">1453–1566</div>
-      <div class="strip-event">Suleiman the Magnificent — controlled the Silk Road, peak power</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">1566–1699</div>
-      <div class="strip-event">Built beautiful cities and great laws but stopped expanding</div>
-    </div>
-    <div class="strip-cell sc-s4">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">1699–1870</div>
-      <div class="strip-event">Lost wars to Europe. Called "the sick man of Europe." But kept reforming.</div>
-    </div>
-    <div class="strip-cell sc-s5">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">1870–1922</div>
-      <div class="strip-event">World War I finished them off. Empire dissolved in 1922.</div>
-    </div>
-  </div>
-
-  <p>The Ottomans are the most important exception to Glubb's theory — and the one version people most often ignore. At 623 years, they lasted 2.5 times the supposed average. <strong>They spent 170 years in Stage 4</strong> — longer than Glubb says an average empire lives in total.</p>
-
-  <p>How? Through genuine reform. The Tanzimat reforms of 1839 modernized the military, legal system, and bureaucracy. The empire adapted — imperfectly, but enough to survive another 80 years. Stage 5 came eventually regardless. But the delay proves that Stage 4 is not an instant death sentence.</p>
-
-  <div class="callout callout-warn">
-    <div class="callout-label">Why The Ottomans Matter</div>
-    <p>They were called "the sick man of Europe" for 170 years — and survived. <strong>Change is possible even in Stage 4.</strong> It is very hard, and no empire has escaped it permanently. But the Ottoman case proves that reform can buy generations of time.</p>
-  </div>
-
-  <!-- MONGOLS -->
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>⚔️ The Mongols — 162 Years <span class="fast">↓ Fastest collapse</span></h2>
-      <div class="empire-dates">1206 – 1368</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years">~162</span>
-      <span class="years-label">years</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">1206–1227</div>
-      <div class="strip-event">Genghis Khan united the tribes and conquered half the world in 21 years</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">1227–1260</div>
-      <div class="strip-event">Created the safest trade route in history — the Silk Road under Mongol protection</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">1260–1294</div>
-      <div class="strip-event">The empire reached its cultural and artistic peak under Kublai Khan</div>
-    </div>
-    <div class="strip-cell sc-s4">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">1294–1335</div>
-      <div class="strip-event">The four parts of the empire started fighting each other</div>
-    </div>
-    <div class="strip-cell sc-s5">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">1335–1368</div>
-      <div class="strip-event">The Black Death spread through their own trade routes. China rebelled.</div>
-    </div>
-  </div>
-
-  <p>Genghis Khan's unification of the Mongol tribes is one of the most astonishing military achievements in history. Within 21 years, the Mongol army had conquered half the known world. The Pax Mongolica — peace under Mongol rule — made the Silk Road function better than ever. Marco Polo's journey from Venice to China was only possible because the Mongols controlled the entire route.</p>
-
-  <div class="verdict">
-    <div class="verdict-label">Key Lesson from the Mongols</div>
-    Sometimes an outside disaster accelerates a collapse that was already coming. The Mongols opened the Silk Road — and the same road carried the plague that destroyed them. Stage 4 creates vulnerability. External shocks do the rest.
-  </div>
-
-  <!-- ABBASID -->
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>🕌 The Abbasid Caliphate — 508 Years</h2>
-      <div class="empire-dates">750 – 1258 CE</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years">~508</span>
-      <span class="years-label">years</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">750–800</div>
-      <div class="strip-event">Revolution brought new rulers to power. Baghdad was built as the capital.</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">800–900</div>
-      <div class="strip-event">The House of Wisdom translated science from across the world. Greatest city on earth.</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">900–1000</div>
-      <div class="strip-event">Peak of Islamic Golden Age — mathematics, astronomy, medicine.</div>
-    </div>
-    <div class="strip-cell sc-s4">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">1000–1200</div>
-      <div class="strip-event">Foreign generals took real power. The Caliph became a figurehead with no real authority.</div>
-    </div>
-    <div class="strip-cell sc-s5">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">1200–1258</div>
-      <div class="strip-event">The Mongols sacked Baghdad and destroyed the House of Wisdom. Everything was burned.</div>
-    </div>
-  </div>
-
-  <p>The Abbasid Caliphate produced the Islamic Golden Age — algebra was invented here, astronomical observations were made that Europeans wouldn't match for centuries, and Baghdad was the wealthiest city in the world.</p>
-
-  <div class="verdict">
-    <div class="verdict-label">Key Lesson from the Abbasids</div>
-    When the people running the country stop working <em>for</em> the country and start working <em>for themselves</em>, the decline has already begun — even if it takes 200 years to finish.
-  </div>
-
-  <!-- SPANISH -->
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>⚓ The Spanish Empire — 406 Years</h2>
-      <div class="empire-dates">1492 – 1898</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years">~406</span>
-      <span class="years-label">years</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">1492–1550</div>
-      <div class="strip-event">Columbus reached America. Spain conquered the Aztec and Inca empires within 60 years.</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">1550–1650</div>
-      <div class="strip-event">Silver mines in South America made Spain the richest country in the world</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">1650–1750</div>
-      <div class="strip-event">Great art and literature. But the industrial base was being hollowed out.</div>
-    </div>
-    <div class="strip-cell sc-s4">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">1750–1825</div>
-      <div class="strip-event">Too much silver caused inflation. Wars drained the treasury. Colonies grew restless.</div>
-    </div>
-    <div class="strip-cell sc-s5">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">1825–1898</div>
-      <div class="strip-event">Every colony in South America declared independence. The Spanish-American War finished it.</div>
-    </div>
-  </div>
-
-  <p>Spain controlled the world's reserve currency — silver. Everyone needed Spanish silver to trade globally. Spain used this privilege to buy things instead of building things. When the silver ran out, there was nothing underneath. The currency collapsed and the empire fell with it.</p>
-
-  <div class="callout callout-info">
-    <div class="callout-label">The Most Relevant Lesson for Today</div>
-    <p>Spain had the world's reserve currency for two centuries. It used that privilege to avoid building real industry. When the silver ran out, the empire collapsed — not because it lost a war, but because its financial foundation was extracted rather than built. <strong>The dollar parallel is direct.</strong></p>
-  </div>
-
-  <!-- ══ SECTION 4: AMERICA ══ -->
-  <h2>America Right Now — Which Stage Is It In?</h2>
-
-  <p><strong>Answer: Stage 4 — The Broken Years.</strong></p>
-
-  <div class="empire-header">
-    <div class="empire-header-left">
-      <h2>🇺🇸 United States of America</h2>
-      <div class="empire-dates">1776 – present (Stage 4, ongoing)</div>
-    </div>
-    <div class="empire-lifespan-badge">
-      <span class="years" style="background: linear-gradient(135deg, #ef4444, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">~250</span>
-      <span class="years-label">years so far</span>
-    </div>
-  </div>
-
-  <div class="stage-strip">
-    <div class="strip-cell sc-s1">
-      <div class="strip-stage">Hungry Years</div>
-      <div class="strip-dates">1776–1945</div>
-      <div class="strip-event">Won independence, expanded across a continent, won World War II</div>
-    </div>
-    <div class="strip-cell sc-s2">
-      <div class="strip-stage">Trading Years</div>
-      <div class="strip-dates">1945–1971</div>
-      <div class="strip-event">The dollar became the world's currency. Moon landing. Strongest middle class ever.</div>
-    </div>
-    <div class="strip-cell sc-s3">
-      <div class="strip-stage">Comfortable Years</div>
-      <div class="strip-dates">1971–2001</div>
-      <div class="strip-event">Moved factories to China. Financial sector replaced manufacturing. Wages stopped rising.</div>
-    </div>
-    <div class="strip-cell sc-s4 sc-s4-active">
-      <div class="strip-stage">Broken Years</div>
-      <div class="strip-dates">2001–present</div>
-      <div class="strip-event">$36T debt; military without wins; dollar contested</div>
-      <span class="here-pill"><span class="pulse-dot"></span>YOU ARE HERE</span>
-    </div>
-    <div class="strip-cell sc-s5 sc-s5-dim">
-      <div class="strip-stage">The Fall</div>
-      <div class="strip-dates">TBD</div>
-      <div class="strip-event">Reserve currency loss would be the trigger</div>
-    </div>
-  </div>
-
-  <p>All four of Glubb's Stage 4 symptoms are present at the same time:</p>
-
-  <div class="problem-card">
-    <h3>Problem 1 — Military Spending Doesn't Produce Results</h3>
-    <p>America spends <strong>$997 billion per year</strong> on its military — more than the next 9 countries combined. But it could not win in Afghanistan after 20 years. Could not stabilise Iraq.</p>
-    <p>The F-35 fighter jet cost $100 million per plane, took 26 years to build, and exists partly because it provides jobs in 45 out of 50 states — making it politically impossible to cancel. <strong>The military budget has become a jobs programme, not a defence strategy.</strong></p>
-  </div>
-
-  <div class="problem-card">
-    <h3>Problem 2 — The Debt Is Out of Control</h3>
-    <p>Total national debt: <strong>$36 trillion.</strong> America now pays <strong>$1 trillion per year</strong> just in interest — not paying off the debt, just the interest. It borrows new money to pay the interest on old money. The interest on the new money adds to the debt. This is a spiral that has no natural exit.</p>
-  </div>
-
-  <div class="problem-card">
-    <h3>Problem 3 — Other Countries Are Moving Away from the Dollar</h3>
-    <p>The dollar has been the world's reserve currency since World War II. But in 2022, America froze $300 billion of Russia's money overnight. Every country watching thought: <em>"If they can do that to Russia, they can do it to us."</em></p>
-    <p>The result: Countries are quietly moving away from the dollar. Saudi Arabia is selling oil to China in yuan. Central banks worldwide are buying gold instead of dollars. <strong>The privilege is being eroded.</strong></p>
-  </div>
-
-  <div class="problem-card">
-    <h3>Problem 4 — Society Is Splitting Apart</h3>
-    <p>The richest 1% own more than the bottom 90% combined. Real wages have barely grown in 50 years. Life expectancy is declining. Public trust in government, media, and institutions is at historic lows. <strong>The social contract is fraying.</strong></p>
-  </div>
-
-  <!-- ══ SECTION 5: WHY NOBODY FIXES IT ══ -->
-  <h2>Why Nobody Fixes It</h2>
-
-  <p>Here is the part that makes this pattern so hard to break. Every powerful person in America is making a <em>rational</em> decision for themselves:</p>
-
-  <div class="simple-table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Who</th>
-          <th>Their Rational Choice</th>
-          <th>The Overall Result</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Weapons companies</td>
-          <td>Fund politicians who support wars — good for business</td>
-          <td>Wars that can't be won keep happening</td>
-        </tr>
-        <tr>
-          <td>Big banks</td>
-          <td>Fight any alternative to the dollar</td>
-          <td>The dollar stays weaponised</td>
-        </tr>
-        <tr>
-          <td>Politicians</td>
-          <td>Accept money from weapons companies and banks</td>
-          <td>Serve those interests, not the public</td>
-        </tr>
-        <tr>
-          <td>TV news</td>
-          <td>Take advertising money from weapons companies</td>
-          <td>Don't report things that upset advertisers</td>
-        </tr>
-        <tr>
-          <td>Military generals</td>
-          <td>Know their retirement jobs are with defence companies</td>
-          <td>Never challenge the system</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>Every single decision makes sense for the individual. Together, they destroy the country.</p>
-
-  <p>This is the trap that <strong>every empire in Stage 4 has fallen into.</strong> The Ottoman Empire fought it for 170 years with genuine reforms. No other empire in history has successfully escaped it from the inside.</p>
-
-  <!-- ══ SECTION 6: WHAT DATA SHOWS ══ -->
-  <h2>What the Data Shows — Four Key Findings</h2>
-
-  <div class="findings-grid">
-    <div class="finding-card fc-amber">
-      <div class="finding-num">Finding 1</div>
-      <div class="finding-title">250 years is not a deadline</div>
-      <div class="finding-body">The range runs from 162 years (Mongol) to 985 years (Rome) — a 6× spread. America at 250 years sits near the average, but the average predicts nothing about any individual case. The Ottoman Empire was "overdue" by Glubb's reckoning for 370 years.</div>
-    </div>
-    <div class="finding-card fc-red">
-      <div class="finding-num">Finding 2</div>
-      <div class="finding-title">Stage 4 can last a long time</div>
-      <div class="finding-body">The Ottomans spent ~170 years in Stage 4 through reform. Rome spent ~265 years. Britain spent ~89 years. America has been in Stage 4 for approximately 25 years. There is no reliable estimate for how long it lasts.</div>
-    </div>
-    <div class="finding-card fc-blue">
-      <div class="finding-num">Finding 3</div>
-      <div class="finding-title">Stage 5 can be very fast</div>
-      <div class="finding-body">The British Empire collapsed from largest in history to a mid-sized power in one decade. Gradual decline is not guaranteed — convergent pressures can produce rapid, sudden collapse. The conditions build slowly. The break can happen overnight.</div>
-    </div>
-    <div class="finding-card fc-green">
-      <div class="finding-num">Finding 4</div>
-      <div class="finding-title">Outside shocks speed up collapse</div>
-      <div class="finding-body">The Mongol collapse was accelerated by the Black Death. British by WWII. Spanish by the Napoleonic Wars. Stage 4 conditions create vulnerability. External shocks eliminate whatever resilience remains.</div>
-    </div>
-  </div>
-
-  <!-- ══ SECTION 7: WHO IS RISING ══ -->
-  <h2>Who Is Rising Right Now?</h2>
-
-  <p>While some countries are declining, others are in the hungry, disciplined Stage 1 phase — building, expanding, full of purpose.</p>
-
-  <div class="country-card">
-    <h3>🇮🇳 India — The Clearest Stage 1 Country Today</h3>
-    <div class="country-stats">
-      <span class="cstat">6–7% annual growth</span>
-      <span class="cstat">1.44 billion people</span>
-      <span class="cstat">Median age: 28</span>
-      <span class="cstat">$720B exports (2025-26)</span>
-    </div>
-    <p>India is growing at 6–7% per year — the fastest of any large economy. Its population of 1.44 billion is now the world's largest, with an average age of just 28. It is the 3rd most powerful military in the world and is deliberately building factories at home instead of buying everything from abroad.</p>
-    <p>India today is where America was in the 1880s-1910s. Big, growing, disciplined, and hungry. Not yet rich enough to be complacent.</p>
-  </div>
-
-  <div class="country-card">
-    <h3>🇨🇳 China — Late Stage 1, Entering Stage 2</h3>
-    <div class="country-stats">
-      <span class="cstat">Economy grew 76% in one decade</span>
-      <span class="cstat">31 years of military growth</span>
-      <span class="cstat">BRI in 140+ countries</span>
-    </div>
-    <p>China is the most powerful rising force on earth right now. Its economy grew from $11 trillion to $19.5 trillion in a decade. Military spending has grown for 31 consecutive years. The Belt and Road Initiative has built roads, ports, and railways in 140+ countries.</p>
-    <p>The complication: China is also getting rich. A middle class of 400 million has emerged. Wealth inequality is rising. These are early Stage 2 and Stage 3 signals. China is right on the edge.</p>
-  </div>
-
-  <div class="country-card">
-    <h3>🇦🇪 🇸🇦 UAE and Saudi Arabia — Conquering With Money, Not Armies</h3>
-    <div class="country-stats">
-      <span class="cstat">UAE: 80% non-oil economy</span>
-      <span class="cstat">Saudi: $700B investment fund</span>
-      <span class="cstat">Vision 2030</span>
-    </div>
-    <p>These countries have invented a new type of Stage 1 expansion: conquest by investment. Instead of armies, they use sovereign wealth funds — giant pots of money deployed strategically to buy influence worldwide.</p>
-    <p>The UAE has moved 80% of its economy away from oil — extraordinary for a Gulf state. Saudi Arabia is building NEOM, a $500 billion futuristic city from scratch, and is now selling oil in Chinese currency — a deliberate hedge against dollar dependence.</p>
-  </div>
-
-  <div class="country-card">
-    <h3>🇹🇷 Turkey — Military Expansion in Five Countries at Once</h3>
-    <div class="country-stats">
-      <span class="cstat">Active in Syria, Libya, Somalia, Azerbaijan</span>
-      <span class="cstat">Bayraktar TB2 drone exports</span>
-      <span class="cstat">Controls the Bosphorus Strait</span>
-    </div>
-    <p>Turkey's military is currently active in five countries simultaneously. It has built world-class military drones (Bayraktar TB2) now exported globally. It controls the Bosphorus Strait — the only sea passage between the Black Sea and the Mediterranean — and has positioned itself as a negotiator between NATO and Russia. Textbook Stage 1 external behaviour.</p>
-  </div>
-
-  <div class="country-card">
-    <h3>🇮🇩 Indonesia — The Sleeping Giant</h3>
-    <div class="country-stats">
-      <span class="cstat">280 million people</span>
-      <span class="cstat">Controls Strait of Malacca</span>
-      <span class="cstat">World's largest nickel reserves</span>
-      <span class="cstat">5%+ annual growth</span>
-    </div>
-    <p>Indonesia does not get much attention. It should. 280 million people. Controls the Strait of Malacca — 40% of all global trade passes through it. Has the world's largest nickel reserves, critical for electric car batteries. As global supply chains move away from China, Indonesia is becoming the new manufacturing hub of Southeast Asia.</p>
-  </div>
-
-  <div class="country-card">
-    <h3>🇻🇳 Vietnam — The Quiet Overachiever</h3>
-    <div class="country-stats">
-      <span class="cstat">6–7% growth for a decade</span>
-      <span class="cstat">Samsung, Apple, Intel production</span>
-      <span class="cstat">Median age: 32</span>
-    </div>
-    <p>Samsung, Apple, and Intel have all moved major production to Vietnam. It maintains good relationships with both the US and China — a smart hedge. A country that defeated both France and America militarily has deep institutional memory of what resilience looks like.</p>
-  </div>
-
-  <!-- ══ SECTION 8: WORLD MAP ══ -->
-  <h2>The Complete World Map — Every Country, Every Stage</h2>
-
-  <p>Here is where every major country sits today in Glubb's framework. This is a thinking tool, not a verdict. Countries can be between stages. Use this as a lens, not a law.</p>
-
-  <div class="world-stage ws-s1">
-    <div class="world-stage-header">
-      <span class="world-stage-title">🟢 Stage 1 — Rising and Hungry</span>
-      <span class="world-stage-sub">Fast growth · Young population · Expanding influence</span>
-    </div>
-    <table>
-      <thead><tr><th>Country</th><th>Why Stage 1</th><th>How They're Expanding</th></tr></thead>
-      <tbody>
-        <tr><td>🇮🇳 India</td><td>6-7% growth, median age 28, building manufacturing</td><td>Economy + Military</td></tr>
-        <tr><td>🇨🇳 China</td><td>31 years of military growth, BRI in 140+ countries</td><td>Economy + Military</td></tr>
-        <tr><td>🇦🇪 UAE</td><td>80% non-oil economy, global investment, AI hub</td><td>Investment / Capital</td></tr>
-        <tr><td>🇸🇦 Saudi Arabia</td><td>Vision 2030, $700B investment fund, NEOM</td><td>Investment / Energy</td></tr>
-        <tr><td>🇹🇷 Turkey</td><td>Military in 5 countries, drone exports, Bosphorus control</td><td>Military + Industry</td></tr>
-        <tr><td>🇮🇩 Indonesia</td><td>280M people, Malacca Strait, world's largest nickel reserves</td><td>Resources + Trade</td></tr>
-        <tr><td>🇻🇳 Vietnam</td><td>Manufacturing replacing China, 6-7% growth</td><td>Industry</td></tr>
-        <tr><td>🇪🇹 Ethiopia</td><td>130M people, Grand Renaissance Dam, regional power</td><td>Regional</td></tr>
-        <tr><td>🇧🇩 Bangladesh</td><td>World's 2nd largest clothing exporter, 6% growth</td><td>Industry</td></tr>
-        <tr><td>🇵🇭 Philippines</td><td>6% growth, South China Sea location, median age 25</td><td>Economy + Strategic</td></tr>
-        <tr><td>🇳🇬 Nigeria</td><td>Africa's largest economy, 220M people</td><td>Regional</td></tr>
-        <tr><td>🇷🇼 Rwanda</td><td>Africa's best-run government, 7-8% growth</td><td>Governance</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="world-stage ws-s2">
-    <div class="world-stage-header">
-      <span class="world-stage-title">🔵 Stage 2 — Trading and Prospering</span>
-      <span class="world-stage-sub">Controlling trade routes · Wealth accumulating · Globally respected</span>
-    </div>
-    <table>
-      <thead><tr><th>Country</th><th>Why Stage 2</th><th>What They Control</th></tr></thead>
-      <tbody>
-        <tr><td>🇹🇼 Taiwan</td><td>8% GDP growth (2025), makes 90% of world's advanced chips</td><td>The global chip supply</td></tr>
-        <tr><td>🇵🇱 Poland</td><td>Europe's new manufacturing hub, 3-4% growth</td><td>European supply chains</td></tr>
-        <tr><td>🇲🇽 Mexico</td><td>Biggest winner of US-China trade split, factories booming</td><td>North American manufacturing</td></tr>
-        <tr><td>🇲🇾 Malaysia</td><td>Semiconductor hub, Malacca Strait, 5% growth</td><td>Asian trade routes</td></tr>
-        <tr><td>🇹🇭 Thailand</td><td>Manufacturing + tourism hub, EV battery investment</td><td>Southeast Asian trade</td></tr>
-        <tr><td>🇸🇬 Singapore</td><td>World's busiest port, top financial hub</td><td>Southeast Asian finance</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="world-stage ws-s3">
-    <div class="world-stage-header">
-      <span class="world-stage-title">🟡 Stage 3 — Comfortable but Slowing</span>
-      <span class="world-stage-sub">High living standards · Strong institutions · Growth slowing</span>
-    </div>
-    <table>
-      <thead><tr><th>Country</th><th>Why Stage 3</th><th>The Warning Signs</th></tr></thead>
-      <tbody>
-        <tr><td>🇰🇷 South Korea</td><td>Advanced economy, high standard of living</td><td>Fertility rate 0.72 — lowest in the world. Losing ground to Taiwan.</td></tr>
-        <tr><td>🇦🇺 Australia</td><td>High quality of life, commodity wealth</td><td>Over-reliant on selling to China. Housing crisis. Aging population.</td></tr>
-        <tr><td>🇨🇦 Canada</td><td>Strong institutions, natural resources</td><td>Housing unaffordable. Growth depends on immigration. Productivity falling.</td></tr>
-        <tr><td>🇸🇪 🇳🇴 🇩🇰 Nordics</td><td>World's best quality of life</td><td>Very small populations. Aging. Dependent on global trade.</td></tr>
-        <tr><td>🇳🇿 New Zealand</td><td>Stable democracy, beautiful country</td><td>Young people leaving. Productivity stagnating.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="world-stage ws-s4">
-    <div class="world-stage-header">
-      <span class="world-stage-title">🔴 Stage 4 — Broken and Struggling to Fix It</span>
-      <span class="world-stage-sub">Debt out of control · Military without results · Social trust collapsing</span>
-    </div>
-    <table>
-      <thead><tr><th>Country</th><th>The Main Problem</th><th>Key Evidence</th></tr></thead>
-      <tbody>
-        <tr><td>🇺🇸 USA</td><td>All four Stage 4 symptoms at once</td><td>$36T debt, $997B military without wins, top 1% owns more than bottom 90%</td></tr>
-        <tr><td>🇯🇵 Japan</td><td>Debt and demographics</td><td>Debt = 195% of GDP. Population falling from 135M to 96M by 2060. 30+ years of near-zero growth.</td></tr>
-        <tr><td>🇬🇧 UK</td><td>Lost its role, can't agree on what it is now</td><td>Brexit chaos. NHS collapsing. 5 Prime Ministers in 3 years.</td></tr>
-        <tr><td>🇩🇪 Germany</td><td>Its entire economic model broke</td><td>Needed cheap Russian gas + Chinese buyers. Lost both. 5 years of stagnation.</td></tr>
-        <tr><td>🇫🇷 France</td><td>Political paralysis + debt</td><td>GDP growth 0.6% (2025). Protests against every reform. Debt rising.</td></tr>
-        <tr><td>🇮🇹 Italy</td><td>Demographic and financial spiral</td><td>Debt at 140% of GDP. Population shrinking. Young people leaving.</td></tr>
-        <tr><td>🇷🇺 Russia</td><td>War that costs more than it gains</td><td>21-22% inflation. Military budget = 40% of all spending. Emergency fund nearly empty.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="world-stage ws-s5">
-    <div class="world-stage-header">
-      <span class="world-stage-title">🟣 Stage 5 — Collapsed or Collapsing</span>
-      <span class="world-stage-sub">Currency collapsed · Government cannot function · Basic services broken down</span>
-    </div>
-    <table>
-      <thead><tr><th>Country</th><th>What Happened</th><th>The Main Cause</th></tr></thead>
-      <tbody>
-        <tr><td>🇻🇪 Venezuela</td><td>Economy shrank by 80% since 2013. 8 million people fled.</td><td>Government printed money until it was worthless. Corruption destroyed institutions.</td></tr>
-        <tr><td>🇱🇧 Lebanon</td><td>The pound lost 98% of its value since 2019. Banks frozen.</td><td>Banks collapsed. Political system deadlocked for decades.</td></tr>
-        <tr><td>🇦🇷 Argentina</td><td>9 debt defaults in its history. Still in crisis.</td><td>Borrowed, printed money, borrowed again. Never fixed the root cause.</td></tr>
-        <tr><td>🇵🇰 Pakistan</td><td>On its 25th IMF bailout. Political leaders in prison.</td><td>Military runs the country. Economy cannot pay its own debts.</td></tr>
-        <tr><td>🇸🇾 Syria</td><td>Civil war. Government collapsed December 2024.</td><td>Political repression led to civil war. State fragmented.</td></tr>
-        <tr><td>🇭🇹 Haiti</td><td>Gangs control the capital city.</td><td>Government lost control. No functioning police or army.</td></tr>
-        <tr><td>🇲🇲 Myanmar</td><td>Military took over in 2021. Civil war ongoing.</td><td>Military coup. Economy collapsed 18% in one year.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout callout-green">
-    <div class="callout-label">Special Case — 🇱🇰 Sri Lanka (Recovering from Stage 5)</div>
-    <p>Sri Lanka collapsed in 2022 — it could not pay its debts, inflation hit 70%, and stores ran out of basics. But by 2025: inflation turned negative, its currency stabilised, and the economy grew 4.5%. It is one of the only countries in history to publicly collapse and begin a genuine recovery. <strong>It is fragile, but it is the most hopeful case study in this list.</strong></p>
-  </div>
-
-  <!-- ══ SECTION 9: QUICK SUMMARY ══ -->
-  <h2>The Quick Summary</h2>
-
-  <h3 class="section-label">What the five stages mean in plain language</h3>
-
-  <div class="quick-table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Stage</th>
-          <th>Simple Meaning</th>
-          <th>Like a Company Going Through...</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td style="color: var(--s1);">🟢 Stage 1</td><td>Hungry and growing</td><td>A startup — all hustle, no ego</td></tr>
-        <tr><td style="color: var(--s2);">🔵 Stage 2</td><td>Trading and thriving</td><td>A successful business — profitable, expanding</td></tr>
-        <tr><td style="color: var(--s3);">🟡 Stage 3</td><td>Rich and comfortable</td><td>A market leader getting complacent</td></tr>
-        <tr><td style="color: var(--s4);">🔴 Stage 4</td><td>Breaking down</td><td>A company burning cash, management protecting itself</td></tr>
-        <tr><td style="color: var(--s5);">🟣 Stage 5</td><td>Collapsed</td><td>Bankruptcy — the model failed</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3 class="section-label">Three things to remember</h3>
-
-  <div class="takeaway">
-    <strong>1. The 250-year "deadline" is not real.</strong><br>
-    Rome lasted 985 years. The Mongols lasted 162. It's a rough average, not a clock. America being at the average age is interesting — it is not a death sentence.
-  </div>
-
-  <div class="takeaway">
-    <strong>2. Stage 4 is not instant death.</strong><br>
-    The Ottoman Empire was in Stage 4 for 170 years and survived through reform. Change is hard but possible.
-  </div>
-
-  <div class="takeaway">
-    <strong>3. The most dangerous moment in world history right now:</strong><br>
-    A Stage 4 power (America) is being challenged by a Stage 1–2 power (China). Every time this has happened in history — Rome vs the Germanic tribes, Britain vs America — the transition has been turbulent. None has been peaceful.
-  </div>
-
-  <!-- ══ FINAL NOTE ══ -->
-  <h2>A Final Honest Note</h2>
-
-  <p>Sir John Glubb's framework is a useful thinking tool — not a proven science. He was a general, not an academic historian. Some of his dates are questionable. His sample of empires is small. Historians debate his conclusions.</p>
-
-  <p>But here is what is hard to argue with:</p>
-
-  <ul style="margin: 1em 0 1.6em; padding-left: 1.5em; color: var(--muted); font-size: 16px; line-height: 1.8;">
-    <li><strong style="color: var(--text);">Wealth does create comfort.</strong> Comfort does create complacency.</li>
-    <li><strong style="color: var(--text);">Institutions do start serving themselves</strong> instead of the people they were built to serve.</li>
-    <li><strong style="color: var(--text);">Every powerful empire in history</strong> has eventually been replaced by a hungrier one.</li>
-  </ul>
-
-  <p>The question for America — and for any declining power — is not <em>whether</em> this pattern is real. The evidence across 3,000 years suggests it is. The question is whether it is possible to understand a pattern <em>while you are inside it</em> and choose differently.</p>
-
-  <p>That is a question history has not yet answered with a "yes."</p>
-
-  <!-- ══ SOURCES ══ -->
-  <div class="sources">
-    <h3>Sources &amp; References</h3>
-    <ul>
-      <li>Sir John Bagot Glubb, <em>The Fate of Empires and Search for Survival</em> (1976)</li>
-      <li>SIPRI Military Spending Report, April 2026 — sipri.org</li>
-      <li>IMF — Japan Economic Review 2025</li>
-      <li>Atlantic Council — Russia's Economy 2025</li>
-      <li>Moscow Times — Russia's Economy in 2026</li>
-      <li>Fortune — World's Most Miserable Economies 2025 (Hanke Annual Misery Index)</li>
-      <li>European Commission — Germany Economic Forecast</li>
-      <li>Asia Pacific Foundation — Sri Lanka Recovery 2025</li>
-      <li>KED Global — South Korea vs Taiwan GDP Per Capita</li>
-      <li>Soufan Center — Great Power Competition 2026</li>
-      <li>CFR — Venezuela: Rise and Fall of a Petrostate</li>
-      <li>Pew Research Center — US Wage Stagnation Data</li>
-      <li>US Congressional Budget Office — National Debt and Interest Payments FY2024</li>
-    </ul>
-  </div>
-
-</article>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">509–264 BCE</div>
+          <div class="strip-event">Fought massive wars and kept winning even after crushing defeats</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">264–133 BCE</div>
+          <div class="strip-event">Controlled all trade around the Mediterranean Sea</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">133–31 BCE</div>
+          <div class="strip-event">Romans grew rich and started fighting each other for power</div>
+        </div>
+        <div class="strip-cell sc-s4">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">31 BCE–235 CE</div>
+          <div class="strip-event">Started printing fake money. Bread and entertainment replaced hard work.</div>
+        </div>
+        <div class="strip-cell sc-s5">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">235–476 CE</div>
+          <div class="strip-event">26 emperors in 50 years. Armies weakened. Barbarians took over.</div>
+        </div>
+      </div>
+
+      <p class="reveal">Rome started as a scrappy city-state that refused to quit. It lost catastrophically to Carthage at Cannae — 80,000 soldiers killed in one day — and kept fighting. That refusal to stop is Stage 1 in its purest form.</p>
+
+      <p class="reveal">Stage 4 is where the Roman parallel to today is sharpest. <strong>The Roman government debased its currency — it reduced the silver content of its coins from 85% to just 5%</strong> — to pay its bills. Military spending stayed enormous, but the quality of the army declined. Bread and entertainment (the Colosseum, chariot races) became official state policy to keep the population distracted. Twenty-six different emperors in 50 years during Stage 5. Most died violently in office.</p>
+
+      <div class="verdict reveal">
+        <div class="verdict-label">Key Lesson from Rome</div>
+        The government started printing fake money to cover its debts. Society split into rich and poor. The military spent more and achieved less. Sound familiar?
+      </div>
+
+      <!-- BRITAIN -->
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>🇬🇧 Britain — 359 Years</h2>
+          <div class="empire-dates">1588 – 1947</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years">~359</span>
+          <span class="years-label">years</span>
+        </div>
+      </div>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">1588–1650</div>
+          <div class="strip-event">Defeated the Spanish Armada and started building a global empire</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">1650–1750</div>
+          <div class="strip-event">The East India Company made Britain the richest trading nation on earth</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">1750–1850</div>
+          <div class="strip-event">The Industrial Revolution made Britain the "workshop of the world"</div>
+        </div>
+        <div class="strip-cell sc-s4">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">1850–1939</div>
+          <div class="strip-event">Expensive wars with fewer results. Debt grew. Military strength faded.</div>
+        </div>
+        <div class="strip-cell sc-s5">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">1939–1949</div>
+          <div class="strip-event">WWII destroyed British finances. India left. The dollar replaced the pound.</div>
+        </div>
+      </div>
+
+      <p class="reveal">The most instructive lesson from Britain is not the rise — it is the <strong>speed of collapse.</strong> In 1939, Britain was still the largest empire in human history. By 1949 — just <strong>ten years later</strong> — India was independent, Palestine had collapsed, and the dollar had replaced the pound as the world's reserve currency.</p>
+
+      <div class="callout callout-danger reveal">
+        <div class="callout-label">The Most Shocking Fact About Britain</div>
+        <p>Britain went from being the largest empire in human history to a mid-sized power in a single decade. The conditions for collapse had been building for 90 years. The actual collapse took 10. <strong>Collapse can be very sudden.</strong></p>
+      </div>
+
+      <!-- OTTOMAN -->
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>🕌 The Ottoman Empire — 623 Years <span class="outlier">↑ 2.5× average</span></h2>
+          <div class="empire-dates">1299 – 1922</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years">~623</span>
+          <span class="years-label">years</span>
+        </div>
+      </div>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">1299–1453</div>
+          <div class="strip-event">Conquered Constantinople and built an empire across three continents</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">1453–1566</div>
+          <div class="strip-event">Suleiman the Magnificent — controlled the Silk Road, peak power</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">1566–1699</div>
+          <div class="strip-event">Built beautiful cities and great laws but stopped expanding</div>
+        </div>
+        <div class="strip-cell sc-s4">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">1699–1870</div>
+          <div class="strip-event">Lost wars to Europe. Called "the sick man of Europe." But kept reforming.</div>
+        </div>
+        <div class="strip-cell sc-s5">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">1870–1922</div>
+          <div class="strip-event">World War I finished them off. Empire dissolved in 1922.</div>
+        </div>
+      </div>
+
+      <p class="reveal">The Ottomans are the most important exception to Glubb's theory — and the one version people most often ignore. At 623 years, they lasted 2.5 times the supposed average. <strong>They spent 170 years in Stage 4</strong> — longer than Glubb says an average empire lives in total.</p>
+
+      <p class="reveal">How? Through genuine reform. The Tanzimat reforms of 1839 modernized the military, legal system, and bureaucracy. The empire adapted — imperfectly, but enough to survive another 80 years. Stage 5 came eventually regardless. But the delay proves that Stage 4 is not an instant death sentence.</p>
+
+      <div class="callout callout-warn reveal">
+        <div class="callout-label">Why The Ottomans Matter</div>
+        <p>They were called "the sick man of Europe" for 170 years — and survived. <strong>Change is possible even in Stage 4.</strong> It is very hard, and no empire has escaped it permanently. But the Ottoman case proves that reform can buy generations of time.</p>
+      </div>
+
+      <!-- MONGOLS -->
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>⚔️ The Mongols — 162 Years <span class="fast">↓ Fastest collapse</span></h2>
+          <div class="empire-dates">1206 – 1368</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years">~162</span>
+          <span class="years-label">years</span>
+        </div>
+      </div>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">1206–1227</div>
+          <div class="strip-event">Genghis Khan united the tribes and conquered half the world in 21 years</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">1227–1260</div>
+          <div class="strip-event">Created the safest trade route in history — the Silk Road under Mongol protection</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">1260–1294</div>
+          <div class="strip-event">The empire reached its cultural and artistic peak under Kublai Khan</div>
+        </div>
+        <div class="strip-cell sc-s4">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">1294–1335</div>
+          <div class="strip-event">The four parts of the empire started fighting each other</div>
+        </div>
+        <div class="strip-cell sc-s5">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">1335–1368</div>
+          <div class="strip-event">The Black Death spread through their own trade routes. China rebelled.</div>
+        </div>
+      </div>
+
+      <p class="reveal">Genghis Khan's unification of the Mongol tribes is one of the most astonishing military achievements in history. Within 21 years, the Mongol army had conquered half the known world. The Pax Mongolica — peace under Mongol rule — made the Silk Road function better than ever. Marco Polo's journey from Venice to China was only possible because the Mongols controlled the entire route.</p>
+
+      <div class="verdict reveal">
+        <div class="verdict-label">Key Lesson from the Mongols</div>
+        Sometimes an outside disaster accelerates a collapse that was already coming. The Mongols opened the Silk Road — and the same road carried the plague that destroyed them. Stage 4 creates vulnerability. External shocks do the rest.
+      </div>
+
+      <!-- ABBASID -->
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>🕌 The Abbasid Caliphate — 508 Years</h2>
+          <div class="empire-dates">750 – 1258 CE</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years">~508</span>
+          <span class="years-label">years</span>
+        </div>
+      </div>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">750–800</div>
+          <div class="strip-event">Revolution brought new rulers to power. Baghdad was built as the capital.</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">800–900</div>
+          <div class="strip-event">The House of Wisdom translated science from across the world. Greatest city on earth.</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">900–1000</div>
+          <div class="strip-event">Peak of Islamic Golden Age — mathematics, astronomy, medicine.</div>
+        </div>
+        <div class="strip-cell sc-s4">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">1000–1200</div>
+          <div class="strip-event">Foreign generals took real power. The Caliph became a figurehead with no real authority.</div>
+        </div>
+        <div class="strip-cell sc-s5">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">1200–1258</div>
+          <div class="strip-event">The Mongols sacked Baghdad and destroyed the House of Wisdom. Everything was burned.</div>
+        </div>
+      </div>
+
+      <p class="reveal">The Abbasid Caliphate produced the Islamic Golden Age — algebra was invented here, astronomical observations were made that Europeans wouldn't match for centuries, and Baghdad was the wealthiest city in the world.</p>
+
+      <div class="verdict reveal">
+        <div class="verdict-label">Key Lesson from the Abbasids</div>
+        When the people running the country stop working <em>for</em> the country and start working <em>for themselves</em>, the decline has already begun — even if it takes 200 years to finish.
+      </div>
+
+      <!-- SPANISH -->
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>⚓ The Spanish Empire — 406 Years</h2>
+          <div class="empire-dates">1492 – 1898</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years">~406</span>
+          <span class="years-label">years</span>
+        </div>
+      </div>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">1492–1550</div>
+          <div class="strip-event">Columbus reached America. Spain conquered the Aztec and Inca empires within 60 years.</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">1550–1650</div>
+          <div class="strip-event">Silver mines in South America made Spain the richest country in the world</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">1650–1750</div>
+          <div class="strip-event">Great art and literature. But the industrial base was being hollowed out.</div>
+        </div>
+        <div class="strip-cell sc-s4">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">1750–1825</div>
+          <div class="strip-event">Too much silver caused inflation. Wars drained the treasury. Colonies grew restless.</div>
+        </div>
+        <div class="strip-cell sc-s5">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">1825–1898</div>
+          <div class="strip-event">Every colony in South America declared independence. The Spanish-American War finished it.</div>
+        </div>
+      </div>
+
+      <p class="reveal">Spain controlled the world's reserve currency — silver. Everyone needed Spanish silver to trade globally. Spain used this privilege to buy things instead of building things. When the silver ran out, there was nothing underneath. The currency collapsed and the empire fell with it.</p>
+
+      <div class="callout callout-info reveal">
+        <div class="callout-label">The Most Relevant Lesson for Today</div>
+        <p>Spain had the world's reserve currency for two centuries. It used that privilege to avoid building real industry. When the silver ran out, the empire collapsed — not because it lost a war, but because its financial foundation was extracted rather than built. <strong>The dollar parallel is direct.</strong></p>
+      </div>
+
+      <!-- ══ SECTION 4: AMERICA ══ -->
+      <h2 id="toc-america" class="reveal">America Right Now — Which Stage Is It In?</h2>
+
+      <p class="reveal"><strong>Answer: Stage 4 — The Broken Years.</strong></p>
+
+      <div class="empire-header reveal">
+        <div class="empire-header-left">
+          <h2>🇺🇸 United States of America</h2>
+          <div class="empire-dates">1776 – present (Stage 4, ongoing)</div>
+        </div>
+        <div class="empire-lifespan-badge">
+          <span class="years" style="background: linear-gradient(135deg, #ef4444, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">~250</span>
+          <span class="years-label">years so far</span>
+        </div>
+      </div>
+
+      <div class="stage-strip reveal">
+        <div class="strip-cell sc-s1">
+          <div class="strip-stage">Hungry Years</div>
+          <div class="strip-dates">1776–1945</div>
+          <div class="strip-event">Won independence, expanded across a continent, won World War II</div>
+        </div>
+        <div class="strip-cell sc-s2">
+          <div class="strip-stage">Trading Years</div>
+          <div class="strip-dates">1945–1971</div>
+          <div class="strip-event">The dollar became the world's currency. Moon landing. Strongest middle class ever.</div>
+        </div>
+        <div class="strip-cell sc-s3">
+          <div class="strip-stage">Comfortable Years</div>
+          <div class="strip-dates">1971–2001</div>
+          <div class="strip-event">Moved factories to China. Financial sector replaced manufacturing. Wages stopped rising.</div>
+        </div>
+        <div class="strip-cell sc-s4 sc-s4-active">
+          <div class="strip-stage">Broken Years</div>
+          <div class="strip-dates">2001–present</div>
+          <div class="strip-event">$36T debt; military without wins; dollar contested</div>
+          <span class="here-pill"><span class="pulse-dot"></span>YOU ARE HERE</span>
+        </div>
+        <div class="strip-cell sc-s5 sc-s5-dim">
+          <div class="strip-stage">The Fall</div>
+          <div class="strip-dates">TBD</div>
+          <div class="strip-event">Reserve currency loss would be the trigger</div>
+        </div>
+      </div>
+
+      <p class="reveal">All four of Glubb's Stage 4 symptoms are present at the same time:</p>
+
+      <div class="problem-card reveal">
+        <h3>Problem 1 — Military Spending Doesn't Produce Results</h3>
+        <p>America spends <strong>$997 billion per year</strong> on its military — more than the next 9 countries combined. But it could not win in Afghanistan after 20 years. Could not stabilise Iraq.</p>
+        <p>The F-35 fighter jet cost $100 million per plane, took 26 years to build, and exists partly because it provides jobs in 45 out of 50 states — making it politically impossible to cancel. <strong>The military budget has become a jobs programme, not a defence strategy.</strong></p>
+      </div>
+
+      <div class="problem-card reveal">
+        <h3>Problem 2 — The Debt Is Out of Control</h3>
+        <p>Total national debt: <strong>$36 trillion.</strong> America now pays <strong>$1 trillion per year</strong> just in interest — not paying off the debt, just the interest. It borrows new money to pay the interest on old money. The interest on the new money adds to the debt. This is a spiral that has no natural exit.</p>
+      </div>
+
+      <div class="problem-card reveal">
+        <h3>Problem 3 — Other Countries Are Moving Away from the Dollar</h3>
+        <p>The dollar has been the world's reserve currency since World War II. But in 2022, America froze $300 billion of Russia's money overnight. Every country watching thought: <em>"If they can do that to Russia, they can do it to us."</em></p>
+        <p>The result: Countries are quietly moving away from the dollar. Saudi Arabia is selling oil to China in yuan. Central banks worldwide are buying gold instead of dollars. <strong>The privilege is being eroded.</strong></p>
+      </div>
+
+      <div class="problem-card reveal">
+        <h3>Problem 4 — Society Is Splitting Apart</h3>
+        <p>The richest 1% own more than the bottom 90% combined. Real wages have barely grown in 50 years. Life expectancy is declining. Public trust in government, media, and institutions is at historic lows. <strong>The social contract is fraying.</strong></p>
+      </div>
+
+      <!-- ══ SECTION 5: WHY NOBODY FIXES IT ══ -->
+      <h2 id="toc-nobody" class="reveal">Why Nobody Fixes It</h2>
+
+      <p class="reveal">Here is the part that makes this pattern so hard to break. Every powerful person in America is making a <em>rational</em> decision for themselves:</p>
+
+      <div class="simple-table-wrap reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>Who</th>
+              <th>Their Rational Choice</th>
+              <th>The Overall Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Weapons companies</td>
+              <td>Fund politicians who support wars — good for business</td>
+              <td>Wars that can't be won keep happening</td>
+            </tr>
+            <tr>
+              <td>Big banks</td>
+              <td>Fight any alternative to the dollar</td>
+              <td>The dollar stays weaponised</td>
+            </tr>
+            <tr>
+              <td>Politicians</td>
+              <td>Accept money from weapons companies and banks</td>
+              <td>Serve those interests, not the public</td>
+            </tr>
+            <tr>
+              <td>TV news</td>
+              <td>Take advertising money from weapons companies</td>
+              <td>Don't report things that upset advertisers</td>
+            </tr>
+            <tr>
+              <td>Military generals</td>
+              <td>Know their retirement jobs are with defence companies</td>
+              <td>Never challenge the system</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="reveal">Every single decision makes sense for the individual. Together, they destroy the country.</p>
+
+      <p class="reveal">This is the trap that <strong>every empire in Stage 4 has fallen into.</strong> The Ottoman Empire fought it for 170 years with genuine reforms. No other empire in history has successfully escaped it from the inside.</p>
+
+      <!-- ══ SECTION 6: WHAT DATA SHOWS ══ -->
+      <h2 id="toc-findings" class="reveal">What the Data Shows — Four Key Findings</h2>
+
+      <div class="findings-grid">
+        <div class="finding-card fc-amber reveal">
+          <div class="finding-num">Finding 1</div>
+          <div class="finding-title">250 years is not a deadline</div>
+          <div class="finding-body">The range runs from 162 years (Mongol) to 985 years (Rome) — a 6× spread. America at 250 years sits near the average, but the average predicts nothing about any individual case. The Ottoman Empire was "overdue" by Glubb's reckoning for 370 years.</div>
+        </div>
+        <div class="finding-card fc-red reveal">
+          <div class="finding-num">Finding 2</div>
+          <div class="finding-title">Stage 4 can last a long time</div>
+          <div class="finding-body">The Ottomans spent ~170 years in Stage 4 through reform. Rome spent ~265 years. Britain spent ~89 years. America has been in Stage 4 for approximately 25 years. There is no reliable estimate for how long it lasts.</div>
+        </div>
+        <div class="finding-card fc-blue reveal">
+          <div class="finding-num">Finding 3</div>
+          <div class="finding-title">Stage 5 can be very fast</div>
+          <div class="finding-body">The British Empire collapsed from largest in history to a mid-sized power in one decade. Gradual decline is not guaranteed — convergent pressures can produce rapid, sudden collapse. The conditions build slowly. The break can happen overnight.</div>
+        </div>
+        <div class="finding-card fc-green reveal">
+          <div class="finding-num">Finding 4</div>
+          <div class="finding-title">Outside shocks speed up collapse</div>
+          <div class="finding-body">The Mongol collapse was accelerated by the Black Death. British by WWII. Spanish by the Napoleonic Wars. Stage 4 conditions create vulnerability. External shocks eliminate whatever resilience remains.</div>
+        </div>
+      </div>
+
+      <!-- ══ SECTION 7: WHO IS RISING ══ -->
+      <h2 id="toc-rising" class="reveal">Who Is Rising Right Now?</h2>
+
+      <p class="reveal">While some countries are declining, others are in the hungry, disciplined Stage 1 phase — building, expanding, full of purpose.</p>
+
+      <div class="country-card reveal">
+        <h3>🇮🇳 India — The Clearest Stage 1 Country Today</h3>
+        <div class="country-stats">
+          <span class="cstat">6–7% annual growth</span>
+          <span class="cstat">1.44 billion people</span>
+          <span class="cstat">Median age: 28</span>
+          <span class="cstat">$720B exports (2025-26)</span>
+        </div>
+        <p>India is growing at 6–7% per year — the fastest of any large economy. Its population of 1.44 billion is now the world's largest, with an average age of just 28. It is the 3rd most powerful military in the world and is deliberately building factories at home instead of buying everything from abroad.</p>
+        <p>India today is where America was in the 1880s-1910s. Big, growing, disciplined, and hungry. Not yet rich enough to be complacent.</p>
+      </div>
+
+      <div class="country-card reveal">
+        <h3>🇨🇳 China — Late Stage 1, Entering Stage 2</h3>
+        <div class="country-stats">
+          <span class="cstat">Economy grew 76% in one decade</span>
+          <span class="cstat">31 years of military growth</span>
+          <span class="cstat">BRI in 140+ countries</span>
+        </div>
+        <p>China is the most powerful rising force on earth right now. Its economy grew from $11 trillion to $19.5 trillion in a decade. Military spending has grown for 31 consecutive years. The Belt and Road Initiative has built roads, ports, and railways in 140+ countries.</p>
+        <p>The complication: China is also getting rich. A middle class of 400 million has emerged. Wealth inequality is rising. These are early Stage 2 and Stage 3 signals. China is right on the edge.</p>
+      </div>
+
+      <div class="country-card reveal">
+        <h3>🇦🇪 🇸🇦 UAE and Saudi Arabia — Conquering With Money, Not Armies</h3>
+        <div class="country-stats">
+          <span class="cstat">UAE: 80% non-oil economy</span>
+          <span class="cstat">Saudi: $700B investment fund</span>
+          <span class="cstat">Vision 2030</span>
+        </div>
+        <p>These countries have invented a new type of Stage 1 expansion: conquest by investment. Instead of armies, they use sovereign wealth funds — giant pots of money deployed strategically to buy influence worldwide.</p>
+        <p>The UAE has moved 80% of its economy away from oil — extraordinary for a Gulf state. Saudi Arabia is building NEOM, a $500 billion futuristic city from scratch, and is now selling oil in Chinese currency — a deliberate hedge against dollar dependence.</p>
+      </div>
+
+      <div class="country-card reveal">
+        <h3>🇹🇷 Turkey — Military Expansion in Five Countries at Once</h3>
+        <div class="country-stats">
+          <span class="cstat">Active in Syria, Libya, Somalia, Azerbaijan</span>
+          <span class="cstat">Bayraktar TB2 drone exports</span>
+          <span class="cstat">Controls the Bosphorus Strait</span>
+        </div>
+        <p>Turkey's military is currently active in five countries simultaneously. It has built world-class military drones (Bayraktar TB2) now exported globally. It controls the Bosphorus Strait — the only sea passage between the Black Sea and the Mediterranean — and has positioned itself as a negotiator between NATO and Russia. Textbook Stage 1 external behaviour.</p>
+      </div>
+
+      <div class="country-card reveal">
+        <h3>🇮🇩 Indonesia — The Sleeping Giant</h3>
+        <div class="country-stats">
+          <span class="cstat">280 million people</span>
+          <span class="cstat">Controls Strait of Malacca</span>
+          <span class="cstat">World's largest nickel reserves</span>
+          <span class="cstat">5%+ annual growth</span>
+        </div>
+        <p>Indonesia does not get much attention. It should. 280 million people. Controls the Strait of Malacca — 40% of all global trade passes through it. Has the world's largest nickel reserves, critical for electric car batteries. As global supply chains move away from China, Indonesia is becoming the new manufacturing hub of Southeast Asia.</p>
+      </div>
+
+      <div class="country-card reveal">
+        <h3>🇻🇳 Vietnam — The Quiet Overachiever</h3>
+        <div class="country-stats">
+          <span class="cstat">6–7% growth for a decade</span>
+          <span class="cstat">Samsung, Apple, Intel production</span>
+          <span class="cstat">Median age: 32</span>
+        </div>
+        <p>Samsung, Apple, and Intel have all moved major production to Vietnam. It maintains good relationships with both the US and China — a smart hedge. A country that defeated both France and America militarily has deep institutional memory of what resilience looks like.</p>
+      </div>
+
+      <!-- ══ SECTION 8: WORLD MAP ══ -->
+      <h2 id="toc-world" class="reveal">The Complete World Map — Every Country, Every Stage</h2>
+
+      <p class="reveal">Here is where every major country sits today in Glubb's framework. This is a thinking tool, not a verdict. Countries can be between stages. Use this as a lens, not a law.</p>
+
+      <div class="world-stage ws-s1 reveal">
+        <div class="world-stage-header">
+          <span class="world-stage-title">🟢 Stage 1 — Rising and Hungry</span>
+          <span class="world-stage-sub">Fast growth · Young population · Expanding influence</span>
+        </div>
+        <table>
+          <thead><tr><th>Country</th><th>Why Stage 1</th><th>How They're Expanding</th></tr></thead>
+          <tbody>
+            <tr><td>🇮🇳 India</td><td>6-7% growth, median age 28, building manufacturing</td><td>Economy + Military</td></tr>
+            <tr><td>🇨🇳 China</td><td>31 years of military growth, BRI in 140+ countries</td><td>Economy + Military</td></tr>
+            <tr><td>🇦🇪 UAE</td><td>80% non-oil economy, global investment, AI hub</td><td>Investment / Capital</td></tr>
+            <tr><td>🇸🇦 Saudi Arabia</td><td>Vision 2030, $700B investment fund, NEOM</td><td>Investment / Energy</td></tr>
+            <tr><td>🇹🇷 Turkey</td><td>Military in 5 countries, drone exports, Bosphorus control</td><td>Military + Industry</td></tr>
+            <tr><td>🇮🇩 Indonesia</td><td>280M people, Malacca Strait, world's largest nickel reserves</td><td>Resources + Trade</td></tr>
+            <tr><td>🇻🇳 Vietnam</td><td>Manufacturing replacing China, 6-7% growth</td><td>Industry</td></tr>
+            <tr><td>🇪🇹 Ethiopia</td><td>130M people, Grand Renaissance Dam, regional power</td><td>Regional</td></tr>
+            <tr><td>🇧🇩 Bangladesh</td><td>World's 2nd largest clothing exporter, 6% growth</td><td>Industry</td></tr>
+            <tr><td>🇵🇭 Philippines</td><td>6% growth, South China Sea location, median age 25</td><td>Economy + Strategic</td></tr>
+            <tr><td>🇳🇬 Nigeria</td><td>Africa's largest economy, 220M people</td><td>Regional</td></tr>
+            <tr><td>🇷🇼 Rwanda</td><td>Africa's best-run government, 7-8% growth</td><td>Governance</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="world-stage ws-s2 reveal">
+        <div class="world-stage-header">
+          <span class="world-stage-title">🔵 Stage 2 — Trading and Prospering</span>
+          <span class="world-stage-sub">Controlling trade routes · Wealth accumulating · Globally respected</span>
+        </div>
+        <table>
+          <thead><tr><th>Country</th><th>Why Stage 2</th><th>What They Control</th></tr></thead>
+          <tbody>
+            <tr><td>🇹🇼 Taiwan</td><td>8% GDP growth (2025), makes 90% of world's advanced chips</td><td>The global chip supply</td></tr>
+            <tr><td>🇵🇱 Poland</td><td>Europe's new manufacturing hub, 3-4% growth</td><td>European supply chains</td></tr>
+            <tr><td>🇲🇽 Mexico</td><td>Biggest winner of US-China trade split, factories booming</td><td>North American manufacturing</td></tr>
+            <tr><td>🇲🇾 Malaysia</td><td>Semiconductor hub, Malacca Strait, 5% growth</td><td>Asian trade routes</td></tr>
+            <tr><td>🇹🇭 Thailand</td><td>Manufacturing + tourism hub, EV battery investment</td><td>Southeast Asian trade</td></tr>
+            <tr><td>🇸🇬 Singapore</td><td>World's busiest port, top financial hub</td><td>Southeast Asian finance</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="world-stage ws-s3 reveal">
+        <div class="world-stage-header">
+          <span class="world-stage-title">🟡 Stage 3 — Comfortable but Slowing</span>
+          <span class="world-stage-sub">High living standards · Strong institutions · Growth slowing</span>
+        </div>
+        <table>
+          <thead><tr><th>Country</th><th>Why Stage 3</th><th>The Warning Signs</th></tr></thead>
+          <tbody>
+            <tr><td>🇰🇷 South Korea</td><td>Advanced economy, high standard of living</td><td>Fertility rate 0.72 — lowest in the world. Losing ground to Taiwan.</td></tr>
+            <tr><td>🇦🇺 Australia</td><td>High quality of life, commodity wealth</td><td>Over-reliant on selling to China. Housing crisis. Aging population.</td></tr>
+            <tr><td>🇨🇦 Canada</td><td>Strong institutions, natural resources</td><td>Housing unaffordable. Growth depends on immigration. Productivity falling.</td></tr>
+            <tr><td>🇸🇪 🇳🇴 🇩🇰 Nordics</td><td>World's best quality of life</td><td>Very small populations. Aging. Dependent on global trade.</td></tr>
+            <tr><td>🇳🇿 New Zealand</td><td>Stable democracy, beautiful country</td><td>Young people leaving. Productivity stagnating.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="world-stage ws-s4 reveal">
+        <div class="world-stage-header">
+          <span class="world-stage-title">🔴 Stage 4 — Broken and Struggling to Fix It</span>
+          <span class="world-stage-sub">Debt out of control · Military without results · Social trust collapsing</span>
+        </div>
+        <table>
+          <thead><tr><th>Country</th><th>The Main Problem</th><th>Key Evidence</th></tr></thead>
+          <tbody>
+            <tr><td>🇺🇸 USA</td><td>All four Stage 4 symptoms at once</td><td>$36T debt, $997B military without wins, top 1% owns more than bottom 90%</td></tr>
+            <tr><td>🇯🇵 Japan</td><td>Debt and demographics</td><td>Debt = 195% of GDP. Population falling from 135M to 96M by 2060. 30+ years of near-zero growth.</td></tr>
+            <tr><td>🇬🇧 UK</td><td>Lost its role, can't agree on what it is now</td><td>Brexit chaos. NHS collapsing. 5 Prime Ministers in 3 years.</td></tr>
+            <tr><td>🇩🇪 Germany</td><td>Its entire economic model broke</td><td>Needed cheap Russian gas + Chinese buyers. Lost both. 5 years of stagnation.</td></tr>
+            <tr><td>🇫🇷 France</td><td>Political paralysis + debt</td><td>GDP growth 0.6% (2025). Protests against every reform. Debt rising.</td></tr>
+            <tr><td>🇮🇹 Italy</td><td>Demographic and financial spiral</td><td>Debt at 140% of GDP. Population shrinking. Young people leaving.</td></tr>
+            <tr><td>🇷🇺 Russia</td><td>War that costs more than it gains</td><td>21-22% inflation. Military budget = 40% of all spending. Emergency fund nearly empty.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="world-stage ws-s5 reveal">
+        <div class="world-stage-header">
+          <span class="world-stage-title">🟣 Stage 5 — Collapsed or Collapsing</span>
+          <span class="world-stage-sub">Currency collapsed · Government cannot function · Basic services broken down</span>
+        </div>
+        <table>
+          <thead><tr><th>Country</th><th>What Happened</th><th>The Main Cause</th></tr></thead>
+          <tbody>
+            <tr><td>🇻🇪 Venezuela</td><td>Economy shrank by 80% since 2013. 8 million people fled.</td><td>Government printed money until it was worthless. Corruption destroyed institutions.</td></tr>
+            <tr><td>🇱🇧 Lebanon</td><td>The pound lost 98% of its value since 2019. Banks frozen.</td><td>Banks collapsed. Political system deadlocked for decades.</td></tr>
+            <tr><td>🇦🇷 Argentina</td><td>9 debt defaults in its history. Still in crisis.</td><td>Borrowed, printed money, borrowed again. Never fixed the root cause.</td></tr>
+            <tr><td>🇵🇰 Pakistan</td><td>On its 25th IMF bailout. Political leaders in prison.</td><td>Military runs the country. Economy cannot pay its own debts.</td></tr>
+            <tr><td>🇸🇾 Syria</td><td>Civil war. Government collapsed December 2024.</td><td>Political repression led to civil war. State fragmented.</td></tr>
+            <tr><td>🇭🇹 Haiti</td><td>Gangs control the capital city.</td><td>Government lost control. No functioning police or army.</td></tr>
+            <tr><td>🇲🇲 Myanmar</td><td>Military took over in 2021. Civil war ongoing.</td><td>Military coup. Economy collapsed 18% in one year.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-green reveal">
+        <div class="callout-label">Special Case — 🇱🇰 Sri Lanka (Recovering from Stage 5)</div>
+        <p>Sri Lanka collapsed in 2022 — it could not pay its debts, inflation hit 70%, and stores ran out of basics. But by 2025: inflation turned negative, its currency stabilised, and the economy grew 4.5%. It is one of the only countries in history to publicly collapse and begin a genuine recovery. <strong>It is fragile, but it is the most hopeful case study in this list.</strong></p>
+      </div>
+
+      <!-- ══ SECTION 9: QUICK SUMMARY ══ -->
+      <h2 id="toc-summary" class="reveal">The Quick Summary</h2>
+
+      <h3 class="section-label reveal">What the five stages mean in plain language</h3>
+
+      <div class="quick-table-wrap reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Simple Meaning</th>
+              <th>Like a Company Going Through...</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="color: var(--s1);">🟢 Stage 1</td><td>Hungry and growing</td><td>A startup — all hustle, no ego</td></tr>
+            <tr><td style="color: var(--s2);">🔵 Stage 2</td><td>Trading and thriving</td><td>A successful business — profitable, expanding</td></tr>
+            <tr><td style="color: var(--s3);">🟡 Stage 3</td><td>Rich and comfortable</td><td>A market leader getting complacent</td></tr>
+            <tr><td style="color: var(--s4);">🔴 Stage 4</td><td>Breaking down</td><td>A company burning cash, management protecting itself</td></tr>
+            <tr><td style="color: var(--s5);">🟣 Stage 5</td><td>Collapsed</td><td>Bankruptcy — the model failed</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="section-label reveal">Three things to remember</h3>
+
+      <div class="takeaway reveal">
+        <strong>1. The 250-year "deadline" is not real.</strong><br>
+        Rome lasted 985 years. The Mongols lasted 162. It's a rough average, not a clock. America being at the average age is interesting — it is not a death sentence.
+      </div>
+
+      <div class="takeaway reveal">
+        <strong>2. Stage 4 is not instant death.</strong><br>
+        The Ottoman Empire was in Stage 4 for 170 years and survived through reform. Change is hard but possible.
+      </div>
+
+      <div class="takeaway reveal">
+        <strong>3. The most dangerous moment in world history right now:</strong><br>
+        A Stage 4 power (America) is being challenged by a Stage 1–2 power (China). Every time this has happened in history — Rome vs the Germanic tribes, Britain vs America — the transition has been turbulent. None has been peaceful.
+      </div>
+
+      <!-- ══ FINAL NOTE ══ -->
+      <h2 id="toc-final" class="reveal">A Final Honest Note</h2>
+
+      <p class="reveal">Sir John Glubb's framework is a useful thinking tool — not a proven science. He was a general, not an academic historian. Some of his dates are questionable. His sample of empires is small. Historians debate his conclusions.</p>
+
+      <p class="reveal">But here is what is hard to argue with:</p>
+
+      <ul class="reveal">
+        <li><strong style="color: var(--text);">Wealth does create comfort.</strong> Comfort does create complacency.</li>
+        <li><strong style="color: var(--text);">Institutions do start serving themselves</strong> instead of the people they were built to serve.</li>
+        <li><strong style="color: var(--text);">Every powerful empire in history</strong> has eventually been replaced by a hungrier one.</li>
+      </ul>
+
+      <p class="reveal">The question for America — and for any declining power — is not <em>whether</em> this pattern is real. The evidence across 3,000 years suggests it is. The question is whether it is possible to understand a pattern <em>while you are inside it</em> and choose differently.</p>
+
+      <p class="reveal">That is a question history has not yet answered with a "yes."</p>
+
+      <!-- ══ SOURCES ══ -->
+      <div class="sources reveal">
+        <h3>Sources &amp; References</h3>
+        <ul>
+          <li>Sir John Bagot Glubb, <em>The Fate of Empires and Search for Survival</em> (1976)</li>
+          <li>SIPRI Military Spending Report, April 2026 — sipri.org</li>
+          <li>IMF — Japan Economic Review 2025</li>
+          <li>Atlantic Council — Russia's Economy 2025</li>
+          <li>Moscow Times — Russia's Economy in 2026</li>
+          <li>Fortune — World's Most Miserable Economies 2025 (Hanke Annual Misery Index)</li>
+          <li>European Commission — Germany Economic Forecast</li>
+          <li>Asia Pacific Foundation — Sri Lanka Recovery 2025</li>
+          <li>KED Global — South Korea vs Taiwan GDP Per Capita</li>
+          <li>Soufan Center — Great Power Competition 2026</li>
+          <li>CFR — Venezuela: Rise and Fall of a Petrostate</li>
+          <li>Pew Research Center — US Wage Stagnation Data</li>
+          <li>US Congressional Budget Office — National Debt and Interest Payments FY2024</li>
+        </ul>
+      </div>
+
+    </article>
+
+  </div><!-- /.page-content -->
+
+  <aside class="page-toc">
+    <nav class="toc-sidebar">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#toc-stages">The Five Stages</a></li>
+        <li><a href="#toc-lifespan">How Long Empires Last</a></li>
+        <li><a href="#toc-empires">Six Empires</a></li>
+        <li><a href="#toc-america">America Right Now</a></li>
+        <li><a href="#toc-nobody">Why Nobody Fixes It</a></li>
+        <li><a href="#toc-findings">Four Key Findings</a></li>
+        <li><a href="#toc-rising">Who Is Rising</a></li>
+        <li><a href="#toc-world">World Map</a></li>
+        <li><a href="#toc-summary">Quick Summary</a></li>
+        <li><a href="#toc-final">Final Note</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+</div><!-- /.page-shell -->
 
 <footer>
-  Based on Sir John Glubb's <em>The Fate of Empires</em> (1976) &nbsp;·&nbsp; Data verified against SIPRI 2026, Federal Reserve, IMF, Pew Research &nbsp;·&nbsp; Glubb's 250-year framework is a thinking tool, not a proven law — see analysis above
+  Based on Sir John Glubb's <em>The Fate of Empires</em> (1976) &nbsp;·&nbsp; Data verified against SIPRI 2026, Federal Reserve, IMF, Pew Research<br>
+  Glubb's 250-year framework is a thinking tool, not a proven law — see analysis above
 </footer>
 
 <script>
+  /* ── Scroll progress ── */
   window.addEventListener('scroll', () => {
     const el = document.documentElement;
     const scrollTop = el.scrollTop || document.body.scrollTop;
@@ -1437,6 +1632,35 @@
     const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
     document.getElementById('progress').style.width = pct + '%';
   });
+
+  /* ── Scroll-reveal ── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = (i * 0.04) + 's';
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── TOC active link ── */
+  const tocLinks = document.querySelectorAll('.toc-list a');
+  const sections = document.querySelectorAll('[id^="toc-"]');
+
+  const tocObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => tocObserver.observe(s));
 </script>
 
 </body>
