@@ -951,11 +951,11 @@ Managing Claude's context window effectively is like managing your own cognitive
 
 ### Additional Resources
 
-- **Claude Documentation**: anthropic.com/claude
-- **Claude Code Docs**: docs.anthropic.com/en/claude-code
-- **MCP Protocol**: modelcontextprotocol.io
-- **RAG with LlamaIndex**: llamaindex.ai
-- **Prompt Caching**: docs.anthropic.com/en/docs/build-with-claude/prompt-caching
+- **Claude Documentation**: [anthropic.com/claude](https://www.anthropic.com/claude)
+- **Claude Code Docs**: [docs.anthropic.com/en/claude-code](https://docs.anthropic.com/en/claude-code)
+- **MCP Protocol**: [modelcontextprotocol.io](https://modelcontextprotocol.io)
+- **RAG with LlamaIndex**: [llamaindex.ai](https://llamaindex.ai)
+- **Prompt Caching**: [docs.anthropic.com/en/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
 
 ---
 

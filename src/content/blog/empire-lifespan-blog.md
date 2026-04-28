@@ -519,7 +519,7 @@ That is a question history has not yet answered with a "yes."
 
 - Sir John Glubb, *The Fate of Empires* (1976)
 - [SIPRI Military Spending Report, April 2026](https://www.sipri.org/sites/default/files/2026-04/2604_milex_2025.pdf)
-- [IMF — Japan Economic Review 2025](https://www.imf.org/en/news/articles/2025/02/07/mcs-020725-japan-staff-concluding-statement-of-the-2025-article-iv-mission)
+- [IMF — Japan Country Overview](https://www.imf.org/en/countries/JPN)
 - [Atlantic Council — Russia's Economy 2025](https://www.atlanticcouncil.org/content-series/russia-tomorrow/the-russian-economy-in-2025-between-stagnation-and-militarization/)
 - [Moscow Times — Russia's Economy in 2026](https://www.themoscowtimes.com/2026/01/02/russias-economy-in-2026-more-war-slower-growth-and-higher-taxes-a91579)
 - [Fortune — World's Most Miserable Economies 2025](https://fortune.com/2026/04/16/hanke-annual-misery-index-2025-venezuela-taiwan-rankings/)
