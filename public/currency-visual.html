@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Complete History of Money — Visual Guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:   #f5c842;
+      --amber:  #f5a623;
+      --green:  #27ae60;
+      --red:    #e74c3c;
+      --blue:   #3498db;
+      --purple: #9b59b6;
+      --teal:   #1abc9c;
+      --orange: #e67e22;
+      --dark:   #0d1117;
+      --darker: #090d13;
+      --card:   #161b22;
+      --card2:  #1c2128;
+      --border: #30363d;
+      --text:   #e6edf3;
+      --muted:  #8b949e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    h2 {
+      font-size: clamp(20px, 3.5vw, 30px);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+    p  { color: var(--muted); font-size: 15px; line-height: 1.7; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #090d13 0%, #1a1400 50%, #090d13 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 88px 24px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 900px 400px at 50% 110%, rgba(245,200,66,.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(245,200,66,.14);
+      border: 1px solid rgba(245,200,66,.3);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 60px);
+      font-weight: 800;
+      line-height: 1.1;
+      max-width: 820px;
+      margin: 0 auto 20px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero > p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 48px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .hero-stat .num { font-size: 34px; font-weight: 800; color: var(--gold); display: block; }
+    .hero-stat .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── Nav ── */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--darker);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav-bar a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .nav-bar a:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: rgba(245,200,66,.08);
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       TIMELINE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .timeline-wrap {
+      position: relative;
+      margin-top: 48px;
+    }
+    .timeline-wrap::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        var(--border) 5%,
+        var(--border) 95%,
+        transparent 100%
+      );
+    }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      align-items: start;
+      margin-bottom: 52px;
+      position: relative;
+    }
+    .tl-item.left  .tl-card { grid-column: 1; justify-self: end; }
+    .tl-item.right .tl-card { grid-column: 3; justify-self: start; }
+    .tl-item.left  .tl-spacer { grid-column: 2 / 4; display:none; }
+    .tl-item.right .tl-spacer { grid-column: 1 / 3; display:none; }
+
+    .tl-icon {
+      grid-column: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card2);
+      border: 2px solid var(--border);
+      font-size: 22px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 2;
+      transition: border-color .2s;
+    }
+    .tl-item:hover .tl-icon { border-color: var(--gold); }
+
+    .tl-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      max-width: 400px;
+      transition: border-color .2s, transform .2s;
+    }
+    .tl-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .tl-era {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .tl-card h3 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+    .tl-card p  { font-size: 13.5px; color: var(--muted); margin-bottom: 12px; }
+    .tl-backed {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      display: inline-block;
+    }
+    .tl-backed::before { content: '⚡ '; }
+
+    .era-c  { color: #e67e22; }
+    .era-m  { color: #f5c842; }
+    .era-p  { color: #3498db; }
+    .era-b  { color: #9b59b6; }
+    .era-g  { color: #f5a623; }
+    .era-f  { color: #27ae60; }
+    .era-d  { color: #1abc9c; }
+
+    @media (max-width: 720px) {
+      .timeline-wrap::before { left: 24px; }
+      .tl-item {
+        grid-template-columns: 56px 1fr;
+        margin-bottom: 32px;
+      }
+      .tl-icon { grid-column: 1; grid-row: 1; width: 40px; height: 40px; font-size: 18px; margin-top: 12px; }
+      .tl-item.left  .tl-card,
+      .tl-item.right .tl-card { grid-column: 2; grid-row: 1; max-width: 100%; justify-self: stretch; }
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CYCLE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .cycle-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 36px;
+    }
+    @media (max-width: 720px) { .cycle-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .cycle-step {
+      background: var(--card);
+      padding: 28px 18px;
+      text-align: center;
+      position: relative;
+    }
+    .cycle-step.step-birth    { background: rgba(39,174,96,.08);  }
+    .cycle-step.step-success  { background: rgba(52,152,219,.06); }
+    .cycle-step.step-fall     { background: rgba(231,76,60,.08);  }
+    .cycle-step.step-reset    { background: rgba(39,174,96,.08);  }
+
+    .step-num  { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .step-icon { font-size: 34px; display: block; margin-bottom: 12px; }
+    .cycle-step h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .cycle-step p  { font-size: 13px; }
+
+    /* Arrow between steps */
+    .cycle-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--border);
+      font-size: 24px;
+      margin: 4px 0;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       BAR CHART — Roman coins
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .bar-chart { display: flex; flex-direction: column; gap: 14px; margin-top: 36px; }
+    .bar-row   { display: flex; align-items: center; gap: 16px; }
+    .bar-lbl   { width: 200px; font-size: 13px; color: var(--muted); text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 34px; background: rgba(255,255,255,.05); border-radius: 8px; overflow: hidden; }
+    .bar-fill  {
+      height: 100%;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #000;
+      transition: width 1s ease;
+    }
+    .bar-row.r-high .bar-fill { background: linear-gradient(90deg,#f5c842,#f5a623); }
+    .bar-row.r-mid  .bar-fill { background: linear-gradient(90deg,#e67e22,#c0392b); color:#fff; }
+    .bar-row.r-low  .bar-fill { background: linear-gradient(90deg,#c0392b,#7f0000); color:#fff; }
+
+    @media (max-width: 600px) { .bar-lbl { width: 130px; font-size: 11px; } }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       MONEY PYRAMID
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .pyramid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-top: 44px;
+    }
+    .pyr-layer {
+      border-radius: 10px;
+      padding: 18px 28px;
+      text-align: center;
+      width: 100%;
+      transition: transform .2s;
+      border: 1px solid transparent;
+    }
+    .pyr-layer:hover { transform: scaleX(1.015); }
+    .pyr-val  { font-size: 24px; font-weight: 800; color: var(--text); }
+    .pyr-name { font-size: 14px; font-weight: 700; margin: 4px 0 2px; }
+    .pyr-desc { font-size: 12.5px; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       COMPARE GRID
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .compare-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 36px;
+    }
+    @media (max-width: 720px) { .compare-wrap { grid-template-columns: 1fr; } }
+
+    .cmp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .cmp-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+    .cmp-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; display: block; }
+    .cmp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cmp-row:last-child { border-bottom: none; }
+    .cmp-lbl { font-size: 13px; color: var(--muted); }
+    .cmp-val { font-size: 13px; font-weight: 600; }
+    .v-good { color: var(--green); }
+    .v-warn { color: var(--orange); }
+    .v-bad  { color: var(--red); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       FAILURES TABLE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .fail-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 36px;
+      font-size: 14px;
+    }
+    .fail-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .fail-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .fail-table tr:hover td { background: rgba(255,255,255,.02); }
+    .f-country { font-weight: 700; color: var(--text); white-space: nowrap; }
+    .f-extreme { color: var(--red); font-weight: 700; }
+    .f-high    { color: var(--orange); font-weight: 700; }
+    .f-med     { color: var(--gold); font-weight: 700; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       STATS GRID
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: border-color .2s;
+    }
+    .stat-card:hover { border-color: var(--gold); }
+    .stat-val { font-size: 30px; font-weight: 800; color: var(--gold); display: block; margin-bottom: 6px; }
+    .stat-lbl { font-size: 13px; color: var(--muted); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CALLOUT BOX
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .callout {
+      padding: 20px 24px;
+      border-radius: 10px;
+      margin-top: 28px;
+    }
+    .callout-red    { background: rgba(231,76,60,.08);   border-left: 3px solid var(--red);    }
+    .callout-gold   { background: rgba(245,200,66,.08);  border-left: 3px solid var(--gold);   }
+    .callout-blue   { background: rgba(52,152,219,.08);  border-left: 3px solid var(--blue);   }
+    .callout-green  { background: rgba(39,174,96,.08);   border-left: 3px solid var(--green);  }
+    .callout p { font-size: 15px; color: var(--text); }
+    .callout strong { color: var(--gold); }
+
+    /* ── Footer ── */
+    footer {
+      padding: 48px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p { font-size: 13px; }
+    footer a { color: var(--gold); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <div class="hero-tag">Economic History · Visual Guide</div>
+  <h1>The Complete<br><span>History of Money</span></h1>
+  <p>From seashells to digital dollars — 10,000 years of humanity's most consequential invention, and where it's heading next.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="num">10,000+</span>
+      <span class="lbl">Years of monetary history</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">7</span>
+      <span class="lbl">Fundamental forms of money</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">~$120T</span>
+      <span class="lbl">Global M2 money supply today</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">~97%</span>
+      <span class="lbl">USD purchasing power lost since 1913</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="nav-bar">
+  <a href="#timeline">📅 Timeline</a>
+  <a href="#cycle">🔄 The Pattern</a>
+  <a href="#roman">🪙 Roman Coins</a>
+  <a href="#layers">🏦 Money Today</a>
+  <a href="#future">⚡ Bitcoin vs CBDC</a>
+  <a href="#failures">💥 Failures</a>
+  <a href="#stats">📊 Key Numbers</a>
+</nav>
+
+<!-- ══════════ TIMELINE ══════════ -->
+<section id="timeline">
+  <div class="container">
+    <div class="section-label">Part 1</div>
+    <h2>The 10,000-Year Timeline</h2>
+    <p>Money evolved from physical goods to invisible digital signals — each transition driven by the same pressure: the need for a reliable way to trade with strangers across time.</p>
+
+    <div class="timeline-wrap">
+
+      <!-- BARTER -->
+      <div class="tl-item left">
+        <div class="tl-card">
+          <div class="tl-era era-c">Before 9000 BCE</div>
+          <h3>🤝 Barter — Direct Exchange</h3>
+          <p>No money at all. You traded goods directly. Works in small villages. Fails at scale — both parties must need exactly what the other has, at exactly the same moment. Economists call this the "double coincidence of wants."</p>
+          <span class="tl-backed">Intrinsic utility of the goods themselves</span>
+        </div>
+        <div class="tl-icon">🤝</div>
+      </div>
+
+      <!-- COMMODITY MONEY -->
+      <div class="tl-item right">
+        <div class="tl-icon">🐚</div>
+        <div class="tl-card">
+          <div class="tl-era era-c">9000 – 600 BCE</div>
+          <h3>🐚 Commodity Money</h3>
+          <p>Cowrie shells (China, Africa), salt (Rome), cattle (Africa), barley tablets (Mesopotamia). Different cultures independently arrived at the same solution: use something portable, scarce, and universally understood. The word "salary" comes from the Latin for salt.</p>
+          <span class="tl-backed">Utility + universal scarcity</span>
+        </div>
+      </div>
+
+      <!-- METAL COINS -->
+      <div class="tl-item left">
+        <div class="tl-card">
+          <div class="tl-era era-m">600 BCE – 1000 CE</div>
+          <h3>🪙 Metal Coins — The Lydian Revolution</h3>
+          <p>The kingdom of Lydia (modern Turkey) struck the world's first official coin around 600 BCE — electrum stamped with the king's seal. Solved portability, standardization, and authority in one invention. Spread to Greece, Persia, India, China, and Rome within 200 years.</p>
+          <span class="tl-backed">Precious metal content (intrinsic value)</span>
+        </div>
+        <div class="tl-icon">🪙</div>
+      </div>
+
+      <!-- CHINESE PAPER MONEY -->
+      <div class="tl-item right">
+        <div class="tl-icon">📜</div>
+        <div class="tl-card">
+          <div class="tl-era era-p">960 – 1300 CE</div>
+          <h3>📜 Paper Money — China's 1,000-Year Head Start</h3>
+          <p>Song Dynasty China issued the world's first government paper currency (jiaozi) around 1000 CE. It worked brilliantly — for 50 years. Then the government printed more paper than it had metal reserves. Hyperinflation followed. Europe would not adopt paper money for another 400 years.</p>
+          <span class="tl-backed">Metal reserves → government promise</span>
+        </div>
+      </div>
+
+      <!-- BANKING -->
+      <div class="tl-item left">
+        <div class="tl-card">
+          <div class="tl-era era-b">1300 – 1700 CE</div>
+          <h3>🏦 Banking &amp; Bills of Exchange</h3>
+          <p>The Medici family pioneered modern banking across Europe. Bills of exchange let merchants settle transactions across cities without carrying gold on dangerous roads. The Bank of Amsterdam (1609) and Bank of England (1694) formalized paper money — with the BoE being the first to back it with government creditworthiness rather than pure gold.</p>
+          <span class="tl-backed">Fractional gold reserves + institutional trust</span>
+        </div>
+        <div class="tl-icon">🏦</div>
+      </div>
+
+      <!-- GOLD STANDARD -->
+      <div class="tl-item right">
+        <div class="tl-icon">🥇</div>
+        <div class="tl-card">
+          <div class="tl-era era-g">1870 – 1971</div>
+          <h3>🥇 The Gold Standard</h3>
+          <p>Every major currency fixed to gold at a set rate. 40 years of remarkable stability (1870s–1914), then shattered by WWI, hobbled through WWII, resurrected as the Bretton Woods dollar-gold system in 1944, and finally ended by Nixon on August 15, 1971. He called it "temporary." It has been 54 years.</p>
+          <span class="tl-backed">Fixed convertibility to physical gold</span>
+        </div>
+      </div>
+
+      <!-- FIAT -->
+      <div class="tl-item left">
+        <div class="tl-card">
+          <div class="tl-era era-f">1971 – Present</div>
+          <h3>💵 Fiat Money — Backed by Decree</h3>
+          <p>Since 1971, every currency in the world is fiat — from the Latin "let it be done." No physical backing. Value derives from legal tender laws, network effects, and trust that central banks will manage supply responsibly. No hard ceiling on how much can be created. First time in the modern era money has had no physical anchor.</p>
+          <span class="tl-backed">Government decree + oil demand (petrodollar) + trust</span>
+        </div>
+        <div class="tl-icon">💵</div>
+      </div>
+
+      <!-- DIGITAL -->
+      <div class="tl-item right">
+        <div class="tl-icon">💻</div>
+        <div class="tl-card">
+          <div class="tl-era era-d">2009 – Present</div>
+          <h3>💻 Digital Money — Two Competing Visions</h3>
+          <p>Bitcoin launched in 2009 with a fixed supply and no central authority — the first hard money since the gold standard. Simultaneously, 130+ governments are building Central Bank Digital Currencies (CBDCs) — programmable, traceable, government-controlled digital money. Both are being built. Their philosophies are opposite.</p>
+          <span class="tl-backed">Cryptographic code (Bitcoin) / Government decree (CBDC)</span>
+        </div>
+      </div>
+
+    </div><!-- /timeline-wrap -->
+  </div>
+</section>
+
+<!-- ══════════ CYCLE ══════════ -->
+<section id="cycle">
+  <div class="container">
+    <div class="section-label">Part 2</div>
+    <h2>The Pattern Every Currency Has Followed</h2>
+    <p>Across 10,000 years, the same 8-step cycle repeats — from the Roman denarius to modern fiat. The only variable is how long each stage takes.</p>
+
+    <div class="cycle-grid">
+      <div class="cycle-step step-birth">
+        <div class="step-num">Step 1</div>
+        <span class="step-icon">🌱</span>
+        <h4>Birth</h4>
+        <p>New currency launched. Metal coins have real silver. Paper fully backed. Credibility is high. Value is stable.</p>
+      </div>
+      <div class="cycle-step step-success">
+        <div class="step-num">Step 2</div>
+        <span class="step-icon">📈</span>
+        <h4>Trust &amp; Adoption</h4>
+        <p>People accept it. Trade grows. Cross-border commerce expands. The currency becomes a standard.</p>
+      </div>
+      <div class="cycle-step step-success">
+        <div class="step-num">Step 3</div>
+        <span class="step-icon">💰</span>
+        <h4>Success &amp; Power</h4>
+        <p>Controlling the currency gives enormous power. Wars are funded. Empires built. Good times continue.</p>
+      </div>
+      <div class="cycle-step">
+        <div class="step-num">Step 4</div>
+        <span class="step-icon">😰</span>
+        <h4>Temptation</h4>
+        <p>War, debt, or ambition creates pressure. The state needs more money than it has. The temptation to create more without backing becomes irresistible.</p>
+      </div>
+      <div class="cycle-step">
+        <div class="step-num">Step 5</div>
+        <span class="step-icon">✂️</span>
+        <h4>Debasement</h4>
+        <p>Coins have silver removed. Printing presses run faster. The money supply expands without a corresponding increase in real goods or services.</p>
+      </div>
+      <div class="cycle-step">
+        <div class="step-num">Step 6</div>
+        <span class="step-icon">📉</span>
+        <h4>Inflation</h4>
+        <p>Too much money chasing too few goods. Prices rise. Merchants notice the coins are lighter. Real wages fall. Unrest grows.</p>
+      </div>
+      <div class="cycle-step step-fall">
+        <div class="step-num">Step 7</div>
+        <span class="step-icon">💥</span>
+        <h4>Collapse</h4>
+        <p>Trust evaporates suddenly. Currency rejected or abandoned. Hyperinflation, revolution, or conquest follows. The currency dies.</p>
+      </div>
+      <div class="cycle-step step-reset">
+        <div class="step-num">Step 8</div>
+        <span class="step-icon">🔄</span>
+        <h4>Reset</h4>
+        <p>A new currency is introduced — usually backed by something new. The cycle begins again. It has happened with every currency in recorded history. Without exception.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-gold" style="margin-top:28px;">
+      <p><strong>Where is the US dollar today?</strong> It is in Steps 4–5. The money supply grew 40% in 18 months during COVID stimulus. The national debt is $36 trillion. Annual interest payments exceed $1 trillion. The pattern is not a prediction — it is a description of what has already happened. The question is only timing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ROMAN COINS ══════════ -->
+<section id="roman">
+  <div class="container">
+    <div class="section-label">Part 3 — Case Study</div>
+    <h2>The Roman Denarius: Ancient Money Printing</h2>
+    <p>Rome had no printing press. So it did the ancient equivalent: quietly reduced the silver in each coin while keeping its face value the same. Over 300 years the denarius went from nearly pure silver to silver-plated bronze. Emperors kept spending as if nothing had changed.</p>
+
+    <div class="bar-chart">
+      <div class="bar-row r-high">
+        <div class="bar-lbl">55 BCE — Roman Republic</div>
+        <div class="bar-track"><div class="bar-fill" style="width:98%">98% silver</div></div>
+      </div>
+      <div class="bar-row r-high">
+        <div class="bar-lbl">50 CE — Emperor Claudius</div>
+        <div class="bar-track"><div class="bar-fill" style="width:85%">85% silver</div></div>
+      </div>
+      <div class="bar-row r-high">
+        <div class="bar-lbl">100 CE — Emperor Trajan</div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%">75% silver</div></div>
+      </div>
+      <div class="bar-row r-mid">
+        <div class="bar-lbl">180 CE — Marcus Aurelius</div>
+        <div class="bar-track"><div class="bar-fill" style="width:65%">65% silver</div></div>
+      </div>
+      <div class="bar-row r-mid">
+        <div class="bar-lbl">215 CE — Emperor Caracalla</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%">50% silver</div></div>
+      </div>
+      <div class="bar-row r-low">
+        <div class="bar-lbl">250 CE — Emperor Decius</div>
+        <div class="bar-track"><div class="bar-fill" style="width:20%">20% silver</div></div>
+      </div>
+      <div class="bar-row r-low">
+        <div class="bar-lbl">270 CE — Claudius Gothicus</div>
+        <div class="bar-track"><div class="bar-fill" style="width:3%">2–3%</div></div>
+      </div>
+    </div>
+
+    <div class="callout callout-red">
+      <p><strong style="color:var(--red);">Result:</strong> Merchants began hoarding old high-silver coins and rejecting new ones. Prices rose. Barter re-emerged in rural regions. The economy fragmented. Currency debasement is considered a primary cause of the Western Roman Empire's collapse in 476 CE. The same mechanism — more units, less backing — reappears in every major currency crisis in history.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MONEY LAYERS ══════════ -->
+<section id="layers">
+  <div class="container">
+    <div class="section-label">Part 4</div>
+    <h2>What Is "Money" Today?</h2>
+    <p>Most people think money is the notes in their wallet. Physical cash is the <em>smallest</em> layer of the modern monetary system. Most money today is digital — and most of it was created by bank lending, not by governments printing notes.</p>
+
+    <div class="pyramid">
+
+      <div class="pyr-layer" style="background:linear-gradient(135deg,rgba(26,188,156,.12),rgba(26,188,156,.04)); border-color:rgba(26,188,156,.3);">
+        <div class="pyr-val">~$1 quadrillion+</div>
+        <div class="pyr-name" style="color:#1abc9c;">📊 Derivatives &amp; Shadow Banking</div>
+        <div class="pyr-desc" style="color:rgba(26,188,156,.7);">Contracts derived from other assets. Not technically money — but affects available credit and perceived wealth. Invisible to most people.</div>
+      </div>
+
+      <div class="pyr-layer" style="background:linear-gradient(135deg,rgba(52,152,219,.12),rgba(52,152,219,.04)); border-color:rgba(52,152,219,.3);">
+        <div class="pyr-val">~$200 trillion+</div>
+        <div class="pyr-name" style="color:#3498db;">💳 Credit Money — Mortgages &amp; Loans</div>
+        <div class="pyr-desc" style="color:rgba(52,152,219,.7);">Created when banks lend. A $300,000 mortgage is not drawn from existing deposits — a bank types a number into a computer and new money is born. Destroyed when the loan is repaid.</div>
+      </div>
+
+      <div class="pyr-layer" style="background:linear-gradient(135deg,rgba(155,89,182,.12),rgba(155,89,182,.04)); border-color:rgba(155,89,182,.3);">
+        <div class="pyr-val">~$120 trillion</div>
+        <div class="pyr-name" style="color:#9b59b6;">🏦 Bank Deposits (M2)</div>
+        <div class="pyr-desc" style="color:rgba(155,89,182,.7);">The balance in your bank account. Not physical money — the bank's promise to pay you. Banks hold only 8–10% of deposits as reserves.</div>
+      </div>
+
+      <div class="pyr-layer" style="background:linear-gradient(135deg,rgba(245,200,66,.14),rgba(245,200,66,.04)); border-color:rgba(245,200,66,.35); max-width:65%;">
+        <div class="pyr-val">~$8.5 trillion</div>
+        <div class="pyr-name" style="color:#f5c842;">🪙 Physical Cash (M0)</div>
+        <div class="pyr-desc" style="color:rgba(245,200,66,.7);">Notes and coins. What most people think of as "real money." Approximately 8% of all money in existence.</div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-blue" style="margin-top:32px;">
+      <p><strong style="color:#3498db;">The key insight:</strong> When your bank approves your mortgage, it does not find existing money to give you. It creates new money — a digital entry — and transfers it to the seller. Money is born from debt. When you finish repaying, that money ceases to exist. The money supply breathes in and out with private lending decisions, not with government printing presses.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FUTURE ══════════ -->
+<section id="future">
+  <div class="container">
+    <div class="section-label">Part 5</div>
+    <h2>Two Competing Visions for the Future of Money</h2>
+    <p>Bitcoin and CBDCs are both being built simultaneously. They represent opposite philosophies about who should control money — and opposite answers to every lesson monetary history has taught.</p>
+
+    <div class="compare-wrap">
+
+      <div class="cmp-card" style="border-color:rgba(26,188,156,.35);">
+        <h3 style="color:#1abc9c;">₿ Bitcoin</h3>
+        <span class="cmp-sub">Decentralized hard money — created Jan 3, 2009</span>
+        <div class="cmp-row"><span class="cmp-lbl">Supply</span>         <span class="cmp-val v-good">Fixed — 21M max, forever</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Issuer</span>         <span class="cmp-val v-good">No one — decentralized</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Account freeze</span> <span class="cmp-val v-good">Cannot be frozen</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Privacy</span>        <span class="cmp-val v-good">Pseudonymous</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Inflation risk</span> <span class="cmp-val v-good">None (fixed supply)</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Price stability</span><span class="cmp-val v-bad">Highly volatile</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Daily use</span>      <span class="cmp-val v-warn">Limited today (volatility)</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Gov. control</span>   <span class="cmp-val v-good">None</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Programmable</span>   <span class="cmp-val v-warn">Limited</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Negative interest</span><span class="cmp-val v-good">Impossible</span></div>
+      </div>
+
+      <div class="cmp-card" style="border-color:rgba(52,152,219,.35);">
+        <h3 style="color:#3498db;">🏛️ CBDC</h3>
+        <span class="cmp-sub">Central Bank Digital Currency — 130+ countries developing</span>
+        <div class="cmp-row"><span class="cmp-lbl">Supply</span>         <span class="cmp-val v-bad">Unlimited — government sets</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Issuer</span>         <span class="cmp-val v-warn">Central bank</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Account freeze</span> <span class="cmp-val v-bad">Can be frozen instantly</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Privacy</span>        <span class="cmp-val v-bad">Every transaction tracked</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Inflation risk</span> <span class="cmp-val v-warn">Managed by central bank</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Price stability</span><span class="cmp-val v-good">Stable (by design)</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Daily use</span>      <span class="cmp-val v-good">Designed for this</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Gov. control</span>   <span class="cmp-val v-bad">Total</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Programmable</span>   <span class="cmp-val v-bad">Fully — restricts spending</span></div>
+        <div class="cmp-row"><span class="cmp-lbl">Negative interest</span><span class="cmp-val v-bad">Possible</span></div>
+      </div>
+    </div>
+
+    <div class="callout callout-gold">
+      <p><strong>The real tradeoff:</strong> Physical cash is private. You can spend it anonymously, store it without a bank, and no one can freeze it. CBDCs eliminate all of that. A government with total transaction data can enforce spending rules, expire money that hasn't been spent by a deadline, implement negative rates (charging you for holding savings), and restrict your account to approved merchants. This is the first time in history that all the functions of money could be under centralized, programmable control. That can be used well or catastrophically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FAILURES ══════════ -->
+<section id="failures">
+  <div class="container">
+    <div class="section-label">Part 6</div>
+    <h2>When Fiat Money Fails: The Historical Record</h2>
+    <p>Fiat money is a tool. Like any tool, it can be used well or catastrophically. Below are the most significant modern fiat currency failures — and the one root cause they all share.</p>
+
+    <table class="fail-table">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Period</th>
+          <th>Severity</th>
+          <th>What Happened</th>
+          <th>Root Cause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="f-country">🇩🇪 Germany</td>
+          <td>1921–1923</td>
+          <td class="f-extreme">Hyperinflation</td>
+          <td>Prices doubled every 3.7 days. Workers paid twice daily. Wheelbarrows of cash to buy bread.</td>
+          <td>WWI reparations paid by printing marks</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇭🇺 Hungary</td>
+          <td>1945–1946</td>
+          <td class="f-extreme">Worst ever recorded</td>
+          <td>Prices doubled every 15 hours. 400 octillion pengő = 1 new forint. New notes printed in the denominations of octillions.</td>
+          <td>WWII destruction + Soviet occupation demands</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇾🇺 Yugoslavia</td>
+          <td>1992–1994</td>
+          <td class="f-extreme">5 × 10¹⁵% inflation</td>
+          <td>Currency reissued 5 times. GDP fell 50%. Black markets became the real economy.</td>
+          <td>Civil war spending + economic collapse</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇿🇼 Zimbabwe</td>
+          <td>2007–2009</td>
+          <td class="f-extreme">89.7 sextillion %/month</td>
+          <td>$100 trillion dollar notes printed. People burned currency for warmth. Dollar abandoned; US dollars used instead.</td>
+          <td>Land seizures destroyed production; printing compensated</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇻🇪 Venezuela</td>
+          <td>2016–ongoing</td>
+          <td class="f-extreme">130,000% peak</td>
+          <td>Economy shrank 80%. 8 million fled. New bolívar issued — also collapsed.</td>
+          <td>Oil collapse + corrupt institutions + unchecked money creation</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇦🇷 Argentina</td>
+          <td>Recurring</td>
+          <td class="f-high">9 sovereign defaults</td>
+          <td>Currently 200%+ annual inflation. On its 25th IMF bailout. Middle class repeatedly wiped out.</td>
+          <td>Chronic fiscal deficits funded by money printing</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇱🇧 Lebanon</td>
+          <td>2019–ongoing</td>
+          <td class="f-high">98% value lost vs USD</td>
+          <td>Banks froze accounts overnight. Currency collapsed. Middle class savings erased in months.</td>
+          <td>Banking system collapse + political deadlock for decades</td>
+        </tr>
+        <tr>
+          <td class="f-country">🇹🇷 Turkey</td>
+          <td>2021–2023</td>
+          <td class="f-med">~80% lost vs USD</td>
+          <td>Lira collapsed as president ordered interest rate cuts during high inflation. Partially recovered after policy reversal.</td>
+          <td>Political interference in central bank independence</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-red">
+      <p><strong style="color:var(--red);">The common thread:</strong> Every currency crisis in this list has the same root cause — a government printing money to pay for things it cannot afford. The severity depends on how long the problem was allowed to grow before correction. The US dollar, euro, and British pound have also been debased — just slowly enough that most people haven't noticed. The mechanism is identical. Only the speed differs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ STATS ══════════ -->
+<section id="stats">
+  <div class="container">
+    <div class="section-label">Summary</div>
+    <h2>The Numbers That Tell the Full Story</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-val">~97%</span>
+        <span class="stat-lbl">US Dollar purchasing power lost since the Federal Reserve was created in 1913</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">$36T</span>
+        <span class="stat-lbl">Current US national debt — the largest in history</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">40%</span>
+        <span class="stat-lbl">Growth in US money supply (M2) in just 18 months during COVID stimulus (2020–21)</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">130+</span>
+        <span class="stat-lbl">Countries currently developing or piloting Central Bank Digital Currencies</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">21M</span>
+        <span class="stat-lbl">Maximum Bitcoin that will ever exist — by mathematical design, forever</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">0</span>
+        <span class="stat-lbl">Fiat currencies in history that have maintained their value indefinitely — without exception</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">$1T</span>
+        <span class="stat-lbl">US annual interest payment on national debt alone — exceeds the defense budget</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">600 BCE</span>
+        <span class="stat-lbl">Year of the first official coin — minted by the kingdom of Lydia in modern-day Turkey</span>
+      </div>
+    </div>
+
+    <div class="callout callout-green" style="margin-top:32px;">
+      <p><strong style="color:var(--green);">The big picture:</strong> Money is not permanent. It is a technology that gets replaced. Shells replaced barter. Coins replaced shells. Paper replaced coins. Digital is replacing paper. The function — enabling trade between strangers across time — never changes. The form always does. Understanding this history is the clearest lens available for understanding the financial world of the next 50 years.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>Visual companion to <a href="/insights/blog/history-of-money/">Money: The Complete Story</a> &mdash; part of the <a href="/insights/blog/">Benjamin Insights</a> series on economic history.</p>
+    <p style="margin-top:10px;">Related: <a href="/insights/blog/petrodollar-system/">The Petrodollar System</a> &nbsp;·&nbsp; <a href="/insights/blog/empire-lifespan-blog/">Why Every Great Empire Falls</a></p>
+    <p style="margin-top:16px; color:#4a5568;">Data: Federal Reserve · BIS · IMF · World Bank · CoinMarketCap · For educational purposes only.</p>
+  </div>
+</footer>
+
+</body>
+</html>
