@@ -67,7 +67,7 @@ Different cultures arrived at the same solution: pick something with real utilit
 | **Bronze tools** | China | 1000–500 BCE | Miniature spades and knives used as currency before coins |
 | **Wampum beads** | North America | 1500s–1600s CE | Accepted across tribes; later used in trade with European colonists |
 
-> **The word "salary" comes from salt.** Roman soldiers were sometimes paid in salt (*sal* in Latin). The expression "worth his salt" has survived 2,000 years.
+> **The word "salary" likely comes from salt.** The Latin *salarium* is linked to *sal* (salt) — most historians believe it referred to money given to soldiers to *buy* salt, not payment in salt itself. Whether soldiers were ever literally paid in salt is disputed. The phrase "worth his salt" has survived 2,000 years regardless.
 
 ### The Problem With Commodity Money
 
@@ -100,12 +100,13 @@ Rome had no printing press. So it did the ancient equivalent: it **quietly reduc
 ```
 Roman Denarius — Silver Content Over Time
 
-55 BCE  ████████████████████████████████████████ 98% silver
-50 CE   █████████████████████████████████░░░░░░░ 85% silver
-100 CE  ██████████████████████████████░░░░░░░░░░ 75% silver
-200 CE  ████████████████████░░░░░░░░░░░░░░░░░░░░ 50% silver
-250 CE  ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 20% silver
-270 CE  █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  2% silver
+ 55 BCE  ████████████████████████████████████████ ~98%  (Roman Republic)
+ 50 CE   █████████████████████████████████░░░░░░░ ~85%  (Emperor Claudius)
+100 CE   ████████████████████████████████████░░░░ ~90%  (Emperor Trajan)
+170 CE   ██████████████████████████████░░░░░░░░░░ ~75%  (Marcus Aurelius)
+215 CE   ████████████████████░░░░░░░░░░░░░░░░░░░░ ~50%  (Emperor Caracalla)
+250 CE   ████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ ~20%  (Emperor Decius)
+270 CE   █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ~2%  (Claudius Gothicus)
 ```
 
 The result: merchants noticed. They hoarded old high-silver coins and refused debased ones. Prices rose. Barter re-emerged in rural areas. The Roman economy fragmented. Historians cite currency debasement as a direct cause of the Western Empire's collapse.
@@ -138,9 +139,9 @@ Then the government did what every government has done since: **it issued more p
 
 By 1100 CE, inflation had eroded the jiaozi's value. By 1200 CE, it had collapsed. A replacement was issued. That also inflated and collapsed. China invented paper money — and immediately invented hyperinflation to go with it.
 
-### Marco Polo's Shock (1271 CE)
+### Marco Polo's Shock (~1275 CE)
 
-When Marco Polo arrived in Kublai Khan's court, he was astonished:
+Marco Polo left Venice in 1271 and arrived at Kublai Khan's court around 1275–1276. He was astonished:
 
 > *"All these pieces of paper are issued with as much solemnity and authority as if they were of pure gold or silver... and the Khan causes every year to be made such a vast quantity of this money that it would pay for all the treasure in the world."*
 
@@ -168,7 +169,7 @@ This meant:
 | Institution | Founded | What It Introduced |
 |-------------|---------|-------------------|
 | **Medici Bank** | 1397, Florence | Modern correspondent banking network — branches in 8 cities honoring each other's bills |
-| **Bank of Amsterdam** | 1609 | First true central bank — standardized receipts backed by gold on deposit |
+| **Bank of Amsterdam** | 1609 | One of Europe's first public deposit banks — standardized receipts backed by gold on deposit |
 | **Bank of England** | 1694 | Paper notes backed by **government debt** rather than pure gold deposits |
 
 The Bank of England's innovation was a conceptual leap: money backed not by a physical commodity, but by the **creditworthiness of a government**.
@@ -240,7 +241,7 @@ The third one is the fragile one. And every fiat experiment in history has event
 | **Germany** | 1921–1923 | Weimar hyperinflation. Prices doubled every 3.7 days. Workers paid twice daily. Wheelbarrows of cash for bread. |
 | **Hungary** | 1945–1946 | Worst hyperinflation ever recorded. Prices doubled every 15 hours. 400 octillion pengo = 1 new forint. |
 | **Zimbabwe** | 2007–2009 | $100 trillion dollar notes. Inflation: 89.7 sextillion percent per month. Currency abandoned entirely. |
-| **Venezuela** | 2018–ongoing | 130,000% peak annual inflation. Economy shrank 80%. Eight million people fled. |
+| **Venezuela** | 2018–ongoing | ~1,000,000% peak annual inflation (IMF estimate). Economy shrank 80%. Eight million people fled. |
 | **Argentina** | Recurring | Nine sovereign defaults. Currently 200%+ annual inflation. On its 25th IMF bailout. |
 | **Lebanon** | 2019–ongoing | Currency lost 98% of its value vs USD. Banks froze accounts. Middle class wiped out in months. |
 
