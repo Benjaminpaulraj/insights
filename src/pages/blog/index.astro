@@ -1,14 +1,9 @@
 ---
-import { Image } from 'astro:assets';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-import placeholder1 from '../../assets/blog-placeholder-1.jpg';
-import placeholder2 from '../../assets/blog-placeholder-2.jpg';
-import placeholder3 from '../../assets/blog-placeholder-3.jpg';
-import placeholder4 from '../../assets/blog-placeholder-4.jpg';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
@@ -19,7 +14,8 @@ const presentations = [
 			'A visual walkthrough of every layer inside Claude CLI: tools, sub-agents, memory, and permissions.',
 		pubDate: new Date('2026-05-24'),
 		href: `${base}claude-cli-architecture.html`,
-		heroImage: placeholder4,
+		gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+		label: 'Architecture',
 	},
 	{
 		title: 'The Complete History of Money — Visual Guide',
@@ -27,7 +23,8 @@ const presentations = [
 			'From seashells to digital dollars — how humanity invented and reinvented money across the centuries.',
 		pubDate: new Date('2026-05-02'),
 		href: `${base}currency-visual.html`,
-		heroImage: placeholder3,
+		gradient: 'linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)',
+		label: 'History',
 	},
 	{
 		title: "How Claude's Memory Works — Visual Guide",
@@ -35,7 +32,8 @@ const presentations = [
 			"11 context management strategies explained visually. Understand what fits inside Claude's 200K token window.",
 		pubDate: new Date('2026-04-27'),
 		href: `${base}claude-context-visual-guide.html`,
-		heroImage: placeholder3,
+		gradient: 'linear-gradient(135deg, #0f4c75 0%, #1b6ca8 50%, #118ab2 100%)',
+		label: 'Memory',
 	},
 	{
 		title: 'Mastering Claude Context Management',
@@ -43,7 +41,8 @@ const presentations = [
 			'A 25-slide deep dive into LLM limitations, context windows, and extended thinking — for developers and curious readers alike.',
 		pubDate: new Date('2026-04-27'),
 		href: `${base}claude-context-presentation.html`,
-		heroImage: placeholder2,
+		gradient: 'linear-gradient(135deg, #3b0764 0%, #6d28d9 50%, #7c3aed 100%)',
+		label: 'Deep Dive',
 	},
 	{
 		title: 'Why Every Great Empire Eventually Falls — Visual Framework',
@@ -51,7 +50,8 @@ const presentations = [
 			"Glubb's 5-stage empire cycle visualised. See where America, China, and other powers stand today.",
 		pubDate: new Date('2026-04-27'),
 		href: `${base}empire-cycle-diagram.html`,
-		heroImage: placeholder1,
+		gradient: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #c2410c 100%)',
+		label: 'Civilisation',
 	},
 	{
 		title: 'The Petrodollar System — Visual Explainer',
@@ -59,7 +59,8 @@ const presentations = [
 			'How oil pricing in dollars fuels US economic dominance — the full petrodollar loop in one visual guide.',
 		pubDate: new Date('2026-04-27'),
 		href: `${base}petrodollar-visual.html`,
-		heroImage: placeholder2,
+		gradient: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)',
+		label: 'Economics',
 	},
 ];
 ---
@@ -92,15 +93,44 @@ const presentations = [
 				margin-bottom: 1rem;
 				text-align: center;
 			}
-			ul li:first-child img {
+			ul li:first-child .thumbnail {
 				width: 100%;
 			}
 			ul li:first-child .title {
 				font-size: 2.369rem;
 			}
-			ul li img {
+			ul li .thumbnail {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
+				width: 100%;
+				aspect-ratio: 2 / 1;
+				display: flex;
+				align-items: flex-end;
+				padding: 1.25rem 1.5rem;
+				box-sizing: border-box;
+				position: relative;
+				overflow: hidden;
+			}
+			ul li .thumbnail::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%);
+				border-radius: inherit;
+			}
+			ul li .thumbnail-label {
+				position: relative;
+				z-index: 1;
+				font-size: 0.75rem;
+				font-weight: 700;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: rgba(255, 255, 255, 0.85);
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				padding: 0.25rem 0.65rem;
+				border-radius: 999px;
+				backdrop-filter: blur(4px);
+				background: rgba(255, 255, 255, 0.1);
 			}
 			ul li a {
 				display: block;
@@ -118,8 +148,9 @@ const presentations = [
 			ul li a:hover .date {
 				color: rgb(var(--accent));
 			}
-			ul a:hover img {
+			ul a:hover .thumbnail {
 				box-shadow: var(--box-shadow);
+				transform: translateY(-2px);
 			}
 			@media (max-width: 720px) {
 				ul {
@@ -135,6 +166,10 @@ const presentations = [
 				ul li:first-child .title {
 					font-size: 1.563em;
 				}
+				ul li .thumbnail {
+					align-items: center;
+					justify-content: center;
+				}
 			}
 		</style>
 	</head>
@@ -147,7 +182,9 @@ const presentations = [
 						presentations.map((item) => (
 							<li>
 								<a href={item.href}>
-									<Image width={720} height={360} src={item.heroImage} alt="" />
+									<div class="thumbnail" style={`background: ${item.gradient};`}>
+										<span class="thumbnail-label">{item.label}</span>
+									</div>
 									<h4 class="title">{item.title}</h4>
 									<p class="date">
 										<FormattedDate date={item.pubDate} />
