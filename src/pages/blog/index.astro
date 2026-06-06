@@ -103,6 +103,7 @@ const presentations = [
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
 				width: 100%;
+				min-height: 180px;
 				aspect-ratio: 2 / 1;
 				display: flex;
 				align-items: flex-end;
@@ -183,7 +184,7 @@ const presentations = [
 							<li>
 								<a href={item.href}>
 									<div class="thumbnail" style={`background: ${item.gradient};`}>
-										<span class="thumbnail-label">{item.label}</span>
+										<span class="thumbnail-label" aria-hidden="true">{item.label}</span>
 									</div>
 									<h4 class="title">{item.title}</h4>
 									<p class="date">
