@@ -20,6 +20,7 @@ const presentations = [
 		pubDate: new Date('2026-05-24'),
 		href: `${base}claude-cli-architecture.html`,
 		heroImage: placeholder4,
+		gcPath: '/insights/claude-cli-architecture.html',
 	},
 	{
 		title: 'The Complete History of Money — Visual Guide',
@@ -28,6 +29,7 @@ const presentations = [
 		pubDate: new Date('2026-05-02'),
 		href: `${base}currency-visual.html`,
 		heroImage: placeholder3,
+		gcPath: '/insights/currency-visual.html',
 	},
 	{
 		title: "How Claude's Memory Works — Visual Guide",
@@ -36,6 +38,7 @@ const presentations = [
 		pubDate: new Date('2026-04-27'),
 		href: `${base}claude-context-visual-guide.html`,
 		heroImage: placeholder3,
+		gcPath: '/insights/claude-context-visual-guide.html',
 	},
 	{
 		title: 'Mastering Claude Context Management',
@@ -44,6 +47,7 @@ const presentations = [
 		pubDate: new Date('2026-04-27'),
 		href: `${base}claude-context-presentation.html`,
 		heroImage: placeholder2,
+		gcPath: '/insights/claude-context-presentation.html',
 	},
 	{
 		title: 'Why Every Great Empire Eventually Falls — Visual Framework',
@@ -52,6 +56,7 @@ const presentations = [
 		pubDate: new Date('2026-04-27'),
 		href: `${base}empire-cycle-diagram.html`,
 		heroImage: placeholder1,
+		gcPath: '/insights/empire-cycle-diagram.html',
 	},
 	{
 		title: 'The Petrodollar System — Visual Explainer',
@@ -60,6 +65,7 @@ const presentations = [
 		pubDate: new Date('2026-04-27'),
 		href: `${base}petrodollar-visual.html`,
 		heroImage: placeholder2,
+		gcPath: '/insights/petrodollar-visual.html',
 	},
 ];
 ---
@@ -114,6 +120,11 @@ const presentations = [
 				margin: 0;
 				color: rgb(var(--gray));
 			}
+			.views {
+				font-size: 0.82rem;
+				color: rgb(var(--gray));
+				margin: 0.2rem 0 0;
+			}
 			ul li a:hover h4,
 			ul li a:hover .date {
 				color: rgb(var(--accent));
@@ -152,6 +163,7 @@ const presentations = [
 									<p class="date">
 										<FormattedDate date={item.pubDate} />
 									</p>
+									<p class="views" data-gc-path={item.gcPath}></p>
 								</a>
 							</li>
 						))
@@ -160,5 +172,18 @@ const presentations = [
 			</section>
 		</main>
 		<Footer />
+		<script>
+			document.querySelectorAll<HTMLElement>('[data-gc-path]').forEach(async (el) => {
+				const path = el.dataset.gcPath!;
+				try {
+					const res = await fetch(
+						`https://benjaminpaulraj.goatcounter.com/counter/${encodeURIComponent(path)}.json`
+					);
+					if (!res.ok) return;
+					const { count } = await res.json();
+					if (count && count !== '0') el.textContent = `${count} views`;
+				} catch {}
+			});
+		</script>
 	</body>
 </html>
