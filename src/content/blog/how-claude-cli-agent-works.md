@@ -541,6 +541,7 @@ Result: Claude behaves like a specialist for this task
 | — | `keybindings-help` | Customise keyboard shortcuts |
 | — | `verify` | Run the app and confirm a change works |
 | — | `code-review` | Review the current diff for bugs |
+| — | `simplify` | Simplify changed code — reuse, efficiency, cleanup; applies fixes (no bug hunting) |
 | — | `fewer-permission-prompts` | Reduce repetitive permission prompts |
 | — | `loop` | Run a command on a recurring interval |
 | — | `schedule` | Set up scheduled / cron-based agents |
