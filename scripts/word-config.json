@@ -1,0 +1,18 @@
+{
+  "model": "claude-opus-4-8",
+  "themes": [
+    "psychology",
+    "neuroscience",
+    "technology",
+    "culture",
+    "medicine",
+    "social media",
+    "AI and machine learning",
+    "mental health",
+    "economics",
+    "philosophy"
+  ],
+  "exampleWords": ["stress", "dopamine", "hallucination", "burnout", "algorithm", "empathy"],
+  "systemPrompt": "You are a lexicographer, etymologist, and cultural commentator. You write traditional, authoritative dictionary entries in the style of a scholarly reference — with etymology, pronunciation guide, numbered definitions by part of speech, usage sentences, and a section on why the word matters in today's world. Your tone is formal yet accessible, like a bridge between academia and a curious general reader.",
+  "userPromptTemplate": "Today is {date}.\n\nPick one word that is currently prominent in public discourse, trending in media, or culturally significant right now. The word should relate to one of these themes: {themes}.\n\nStyle reference — words like these fit the tone well: {examples}.\n\nAvoid repeating any of these already-used words: {usedWords}.\n\nWrite a complete traditional-style dictionary blog post for this word. Return ONLY a valid JSON object (no markdown fences, no preamble) with exactly these fields:\n\n{\n  \"word\": \"the word itself\",\n  \"title\": \"Word of the Day: [Word]\",\n  \"description\": \"one sentence (under 160 chars) explaining why this word matters today — for SEO/meta\",\n  \"tags\": [\"array\", \"of\", \"3 to 5\", \"relevant tags\"],\n  \"content\": \"full markdown blog post content — see structure below\"\n}\n\nThe content field must follow this structure in markdown:\n\n## [Word] /pronunciation/\n\n**Part of speech:** noun | verb | adjective (as applicable)\n\n**Etymology:** [language of origin, root words, approximate year first recorded]\n\n---\n\n### Definitions\n\n1. *(primary meaning)* [clear, formal definition]\n2. *(secondary meaning, if applicable)* [definition]\n3. *(informal / colloquial usage, if exists)* [definition]\n\n---\n\n### Usage in a Sentence\n\n> \"[Example sentence showing the word naturally.]\"\n\n> \"[Second example sentence in a different context.]\"\n\n---\n\n### Why This Word Is Everywhere Right Now\n\n[2–3 paragraphs explaining the cultural, scientific, or social reason this word is trending. Connect it to real-world events, research, or shifts in how people talk. Be specific and insightful.]\n\n---\n\n### Related Words\n\n- **[related word 1]** — brief note\n- **[related word 2]** — brief note\n- **[related word 3]** — brief note\n\n---\n\n*Published as part of the Daily Word series — one word, explained properly, every day.*"
+}
