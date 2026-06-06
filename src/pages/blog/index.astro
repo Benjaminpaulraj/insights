@@ -1,15 +1,67 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import placeholder1 from '../../assets/blog-placeholder-1.jpg';
+import placeholder2 from '../../assets/blog-placeholder-2.jpg';
+import placeholder3 from '../../assets/blog-placeholder-3.jpg';
+import placeholder4 from '../../assets/blog-placeholder-4.jpg';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const presentations = [
+	{
+		title: 'How Claude CLI Agent Works — Interactive Architecture',
+		description:
+			'A visual walkthrough of every layer inside Claude CLI: tools, sub-agents, memory, and permissions.',
+		pubDate: new Date('2026-05-24'),
+		href: `${base}claude-cli-architecture.html`,
+		heroImage: placeholder4,
+	},
+	{
+		title: 'The Complete History of Money — Visual Guide',
+		description:
+			'From seashells to digital dollars — how humanity invented and reinvented money across the centuries.',
+		pubDate: new Date('2026-05-02'),
+		href: `${base}currency-visual.html`,
+		heroImage: placeholder3,
+	},
+	{
+		title: "How Claude's Memory Works — Visual Guide",
+		description:
+			"11 context management strategies explained visually. Understand what fits inside Claude's 200K token window.",
+		pubDate: new Date('2026-04-27'),
+		href: `${base}claude-context-visual-guide.html`,
+		heroImage: placeholder3,
+	},
+	{
+		title: 'Mastering Claude Context Management',
+		description:
+			'A 25-slide deep dive into LLM limitations, context windows, and extended thinking — for developers and curious readers alike.',
+		pubDate: new Date('2026-04-27'),
+		href: `${base}claude-context-presentation.html`,
+		heroImage: placeholder2,
+	},
+	{
+		title: 'Why Every Great Empire Eventually Falls — Visual Framework',
+		description:
+			"Glubb's 5-stage empire cycle visualised. See where America, China, and other powers stand today.",
+		pubDate: new Date('2026-04-27'),
+		href: `${base}empire-cycle-diagram.html`,
+		heroImage: placeholder1,
+	},
+	{
+		title: 'The Petrodollar System — Visual Explainer',
+		description:
+			'How oil pricing in dollars fuels US economic dominance — the full petrodollar loop in one visual guide.',
+		pubDate: new Date('2026-04-27'),
+		href: `${base}petrodollar-visual.html`,
+		heroImage: placeholder2,
+	},
+];
 ---
 
 <!doctype html>
@@ -92,15 +144,13 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
+						presentations.map((item) => (
 							<li>
-								<a href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
+								<a href={item.href}>
+									<Image width={720} height={360} src={item.heroImage} alt="" />
+									<h4 class="title">{item.title}</h4>
 									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
+										<FormattedDate date={item.pubDate} />
 									</p>
 								</a>
 							</li>
