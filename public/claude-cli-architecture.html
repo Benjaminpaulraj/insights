@@ -713,7 +713,7 @@
       <span class="pulse-dot"></span>
       Agent Active · claude-sonnet-4-6
     </div>
-    <div class="label">Complete Architecture Guide · May 2026</div>
+    <div class="label">Complete Architecture Guide · June 2026</div>
     <h1>How Claude CLI<br>Agent Works</h1>
     <p>A visual, plain-English walkthrough of every layer — from the moment you press Enter to the moment output appears on your screen.</p>
 
@@ -724,7 +724,7 @@
         <li>Every prompt flows through: pre-processing → permission checks → context assembly → model API → tool execution</li>
         <li>Tools are Claude's "hands" — 40+ tools across 8 categories (File, Shell, Search, Web, Agent, MCP, Task, Scheduling)</li>
         <li>Sub-agents are worker processes with their own 200K token context windows — isolated from yours</li>
-        <li>Memory lives in: CLAUDE.md (permanent), ~/.claude/memory/ (AI-maintained), git history (implicit)</li>
+        <li>Memory lives in: CLAUDE.md (permanent), ~/.claude/projects/.../memory/ (AI-maintained), git history (implicit)</li>
         <li>Skills are pre-built Markdown prompt templates — not code — loaded on demand when you type /skill-name</li>
       </ul>
     </div>
@@ -804,7 +804,7 @@
         </div>
         <div class="flow-body">
           <h3>Claude Model API</h3>
-          <p>Context sent to Anthropic API. Response streams back token-by-token. Model tier: Haiku 4.5 / Sonnet 4.6 (default) / Opus 4.7. Plan mode and Fast mode alter this layer.</p>
+          <p>Context sent to Anthropic API. Response streams back token-by-token. Model tier: Haiku 4.5 / Sonnet 4.6 (default) / Opus 4.8. Plan mode and Fast mode alter this layer.</p>
         </div>
       </div>
 
@@ -1074,7 +1074,7 @@
             <ul>
               <li><strong>Haiku 4.5</strong> — fastest, great for sub-agents and simple tasks</li>
               <li><strong>Sonnet 4.6</strong> — balanced, the default for most tasks</li>
-              <li><strong>Opus 4.7</strong> — most capable, best for hard reasoning</li>
+              <li><strong>Opus 4.8</strong> — most capable, best for hard reasoning</li>
             </ul>
           </div>
           <div class="detail-subcard">
@@ -1361,8 +1361,8 @@
           <span class="tool-pill">TaskCreate<span class="tool-tip">Start a new background task with a description</span></span>
           <span class="tool-pill">TaskGet<span class="tool-tip">Check the status of a running task</span></span>
           <span class="tool-pill">TaskList<span class="tool-tip">List all current tasks</span></span>
-          <span class="tool-pill">TaskOutput<span class="tool-tip">Get the output of a completed task</span></span>
           <span class="tool-pill">TaskStop<span class="tool-tip">Stop a running task</span></span>
+          <span class="tool-pill">TaskUpdate<span class="tool-tip">Update the status or details of an existing task</span></span>
         </div>
       </div>
 
@@ -1375,7 +1375,6 @@
           <span class="tool-pill">CronDelete<span class="tool-tip">Delete a scheduled recurring task</span></span>
           <span class="tool-pill">CronList<span class="tool-tip">List all scheduled tasks</span></span>
           <span class="tool-pill">ScheduleWakeup<span class="tool-tip">Schedule Claude to resume work after N seconds</span></span>
-          <span class="tool-pill">EnterWorktree<span class="tool-tip">Enter a git worktree for isolated work</span></span>
         </div>
       </div>
 
@@ -1500,7 +1499,7 @@
         <h4>⚡ Hook System</h4>
         <div class="hook-row">
           <span class="hook-name">PreToolUse</span>
-          <span class="hook-desc">Runs before allowlist check — can block any tool</span>
+          <span class="hook-desc">Runs before tool execution — can block or log any tool</span>
         </div>
         <div class="hook-row">
           <span class="hook-name">PostToolUse</span>
@@ -1945,7 +1944,7 @@ fa3c91e feat: petrodollar post
 <!-- ── Footer ── -->
 <footer>
   <div>
-    Claude CLI Architecture · May 2026 ·
+    Claude CLI Architecture · June 2026 ·
     <a href="/insights/blog/how-claude-cli-agent-works">📄 Full written guide →</a>
     · Covers claude-sonnet-4-6 (default model)
   </div>

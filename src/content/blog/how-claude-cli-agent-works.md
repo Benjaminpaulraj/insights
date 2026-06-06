@@ -76,7 +76,7 @@ Here is the high-level picture:
                         ↓
 ┌─────────────────────────────────────────────────────────┐
 │  Layer 5 ·  CLAUDE MODEL API                            │
-│      claude-haiku-4-5 · sonnet-4-6 · opus-4-7           │
+│      claude-haiku-4-5 · sonnet-4-6 · opus-4-8           │
 └───────────────────────┬─────────────────────────────────┘
                         ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -242,7 +242,7 @@ The assembled context is sent to Anthropic's API and processed by one of three m
 │ Claude Sonnet 4.6│ claude-sonnet-4-6    │ Balanced        │ Most coding and  │
 │  (default)       │                      │                 │ writing tasks    │
 ├──────────────────┼──────────────────────┼─────────────────┼──────────────────┤
-│ Claude Opus 4.7  │ claude-opus-4-7      │ Most capable    │ Complex analysis,│
+│ Claude Opus 4.8  │ claude-opus-4-8      │ Most capable    │ Complex analysis,│
 │                  │                      │                 │ hard reasoning   │
 └──────────────────┴──────────────────────┴─────────────────┴──────────────────┘
 ```
@@ -322,7 +322,7 @@ There are **8 tool categories** with 40+ individual tools:
 │  🔌 MCP      │  chrome-devtools · google-drive · (custom servers)                │
 │              │  External servers connected via Model Context Protocol             │
 ├──────────────┼───────────────────────────────────────────────────────────────────┤
-│  📋 Task     │  TaskCreate · TaskGet · TaskList · TaskOutput · TaskStop          │
+│  📋 Task     │  TaskCreate · TaskGet · TaskList · TaskStop · TaskUpdate          │
 │              │  Long-running background task management                          │
 ├──────────────┼───────────────────────────────────────────────────────────────────┤
 │  ⏰ Schedule │  CronCreate · CronDelete · CronList · ScheduleWakeup             │
@@ -574,4 +574,4 @@ Six things to remember every time you use Claude CLI:
 
 > 💡 **Explore every layer visually:** [Claude CLI Architecture Interactive Diagram →](/insights/claude-cli-architecture.html)
 
-*Last updated: May 2026 · Covers Claude CLI with claude-sonnet-4-6 as default model*
+*Last updated: June 2026 · Covers Claude CLI with claude-sonnet-4-6 as default model*
