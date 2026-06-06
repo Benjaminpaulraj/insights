@@ -6,7 +6,30 @@
       "Bash(open:*)",
       "Bash(npm run *)",
       "Bash(lsof -iTCP -sTCP:LISTEN)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh run *)",
+      "WebFetch(domain:benjaminpaulraj.github.io)",
+      "WebFetch(domain:anthropic.com)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:www.sipri.org)",
+      "WebFetch(domain:www.19fortyfive.com)",
+      "WebFetch(domain:llamaindex.ai)",
+      "WebFetch(domain:www.imf.org)",
+      "WebFetch(domain:www.atlanticcouncil.org)",
+      "WebFetch(domain:fortune.com)",
+      "WebFetch(domain:www.themoscowtimes.com)",
+      "WebFetch(domain:www.kedglobal.com)",
+      "WebFetch(domain:thesoufancenter.org)",
+      "WebFetch(domain:www.cfr.org)",
+      "WebFetch(domain:economy-finance.ec.europa.eu)",
+      "WebFetch(domain:www.allianz-trade.com)",
+      "WebFetch(domain:www.asiapacific.ca)",
+      "Bash(grep -E \"\\\\.md$\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4322/insights/blog/)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot"
     ]
   }
 }
