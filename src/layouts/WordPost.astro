@@ -1,0 +1,383 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, tags } = Astro.props;
+
+// Extract just the word from "Word of the Day: Brainrot"
+const word = title.replace(/^Word of the Day:\s*/i, '').trim();
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet" />
+		<style>
+			:root {
+				--ink: #0d1117;
+				--ink-soft: #1a2030;
+				--cream: #f0ede6;
+				--cream-dim: #d8d4cc;
+				--gold: #c9a44a;
+				--gold-dim: #8a6f30;
+				--rule: rgba(201,164,74,0.25);
+				--serif: 'Playfair Display', Georgia, serif;
+				--body: 'Source Serif 4', Georgia, serif;
+			}
+
+			* { box-sizing: border-box; }
+
+			body {
+				background: var(--ink);
+				color: var(--cream);
+				font-family: var(--body);
+				margin: 0;
+				padding: 0;
+			}
+
+			/* Override global.css for this layout */
+			body h1,h2,h3,h4,h5,h6 { color: var(--cream); }
+			body a { color: var(--gold); }
+
+			/* ── Hero ─────────────────────────────── */
+			.word-hero {
+				position: relative;
+				min-height: 52vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				padding: 5rem 2rem 4rem;
+				overflow: hidden;
+				background: radial-gradient(ellipse 80% 60% at 50% 0%, #1e2a45 0%, var(--ink) 70%);
+			}
+
+			.word-hero::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background-image:
+					radial-gradient(circle at 20% 50%, rgba(201,164,74,0.06) 0%, transparent 50%),
+					radial-gradient(circle at 80% 20%, rgba(35,55,255,0.08) 0%, transparent 50%);
+				pointer-events: none;
+			}
+
+			/* decorative large letter watermark */
+			.word-hero::after {
+				content: attr(data-word);
+				position: absolute;
+				bottom: -0.15em;
+				left: 50%;
+				transform: translateX(-50%);
+				font-family: var(--serif);
+				font-size: clamp(8rem, 25vw, 22rem);
+				font-weight: 900;
+				font-style: italic;
+				color: transparent;
+				-webkit-text-stroke: 1px rgba(201,164,74,0.08);
+				white-space: nowrap;
+				pointer-events: none;
+				line-height: 1;
+				letter-spacing: -0.03em;
+			}
+
+			.series-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-family: var(--body);
+				font-size: 0.7rem;
+				font-weight: 600;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				color: var(--gold);
+				border: 1px solid var(--rule);
+				padding: 0.35rem 1rem;
+				border-radius: 999px;
+				margin-bottom: 2.5rem;
+				backdrop-filter: blur(4px);
+				background: rgba(201,164,74,0.06);
+				position: relative;
+				z-index: 1;
+				animation: fadeDown 0.6s ease both;
+			}
+
+			.series-badge::before {
+				content: '';
+				width: 5px;
+				height: 5px;
+				background: var(--gold);
+				border-radius: 50%;
+			}
+
+			.word-display {
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.7s ease 0.1s both;
+			}
+
+			.word-display h1 {
+				font-family: var(--serif);
+				font-size: clamp(3.5rem, 10vw, 8rem);
+				font-weight: 700;
+				font-style: italic;
+				line-height: 1;
+				margin: 0 0 0.4rem;
+				letter-spacing: -0.02em;
+				color: var(--cream);
+			}
+
+			.word-meta {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 1.5rem;
+				flex-wrap: wrap;
+				margin-top: 1.5rem;
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.7s ease 0.2s both;
+			}
+
+			.pub-date {
+				font-size: 0.8rem;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				color: var(--cream-dim);
+			}
+
+			.tags {
+				display: flex;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			.tag {
+				font-size: 0.72rem;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				color: var(--gold);
+				background: rgba(201,164,74,0.1);
+				border: 1px solid rgba(201,164,74,0.2);
+				padding: 0.2rem 0.7rem;
+				border-radius: 3px;
+			}
+
+			/* ── Gold rule ────────────────────────── */
+			.gold-rule {
+				width: 100%;
+				height: 1px;
+				background: linear-gradient(to right, transparent, var(--gold), transparent);
+				opacity: 0.4;
+				margin: 0;
+			}
+
+			/* ── Content ──────────────────────────── */
+			.word-content {
+				max-width: 740px;
+				margin: 0 auto;
+				padding: 3rem 2rem 5rem;
+				animation: fadeUp 0.8s ease 0.3s both;
+			}
+
+			/* Typography overrides for prose */
+			.word-content :global(h2) {
+				font-family: var(--serif);
+				font-size: 2rem;
+				font-weight: 700;
+				color: var(--cream);
+				margin: 2.5rem 0 0.75rem;
+				padding-bottom: 0.5rem;
+				border-bottom: 1px solid var(--rule);
+			}
+
+			.word-content :global(h3) {
+				font-family: var(--serif);
+				font-size: 1.3rem;
+				font-weight: 600;
+				color: var(--gold);
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				font-style: normal;
+				margin: 2rem 0 0.75rem;
+				font-size: 0.85rem;
+			}
+
+			.word-content :global(p) {
+				font-size: 1.05rem;
+				line-height: 1.8;
+				color: var(--cream-dim);
+				margin-bottom: 1.2rem;
+			}
+
+			.word-content :global(strong) {
+				color: var(--cream);
+				font-weight: 600;
+			}
+
+			.word-content :global(em) {
+				color: var(--cream);
+				font-style: italic;
+			}
+
+			/* Dictionary-style ordered list */
+			.word-content :global(ol) {
+				counter-reset: def;
+				list-style: none;
+				padding: 0;
+				margin: 0 0 1.5rem;
+			}
+
+			.word-content :global(ol li) {
+				counter-increment: def;
+				position: relative;
+				padding: 0.85rem 1rem 0.85rem 3rem;
+				margin-bottom: 0.5rem;
+				background: rgba(255,255,255,0.02);
+				border-left: 2px solid var(--rule);
+				border-radius: 0 4px 4px 0;
+				font-size: 1rem;
+				line-height: 1.7;
+				color: var(--cream-dim);
+				transition: border-color 0.2s;
+			}
+
+			.word-content :global(ol li::before) {
+				content: counter(def);
+				position: absolute;
+				left: 0.9rem;
+				top: 0.85rem;
+				font-family: var(--serif);
+				font-size: 0.9rem;
+				font-weight: 700;
+				color: var(--gold);
+				line-height: 1.7;
+			}
+
+			.word-content :global(ol li:hover) {
+				border-left-color: var(--gold);
+			}
+
+			/* Usage blockquotes */
+			.word-content :global(blockquote) {
+				margin: 1rem 0;
+				padding: 1.2rem 1.5rem 1.2rem 2rem;
+				background: rgba(201,164,74,0.05);
+				border-left: 3px solid var(--gold);
+				border-radius: 0 6px 6px 0;
+				font-style: italic;
+				font-size: 1.05rem;
+				color: var(--cream);
+				position: relative;
+			}
+
+			.word-content :global(blockquote::before) {
+				content: '"';
+				position: absolute;
+				top: -0.1rem;
+				left: 0.4rem;
+				font-family: var(--serif);
+				font-size: 3rem;
+				color: var(--gold);
+				opacity: 0.3;
+				line-height: 1;
+			}
+
+			/* Horizontal rules */
+			.word-content :global(hr) {
+				border: none;
+				height: 1px;
+				background: linear-gradient(to right, transparent, var(--rule), transparent);
+				margin: 2.5rem 0;
+			}
+
+			/* Unordered list (related words) */
+			.word-content :global(ul) {
+				list-style: none;
+				padding: 0;
+				margin: 0 0 1.5rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+
+			.word-content :global(ul li) {
+				padding: 0.6rem 1rem;
+				background: rgba(255,255,255,0.02);
+				border-radius: 4px;
+				font-size: 0.95rem;
+				color: var(--cream-dim);
+				line-height: 1.6;
+			}
+
+			.word-content :global(ul li strong) {
+				color: var(--gold);
+			}
+
+			/* Footer note */
+			.word-content :global(em:last-child),
+			.word-content :global(p:last-child em) {
+				font-size: 0.85rem;
+				color: rgba(201,164,74,0.6);
+				letter-spacing: 0.03em;
+			}
+
+			/* ── Animations ───────────────────────── */
+			@keyframes fadeDown {
+				from { opacity: 0; transform: translateY(-12px); }
+				to   { opacity: 1; transform: translateY(0); }
+			}
+
+			@keyframes fadeUp {
+				from { opacity: 0; transform: translateY(16px); }
+				to   { opacity: 1; transform: translateY(0); }
+			}
+
+			/* ── Mobile ───────────────────────────── */
+			@media (max-width: 640px) {
+				.word-hero { padding: 4rem 1.5rem 3rem; min-height: 44vh; }
+				.word-content { padding: 2rem 1.25rem 4rem; }
+				.word-display h1 { font-size: 3.5rem; }
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+
+		<div class="word-hero" data-word={word}>
+			<span class="series-badge">Word of the Day</span>
+			<div class="word-display">
+				<h1>{word}</h1>
+			</div>
+			<div class="word-meta">
+				<span class="pub-date"><FormattedDate date={pubDate} /></span>
+				{tags && tags.length > 0 && (
+					<div class="tags">
+						{tags.map(t => <span class="tag">{t}</span>)}
+					</div>
+				)}
+			</div>
+		</div>
+
+		<div class="gold-rule"></div>
+
+		<main style="background: var(--ink); padding: 0; max-width: 100%; width: 100%;">
+			<article>
+				<div class="word-content">
+					<slot />
+				</div>
+			</article>
+		</main>
+
+		<Footer />
+	</body>
+</html>
