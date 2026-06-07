@@ -1,0 +1,62 @@
+name: Generate HN Daily Summary
+
+on:
+  # Triggered daily by Claude routine via GitHub API using GH_PAT
+  # Can also be run manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Override date (YYYY-MM-DD, leave blank for today)'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run — generate but do not commit'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  generate-hn-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Claude CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Generate HN summary
+        run: |
+          FLAGS=""
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            FLAGS="--date ${{ github.event.inputs.date }}"
+          fi
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+          fi
+          node scripts/generate-hn-summary.mjs $FLAGS
+
+      - name: Commit and push
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "HN Summary Bot"
+          git config user.email "actions@github.com"
+          git add src/content/blog/
+          if git diff --staged --quiet; then
+            echo "No new summary file — already exists for today or dry run."
+          else
+            git commit -m "feat: HN daily summary for $(date +%Y-%m-%d)"
+            git push
+          fi
