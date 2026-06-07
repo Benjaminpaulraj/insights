@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
@@ -6,6 +7,18 @@ import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const mdPosts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.map((post) => ({
+		title: post.data.title,
+		description: post.data.description,
+		pubDate: post.data.pubDate,
+		href: `${base}blog/${post.id}/`,
+		gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
+		label: post.data.tags?.[0] ?? 'Word',
+		gcPath: `/insights/blog/${post.id}/`,
+	}));
 
 const presentations = [
 	{
@@ -191,7 +204,9 @@ const presentations = [
 			<section>
 				<ul>
 					{
-						presentations.map((item) => (
+						[...mdPosts, ...presentations]
+						.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf())
+						.map((item) => (
 							<li>
 								<a href={item.href}>
 									<div class="thumbnail" style={`background: ${item.gradient};`}>
