@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Word of the Day: Brainrot — Benjamin's Insights</title>
+<meta name="description" content="Once a joke about doomscrolling, 'brainrot' is now shorthand for the cognitive cost of an attention economy running at full tilt." />
+<link rel="icon" href="/insights/favicon.svg" />
+
+<!-- GoatCounter -->
+<script data-goatcounter="https://benjaminpaulraj.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet" />
+
+<style>
+/* ─── Reset & tokens ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #0b0f18;
+  --ink-mid:   #141a27;
+  --ink-soft:  #1e2840;
+  --cream:     #f0ede6;
+  --cream-dim: #b8b4ab;
+  --cream-faint: rgba(240,237,230,0.06);
+  --gold:      #c9a44a;
+  --gold-dim:  rgba(201,164,74,0.25);
+  --gold-faint:rgba(201,164,74,0.06);
+  --blue-glow: rgba(35,55,180,0.12);
+  --rule:      rgba(201,164,74,0.2);
+  --serif:     'Playfair Display', Georgia, serif;
+  --body:      'Source Serif 4', Georgia, serif;
+  --radius:    6px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Grain overlay ──────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Progress bar ───────────────────────────────────────── */
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(to right, var(--gold-dim), var(--gold));
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+/* ─── Nav ────────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+  background: rgba(11,15,24,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.nav-brand {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cream);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.nav-links { display: flex; gap: 0.25rem; }
+
+.nav-links a {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-links a:hover { color: var(--cream); background: var(--cream-faint); }
+
+/* ─── Hero ───────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 9rem 2rem 6rem;
+  overflow: hidden;
+}
+
+/* Radial background glows */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -10%, #1e2a50 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 15% 80%, var(--blue-glow) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 70%, rgba(201,164,74,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Giant ghost watermark word */
+.hero-ghost {
+  position: absolute;
+  bottom: -0.05em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--serif);
+  font-size: clamp(10rem, 28vw, 26rem);
+  font-weight: 900;
+  font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(201,164,74,0.07);
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  user-select: none;
+}
+
+/* Oxford year badge */
+.oxford-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.68rem;
+  font-family: var(--body);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--rule);
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  background: var(--gold-faint);
+  backdrop-filter: blur(6px);
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: rise 0.7s ease 0.1s forwards;
+}
+
+.oxford-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* The word */
+.hero-word {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: rise 0.8s ease 0.2s forwards;
+}
+
+.hero-word h1 {
+  font-family: var(--serif);
+  font-size: clamp(4rem, 13vw, 10rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 80px rgba(201,164,74,0.15);
+}
+
+.pronunciation {
+  display: inline-block;
+  font-family: var(--body);
+  font-size: 1.15rem;
+  font-style: normal;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+.pos-tag {
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+  font-style: italic;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Date + tags row */
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: rise 0.8s ease 0.35s forwards;
+}
+
+.meta-date {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-faint);
+  border: 1px solid var(--rule);
+  padding: 0.2rem 0.75rem;
+  border-radius: 3px;
+}
+
+/* Scroll cue */
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: rise 0.8s ease 0.8s forwards;
+  z-index: 1;
+}
+
+.scroll-cue span {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.scroll-arrow {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollDrop 1.6s ease infinite;
+}
+
+@keyframes scrollDrop {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  51%  { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* ─── Gold separator ─────────────────────────────────────── */
+.separator {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0.35;
+}
+
+/* ─── Content wrapper ────────────────────────────────────── */
+.content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+/* ─── Section labels ─────────────────────────────────────── */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  margin-top: 3rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.section-label span {
+  font-family: var(--body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+/* ─── Etymology box ──────────────────────────────────────── */
+.etymology {
+  background: linear-gradient(135deg, rgba(201,164,74,0.05), rgba(35,55,180,0.05));
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.etymology p {
+  font-size: 0.95rem;
+  color: var(--cream-dim);
+  line-height: 1.8;
+  font-style: italic;
+}
+
+.etymology strong { color: var(--cream); font-style: normal; }
+
+/* ─── Part of speech ─────────────────────────────────────── */
+.pos-row {
+  font-size: 0.85rem;
+  color: var(--cream-dim);
+  margin-bottom: 2rem;
+  padding: 0.6rem 1rem;
+  background: var(--cream-faint);
+  border-radius: var(--radius);
+  display: inline-block;
+}
+.pos-row strong { color: var(--cream); }
+
+/* ─── Definitions ────────────────────────────────────────── */
+ol.definitions {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  counter-reset: def;
+}
+
+ol.definitions li {
+  counter-increment: def;
+  position: relative;
+  padding: 1rem 1.25rem 1rem 3.25rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-left: 2px solid var(--rule);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--cream-dim);
+  transition: border-color 0.25s, background 0.25s;
+}
+
+ol.definitions li::before {
+  content: counter(def);
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.75;
+}
+
+ol.definitions li:hover {
+  border-left-color: var(--gold);
+  background: rgba(201,164,74,0.04);
+}
+
+ol.definitions li em { color: var(--cream); font-style: italic; }
+ol.definitions li strong { color: var(--cream); }
+
+/* ─── Usage blockquotes ──────────────────────────────────── */
+.usage {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+blockquote {
+  position: relative;
+  padding: 1.25rem 1.5rem 1.25rem 2.25rem;
+  background: rgba(201,164,74,0.04);
+  border: 1px solid rgba(201,164,74,0.12);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--cream);
+  line-height: 1.75;
+}
+
+blockquote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.15rem;
+  left: 0.5rem;
+  font-family: var(--serif);
+  font-size: 3.5rem;
+  color: var(--gold);
+  opacity: 0.25;
+  line-height: 1;
+}
+
+/* ─── Why section ────────────────────────────────────────── */
+.why-section {
+  background: linear-gradient(180deg, var(--ink-mid) 0%, var(--ink) 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 2.5rem;
+  margin-top: 1rem;
+}
+
+.why-section p {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--cream-dim);
+  margin-bottom: 1.25rem;
+}
+
+.why-section p:last-child { margin-bottom: 0; }
+.why-section strong { color: var(--cream); }
+
+/* ─── Related words ──────────────────────────────────────── */
+.related {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.related-item {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.75rem 1.25rem;
+  background: var(--cream-faint);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+}
+
+.related-item:hover { background: rgba(201,164,74,0.05); }
+
+.related-word {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--gold);
+  white-space: nowrap;
+  font-size: 1.05rem;
+}
+
+.related-note {
+  font-size: 0.9rem;
+  color: var(--cream-dim);
+  line-height: 1.6;
+}
+
+/* ─── Series footer ──────────────────────────────────────── */
+.series-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+
+.series-footer p {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(201,164,74,0.5);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--gold);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+}
+
+.back-link:hover { background: var(--gold-faint); }
+
+/* ─── Footer ─────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+}
+
+footer a { color: var(--cream-dim); text-decoration: none; }
+footer a:hover { color: var(--gold); }
+
+/* ─── Animations ─────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero { padding: 8rem 1.5rem 5rem; }
+  .hero-word h1 { font-size: 4rem; }
+  .content { padding: 3rem 1.25rem 5rem; }
+  .why-section { padding: 1.75rem; }
+  nav { padding: 0 1rem; }
+  .nav-links a { padding: 0.4rem 0.5rem; font-size: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <a class="nav-brand" href="/insights/">Benjamin's Insights</a>
+  <div class="nav-links">
+    <a href="/insights/">Home</a>
+    <a href="/insights/blog/">Blog</a>
+    <a href="/insights/about/">About</a>
+  </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────── -->
+<section class="hero">
+  <span class="hero-ghost" aria-hidden="true">Brainrot</span>
+
+  <div class="oxford-badge">
+    <span>Word of the Day</span>
+  </div>
+
+  <div class="hero-word">
+    <h1>Brainrot</h1>
+    <div class="pronunciation">/ˈbreɪn.rɒt/</div>
+    <span class="pos-tag">noun · also attributive</span>
+  </div>
+
+  <div class="hero-meta">
+    <span class="meta-date">7 June 2026</span>
+    <span class="tag">culture</span>
+    <span class="tag">social media</span>
+    <span class="tag">mental health</span>
+    <span class="tag">psychology</span>
+    <span class="tag">language</span>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Read</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<div class="separator"></div>
+
+<!-- ── Content ────────────────────────────────────────────── -->
+<main class="content">
+
+  <!-- Etymology -->
+  <div class="section-label reveal"><span>Etymology</span></div>
+  <div class="etymology reveal">
+    <p>A closed compound of English <strong>brain</strong> (Old English <em>brægen</em>, "the organ of thought") and <strong>rot</strong> (Old English <em>rotian</em>, "to decay, decompose"). The literal pairing appears as early as the 19th century — Henry David Thoreau used it in <em>Walden</em> (1854) to lament intellectual decline — but its present sense emerged on the internet in the early 2020s and was named Oxford University Press's <strong>Word of the Year in 2024</strong>.</p>
+  </div>
+
+  <!-- Part of speech -->
+  <div class="section-label reveal" style="margin-top:2.5rem"><span>Definitions</span></div>
+  <div class="pos-row reveal"><strong>noun</strong> (also attributive, as in <em>brainrot humor</em>)</div>
+
+  <ol class="definitions reveal">
+    <li>
+      <em>(primary meaning)</em> The supposed deterioration of a person's mental or intellectual faculties, especially as a result of overconsuming trivial, low-quality, or algorithmically served online content.
+    </li>
+    <li>
+      <em>(secondary meaning)</em> The genre of such content itself — absurd, hyper-stimulating, often deliberately nonsensical media designed for endless scrolling.
+    </li>
+    <li>
+      <em>(informal / colloquial usage)</em> A state of being so immersed in a particular topic, fandom, or meme that one can think of little else: <em>"I've got total Roman Empire brainrot."</em>
+    </li>
+  </ol>
+
+  <!-- Usage -->
+  <div class="section-label reveal"><span>Usage in a Sentence</span></div>
+  <div class="usage reveal">
+    <blockquote>
+      "After three hours of short-form videos, she felt the familiar fog of brainrot settle in — eyes glazed, attention shot."
+    </blockquote>
+    <blockquote>
+      "Half the slang my students use is pure brainrot; I had to look up four words just to grade their group chat."
+    </blockquote>
+  </div>
+
+  <!-- Why -->
+  <div class="section-label reveal"><span>Why This Word Is Everywhere Right Now</span></div>
+  <div class="why-section reveal">
+    <p>Brainrot won its moment because it gave a name to a feeling almost everyone now recognizes. The infinite scroll — engineered to maximize time-on-app — has made the sensation of mental erosion a daily, shared experience. When Oxford crowned it Word of the Year in 2024, the choice was less a prediction than a diagnosis: a culture describing, in real time, what it suspects its own tools are doing to it.</p>
+    <p>What makes the term unusually sticky is its self-awareness. The same online communities that produce the most aggressively meaningless content also coined the word to mock it. Brainrot is simultaneously an accusation and a badge — people complain about it while gleefully tagging their own posts with it. That irony mirrors a genuine ambivalence: we know the attention economy is extracting something from us, yet we keep paying.</p>
+    <p>Researchers in psychology and neuroscience have leaned into the conversation, studying how fragmented, high-novelty media may reshape attention spans, working memory, and the brain's reward circuitry. Whether "brainrot" describes a measurable cognitive effect or simply a cultural mood remains contested — but the word's explosive uptake is itself evidence of how seriously a generation takes the question.</p>
+  </div>
+
+  <!-- Related words -->
+  <div class="section-label reveal"><span>Related Words</span></div>
+  <div class="related reveal">
+    <div class="related-item">
+      <span class="related-word">doomscrolling</span>
+      <span class="related-note">the compulsive consumption of distressing news; a frequent on-ramp to brainrot.</span>
+    </div>
+    <div class="related-item">
+      <span class="related-word">enshittification</span>
+      <span class="related-note">Cory Doctorow's term for the gradual decay of online platforms — the structural cousin of brainrot's personal decay.</span>
+    </div>
+    <div class="related-item">
+      <span class="related-word">dopamine</span>
+      <span class="related-note">the neurotransmitter most often invoked to explain why the scroll is so hard to stop.</span>
+    </div>
+  </div>
+
+  <!-- Series footer -->
+  <div class="series-footer reveal">
+    <p>Published as part of the Daily Word series — one word, explained properly, every day.</p>
+    <a class="back-link" href="/insights/blog/">← All posts</a>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2026 <a href="/insights/">Benjamin's Insights</a> · Built with Astro</p>
+</footer>
+
+<script>
+// Reading progress bar
+const bar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY / max * 100) + '%';
+}, { passive: true });
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
