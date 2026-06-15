@@ -82,12 +82,27 @@ const filtered = headings.filter(h => h.depth === 2 || h.depth === 3);
 			return id ? document.getElementById(id) : null;
 		}).filter(Boolean) as HTMLElement[];
 
+		const visible = new Set<string>();
+
+		function updateActive() {
+			links.forEach(l => l.classList.remove('active'));
+			for (const el of headingEls) {
+				if (visible.has(el.id)) {
+					document.querySelector(`#toc a[href="#${el.id}"]`)?.classList.add('active');
+					break;
+				}
+			}
+		}
+
 		const observer = new IntersectionObserver(entries => {
 			entries.forEach(entry => {
-				const id = entry.target.getAttribute('id');
-				const link = document.querySelector(`#toc a[href="#${id}"]`);
-				if (link) link.classList.toggle('active', entry.isIntersecting);
+				if (entry.isIntersecting) {
+					visible.add(entry.target.id);
+				} else {
+					visible.delete(entry.target.id);
+				}
 			});
+			updateActive();
 		}, { rootMargin: '0px 0px -70% 0px' });
 
 		headingEls.forEach(el => observer.observe(el));

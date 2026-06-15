@@ -133,7 +133,6 @@ const displayTag = posts[0]?.data.tags?.find((t) => t.toLowerCase() === tag) ?? 
 						<a href={`${base}blog/${post.id}/`}>
 							<div class="post-meta">
 								<FormattedDate date={post.data.pubDate} />
-								{post.data.minutesRead && <span>· {post.data.minutesRead}</span>}
 							</div>
 							<h2 class="post-title">{post.data.title}</h2>
 							<p class="post-desc">{post.data.description}</p>

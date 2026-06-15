@@ -43,6 +43,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 		padding: 1.5rem 0;
 		border-top: 1px solid rgb(var(--gray-light));
 	}
+	:global([data-theme="dark"]) .post-nav {
+		border-top-color: rgb(var(--gray-dark));
+	}
 	.post-nav-prev,
 	.post-nav-next {
 		flex: 1;

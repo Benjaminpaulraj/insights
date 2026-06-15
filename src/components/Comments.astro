@@ -7,25 +7,7 @@
 		Comments are powered by <a href="https://giscus.app" target="_blank" rel="noopener">Giscus</a> via GitHub Discussions.
 		You need a GitHub account to comment.
 	</p>
-	<div id="giscus-container">
-		<script
-			src="https://giscus.app/client.js"
-			data-repo="benjaminpaulraj/insights"
-			data-repo-id=""
-			data-category="General"
-			data-category-id=""
-			data-mapping="pathname"
-			data-strict="0"
-			data-reactions-enabled="1"
-			data-emit-metadata="0"
-			data-input-position="top"
-			data-theme="light"
-			data-lang="en"
-			data-loading="lazy"
-			crossorigin="anonymous"
-			async
-		></script>
-	</div>
+	<div id="giscus-container"></div>
 </section>
 
 <style>
@@ -33,6 +15,9 @@
 		margin: 3rem 0 1rem;
 		padding-top: 2rem;
 		border-top: 1px solid rgb(var(--gray-light));
+	}
+	[data-theme="dark"] .comments {
+		border-top-color: rgb(var(--gray-dark));
 	}
 	h2 {
 		font-size: 1.25rem;
@@ -56,12 +41,33 @@
 		}
 	}
 
-	window.addEventListener('theme-change', (e: Event) => {
-		const theme = (e as CustomEvent<{ theme: string }>).detail.theme;
-		setGiscusTheme(theme);
-	});
-
-	const saved = localStorage.getItem('theme') ||
+	// Determine initial theme before injecting the script so Giscus starts in the right mode
+	const initialTheme = localStorage.getItem('theme') ||
 		(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-	setGiscusTheme(saved);
+
+	// Inject Giscus dynamically so we can set data-theme correctly from the start.
+	// TODO: fill in data-repo-id and data-category-id after enabling GitHub Discussions
+	//       on benjaminpaulraj/insights and generating config at https://giscus.app
+	const script = document.createElement('script');
+	script.src = 'https://giscus.app/client.js';
+	script.setAttribute('data-repo', 'benjaminpaulraj/insights');
+	script.setAttribute('data-repo-id', '');
+	script.setAttribute('data-category', 'General');
+	script.setAttribute('data-category-id', '');
+	script.setAttribute('data-mapping', 'pathname');
+	script.setAttribute('data-strict', '0');
+	script.setAttribute('data-reactions-enabled', '1');
+	script.setAttribute('data-emit-metadata', '0');
+	script.setAttribute('data-input-position', 'top');
+	script.setAttribute('data-theme', initialTheme);
+	script.setAttribute('data-lang', 'en');
+	script.setAttribute('data-loading', 'lazy');
+	script.setAttribute('crossorigin', 'anonymous');
+	script.async = true;
+	document.getElementById('giscus-container')?.appendChild(script);
+
+	// Sync theme on future manual toggles
+	window.addEventListener('theme-change', (e: Event) => {
+		setGiscusTheme((e as CustomEvent<{ theme: string }>).detail.theme);
+	});
 </script>
