@@ -1,0 +1,54 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Search — ${SITE_TITLE}`} description="Search all articles on Benjamin's Insights." />
+		<link rel="stylesheet" href={`${base}pagefind/pagefind-ui.css`} />
+		<style>
+			main {
+				max-width: 720px;
+				margin: 0 auto;
+				padding: 3em 1em;
+			}
+			h1 {
+				font-size: 2rem;
+				margin-bottom: 1.5rem;
+			}
+			.search-note {
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				margin-top: 2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Search</h1>
+			<div id="search"></div>
+			<p class="search-note">
+				Search is powered by <a href="https://pagefind.app" target="_blank" rel="noopener">Pagefind</a>.
+				Results are updated on each build.
+			</p>
+		</main>
+		<Footer />
+		<script is:inline define:vars={{ base }}>
+			window.addEventListener('DOMContentLoaded', function () {
+				var script = document.createElement('script');
+				script.src = base + 'pagefind/pagefind-ui.js';
+				script.onload = function () {
+					new PagefindUI({ element: '#search', showImages: false, resetStyles: false });
+				};
+				document.head.appendChild(script);
+			});
+		</script>
+	</body>
+</html>

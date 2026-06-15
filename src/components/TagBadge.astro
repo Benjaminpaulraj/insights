@@ -1,0 +1,31 @@
+---
+interface Props {
+	tag: string;
+}
+const { tag } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<a href={`${base}tags/${encodeURIComponent(tag.toLowerCase())}/`} class="tag-badge">
+	#{tag}
+</a>
+
+<style>
+	.tag-badge {
+		display: inline-block;
+		font-size: 0.75rem;
+		font-weight: 600;
+		padding: 0.2em 0.65em;
+		border-radius: 999px;
+		background: rgba(35, 55, 255, 0.1);
+		color: var(--accent);
+		text-decoration: none;
+		border: 1px solid rgba(35, 55, 255, 0.2);
+		transition: background 0.15s, border-color 0.15s;
+		white-space: nowrap;
+	}
+	.tag-badge:hover {
+		background: rgba(35, 55, 255, 0.2);
+		border-color: var(--accent);
+	}
+</style>

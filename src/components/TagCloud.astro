@@ -1,0 +1,21 @@
+---
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+	tags: string[];
+}
+const { tags } = Astro.props;
+---
+
+<div class="tag-cloud">
+	{tags.map(tag => <TagBadge tag={tag} />)}
+</div>
+
+<style>
+	.tag-cloud {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0.5rem 0;
+	}
+</style>

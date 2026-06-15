@@ -3,12 +3,24 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
+import { remarkReadingTime } from './src/plugins/remarkReadingTime.ts';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://benjaminpaulraj.github.io',
 	base: '/insights',
+	prefetch: true,
 	integrations: [mdx(), sitemap()],
+	markdown: {
+		remarkPlugins: [remarkReadingTime],
+		shikiConfig: {
+			themes: {
+				light: 'github-light',
+				dark: 'github-dark',
+			},
+			wrap: true,
+		},
+	},
 	fonts: [
 		{
 			provider: fontProviders.local(),

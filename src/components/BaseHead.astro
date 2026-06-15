@@ -1,6 +1,4 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
@@ -11,13 +9,28 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	slug?: string;
+	pubDate?: Date;
+	author?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, slug, pubDate, author = "Benjamin Paul Raj" } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const ogImageUrl = slug
+	? new URL(`${base}og/${slug}.png`, Astro.site)
+	: new URL(image.src, Astro.url);
 ---
+
+<!-- Flash-free theme initialisation — must run before first paint -->
+<script is:inline>
+	(function () {
+		var saved = localStorage.getItem('theme');
+		var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+		document.documentElement.setAttribute('data-theme', saved || preferred);
+	})();
+</script>
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
@@ -44,18 +57,38 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={slug ? 'article' : 'website'} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image.src, Astro.url)} />
+<meta property="og:image" content={ogImageUrl} />
+{pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+<meta property="twitter:image" content={ogImageUrl} />
 
-<!-- Analytics (GoatCounter — replace URL with your account after signing up at goatcounter.com) -->
+<!-- JSON-LD structured data for blog posts -->
+{slug && (
+	<script type="application/ld+json" set:html={JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'Article',
+		headline: title,
+		description: description,
+		author: { '@type': 'Person', name: author },
+		datePublished: pubDate?.toISOString(),
+		url: canonicalURL.toString(),
+		image: ogImageUrl.toString(),
+		publisher: {
+			'@type': 'Organization',
+			name: SITE_TITLE,
+			url: Astro.site?.toString(),
+		},
+	})} />
+)}
+
+<!-- Analytics (GoatCounter) -->
 <script data-goatcounter="https://benjaminpaulraj.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

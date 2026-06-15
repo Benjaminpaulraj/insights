@@ -1,0 +1,67 @@
+---
+---
+
+<section class="comments" aria-label="Comments">
+	<h2>Discussion</h2>
+	<p class="comments-note">
+		Comments are powered by <a href="https://giscus.app" target="_blank" rel="noopener">Giscus</a> via GitHub Discussions.
+		You need a GitHub account to comment.
+	</p>
+	<div id="giscus-container">
+		<script
+			src="https://giscus.app/client.js"
+			data-repo="benjaminpaulraj/insights"
+			data-repo-id=""
+			data-category="General"
+			data-category-id=""
+			data-mapping="pathname"
+			data-strict="0"
+			data-reactions-enabled="1"
+			data-emit-metadata="0"
+			data-input-position="top"
+			data-theme="light"
+			data-lang="en"
+			data-loading="lazy"
+			crossorigin="anonymous"
+			async
+		></script>
+	</div>
+</section>
+
+<style>
+	.comments {
+		margin: 3rem 0 1rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+	h2 {
+		font-size: 1.25rem;
+		margin-bottom: 0.5rem;
+	}
+	.comments-note {
+		font-size: 0.85rem;
+		color: rgb(var(--gray));
+		margin-bottom: 1rem;
+	}
+</style>
+
+<script>
+	function setGiscusTheme(theme: string) {
+		const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+		if (iframe?.contentWindow) {
+			iframe.contentWindow.postMessage(
+				{ giscus: { setConfig: { theme: theme === 'dark' ? 'dark' : 'light' } } },
+				'https://giscus.app'
+			);
+		}
+	}
+
+	window.addEventListener('theme-change', (e: Event) => {
+		const theme = (e as CustomEvent<{ theme: string }>).detail.theme;
+		setGiscusTheme(theme);
+	});
+
+	const saved = localStorage.getItem('theme') ||
+		(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+	setGiscusTheme(saved);
+</script>

@@ -4,18 +4,40 @@ import BlogPost from '../../layouts/BlogPost.astro';
 import WordPost from '../../layouts/WordPost.astro';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: post,
 	}));
 }
+
 type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
-const { Content } = await render(post);
+const { Content, headings, remarkPluginFrontmatter } = await render(post);
+const minutesRead: string | undefined = (remarkPluginFrontmatter as any)?.minutesRead;
 
 const isWordPost = post.id.includes('-word-');
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+	.filter((p) => !p.id.includes('-word-') && !p.id.includes('-hn-summary'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const idx = allPosts.findIndex((p) => p.id === post.id);
+const prev = idx < allPosts.length - 1
+	? { title: allPosts[idx + 1].data.title, slug: allPosts[idx + 1].id }
+	: null;
+const next = idx > 0
+	? { title: allPosts[idx - 1].data.title, slug: allPosts[idx - 1].id }
+	: null;
+
+const related = allPosts
+	.filter(
+		(p) =>
+			p.id !== post.id &&
+			p.data.tags?.some((t) => post.data.tags?.includes(t)),
+	)
+	.slice(0, 3);
 ---
 
 {isWordPost ? (
@@ -23,7 +45,15 @@ const isWordPost = post.id.includes('-word-');
 		<Content />
 	</WordPost>
 ) : (
-	<BlogPost {...post.data}>
+	<BlogPost
+		{...post.data}
+		slug={post.id}
+		headings={headings}
+		minutesRead={minutesRead}
+		prev={prev}
+		next={next}
+		related={related}
+	>
 		<Content />
 	</BlogPost>
 )}

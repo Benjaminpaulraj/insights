@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npx pagefind --site dist --output-path dist/pagefind",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -15,7 +15,14 @@
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "@resvg/resvg-js": "^2.6.2",
     "astro": "^6.1.9",
+    "mdast-util-to-string": "^4.0.0",
+    "reading-time": "^1.5.0",
+    "satori": "^0.26.0",
     "sharp": "^0.34.3"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

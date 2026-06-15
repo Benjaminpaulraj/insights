@@ -1,20 +1,84 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import BackToTop from '../components/BackToTop.astro';
 import BaseHead from '../components/BaseHead.astro';
+import Comments from '../components/Comments.astro';
+import CopyCode from '../components/CopyCode.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import PostNav from '../components/PostNav.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
+import TagBadge from '../components/TagBadge.astro';
+import TOC from '../components/TOC.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface NavPost {
+	title: string;
+	slug: string;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<'blog'>['data'] & {
+	slug?: string;
+	minutesRead?: string;
+	headings?: { depth: number; slug: string; text: string }[];
+	prev?: NavPost | null;
+	next?: NavPost | null;
+	related?: CollectionEntry<'blog'>[];
+};
+
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	tags,
+	minutesRead,
+	series,
+	seriesPart,
+	slug,
+	headings = [],
+	prev = null,
+	next = null,
+	related = [],
+} = Astro.props;
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+			slug={slug}
+			pubDate={pubDate}
+		/>
 		<style>
+			.layout {
+				display: grid;
+				grid-template-columns: 1fr;
+			}
+			@media (min-width: 1200px) {
+				.layout {
+					display: grid;
+					grid-template-columns: 1fr 240px;
+					align-items: start;
+					max-width: 1060px;
+					margin: 0 auto;
+				}
+				.toc-sidebar {
+					padding: 3rem 0 0 0;
+				}
+			}
+			.toc-sidebar {
+				display: none;
+			}
+			@media (min-width: 1200px) {
+				.toc-sidebar {
+					display: block;
+				}
+			}
 			main {
 				width: calc(100% - 2em);
 				max-width: 100%;
@@ -45,42 +109,89 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.title h1 {
 				margin: 0 0 0.5em 0;
 			}
-			.date {
+			.meta {
 				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				font-size: 0.9em;
+			}
+			.reading-time {
 				color: rgb(var(--gray));
 			}
 			.last-updated-on {
 				font-style: italic;
 			}
+			.tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+				justify-content: center;
+				margin: 0.75rem 0;
+			}
+			.series-banner {
+				background: rgba(35, 55, 255, 0.06);
+				border: 1px solid rgba(35, 55, 255, 0.15);
+				border-radius: 8px;
+				padding: 0.6rem 1rem;
+				font-size: 0.85rem;
+				color: var(--accent);
+				text-align: center;
+				margin-bottom: 1.5rem;
+			}
 		</style>
 	</head>
 
 	<body>
+		<ReadingProgress />
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+		<div class="layout">
+			<main>
+				<article data-pagefind-body>
+					<div class="hero-image">
+						{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
 					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
+					<div class="prose">
+						<div class="title">
+							<div class="meta">
+								<FormattedDate date={pubDate} />
+								{minutesRead && <span class="reading-time">· {minutesRead}</span>}
+								{updatedDate && (
+									<span class="last-updated-on">
+										· Updated <FormattedDate date={updatedDate} />
+									</span>
+								)}
+							</div>
+							<h1>{title}</h1>
+							{tags && tags.length > 0 && (
+								<div class="tags">
+									{tags.map(tag => <TagBadge tag={tag} />)}
+								</div>
+							)}
+							<hr />
+						</div>
+						{series && (
+							<div class="series-banner">
+								{seriesPart ? `Part ${seriesPart} of the ` : 'Part of the '}
+								<strong>{series}</strong> series
+							</div>
+						)}
+						<slot />
+						<RelatedPosts posts={related} />
+						<PostNav prev={prev} next={next} />
+						<Comments />
+					</div>
+				</article>
+			</main>
+			<aside class="toc-sidebar">
+				<TOC headings={headings} />
+			</aside>
+		</div>
 		<Footer />
+		<BackToTop />
+		<CopyCode />
 	</body>
 </html>

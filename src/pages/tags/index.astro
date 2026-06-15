@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+const tagMap = new Map<string, number>();
+for (const post of posts) {
+	for (const tag of post.data.tags ?? []) {
+		tagMap.set(tag, (tagMap.get(tag) ?? 0) + 1);
+	}
+}
+
+const tags = [...tagMap.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Tags — ${SITE_TITLE}`} description="Browse articles by topic." />
+		<style>
+			main {
+				max-width: 720px;
+				margin: 0 auto;
+				padding: 3em 1em;
+			}
+			h1 {
+				font-size: 2rem;
+				margin-bottom: 0.5rem;
+			}
+			.subtitle {
+				color: rgb(var(--gray));
+				margin-bottom: 2rem;
+			}
+			.tag-grid {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75rem;
+			}
+			.tag-item {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				padding: 0.4em 0.9em;
+				border-radius: 999px;
+				border: 1px solid rgba(35, 55, 255, 0.2);
+				text-decoration: none;
+				font-size: 0.9rem;
+				font-weight: 600;
+				color: var(--accent);
+				background: rgba(35, 55, 255, 0.06);
+				transition: background 0.15s, border-color 0.15s;
+			}
+			.tag-item:hover {
+				background: rgba(35, 55, 255, 0.15);
+				border-color: var(--accent);
+			}
+			.tag-count {
+				font-size: 0.75rem;
+				font-weight: 400;
+				color: rgb(var(--gray));
+				background: rgba(var(--gray-light), 0.8);
+				border-radius: 999px;
+				padding: 0.1em 0.5em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Tags</h1>
+			<p class="subtitle">{tags.length} topics across {posts.length} articles</p>
+			<div class="tag-grid">
+				{tags.map(([tag, count]) => (
+					<a href={`${base}tags/${encodeURIComponent(tag.toLowerCase())}/`} class="tag-item">
+						#{tag}
+						<span class="tag-count">{count}</span>
+					</a>
+				))}
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

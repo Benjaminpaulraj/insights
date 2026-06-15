@@ -1,0 +1,95 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const { headings } = Astro.props;
+// Strip Markdown explicit heading ID syntax {#anchor} from display text
+const cleanText = (text: string) => text.replace(/\s*\{#[^}]+\}\s*$/, '').trim();
+const filtered = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+
+{filtered.length > 1 && (
+	<nav id="toc" aria-label="Table of contents">
+		<p class="toc-title">Contents</p>
+		<ol>
+			{filtered.map(h => (
+				<li class={`toc-h${h.depth}`}>
+					<a href={`#${h.slug}`}>{cleanText(h.text)}</a>
+				</li>
+			))}
+		</ol>
+	</nav>
+)}
+
+<style>
+	#toc {
+		position: sticky;
+		top: 2rem;
+		max-height: calc(100vh - 4rem);
+		overflow-y: auto;
+		padding: 1rem 1.25rem;
+		border-left: 2px solid var(--accent);
+		font-size: 0.85rem;
+		line-height: 1.5;
+		min-width: 200px;
+		max-width: 240px;
+	}
+	.toc-title {
+		font-weight: 700;
+		font-size: 0.75rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgb(var(--gray));
+		margin: 0 0 0.5rem;
+	}
+	ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	li {
+		margin: 0.25rem 0;
+	}
+	.toc-h3 {
+		padding-left: 1rem;
+	}
+	a {
+		color: rgb(var(--gray));
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+	a:hover,
+	a.active {
+		color: var(--accent);
+	}
+	a.active {
+		font-weight: 600;
+	}
+</style>
+
+<script>
+	const links = document.querySelectorAll('#toc a');
+	if (links.length > 0) {
+		const headingEls = Array.from(links).map(l => {
+			const id = l.getAttribute('href')?.slice(1);
+			return id ? document.getElementById(id) : null;
+		}).filter(Boolean) as HTMLElement[];
+
+		const observer = new IntersectionObserver(entries => {
+			entries.forEach(entry => {
+				const id = entry.target.getAttribute('id');
+				const link = document.querySelector(`#toc a[href="#${id}"]`);
+				if (link) link.classList.toggle('active', entry.isIntersecting);
+			});
+		}, { rootMargin: '0px 0px -70% 0px' });
+
+		headingEls.forEach(el => observer.observe(el));
+	}
+</script>
