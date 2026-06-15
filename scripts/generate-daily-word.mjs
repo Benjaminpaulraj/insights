@@ -28,6 +28,10 @@ const CONFIG_PATH = join(__dirname, 'word-config.json');
 const args = process.argv.slice(2);
 const isDryRun = args.includes('--dry-run');
 const forceWordIndex = args.indexOf('--word');
+if (forceWordIndex !== -1 && !args[forceWordIndex + 1]) {
+  console.error('Error: --word flag requires a value, e.g. --word "serendipity"');
+  process.exit(1);
+}
 const forceWord = forceWordIndex !== -1 ? args[forceWordIndex + 1] : null;
 
 // --- Load config ---
@@ -135,19 +139,23 @@ function main() {
   }
 
   // Validate required fields
-  for (const field of ['word', 'title', 'description', 'tags', 'content']) {
+  for (const field of ['word', 'title', 'description', 'content']) {
     if (!wordData[field]) {
-      console.error(`Missing field in response: "${field}"`);
+      console.error(`Missing or empty field in response: "${field}"`);
       process.exit(1);
     }
+  }
+  if (!Array.isArray(wordData.tags) || wordData.tags.length === 0) {
+    console.error('Missing or empty field in response: "tags"');
+    process.exit(1);
   }
 
   const slug = wordData.word.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const filename = `${today}-word-${slug}.md`;
   const filepath = join(BLOG_DIR, filename);
 
-  const safeTitle = wordData.title.replace(/"/g, '\\"');
-  const safeDescription = wordData.description.replace(/"/g, '\\"');
+  const safeTitle = wordData.title.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ' ');
+  const safeDescription = wordData.description.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ' ');
 
   const markdown = `---
 title: "${safeTitle}"

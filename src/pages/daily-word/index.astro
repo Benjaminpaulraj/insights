@@ -9,7 +9,7 @@ import { SITE_TITLE } from '../../consts';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 const dailyWords = (await getCollection('blog'))
-	.filter((post) => post.data.title.startsWith('Word of the Day:'))
+	.filter((post) => post.id.match(/^\d{4}-\d{2}-\d{2}-word-/))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
@@ -99,7 +99,7 @@ const dailyWords = (await getCollection('blog'))
 			) : (
 				<ul>
 					{dailyWords.map((post) => {
-						const word = post.data.title.replace('Word of the Day: ', '');
+						const word = post.data.title.replace(/^Word of the Day:\s*/i, '').trim();
 						return (
 							<li>
 								<a href={`${base}blog/${post.id}/`}>

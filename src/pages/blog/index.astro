@@ -9,7 +9,6 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 const mdPosts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.map((post) => {
 		const isWord = post.id.includes('-word-');
 		const word = isWord ? post.data.title.replace(/^Word of the Day:\s*/i, '').trim() : null;
@@ -21,7 +20,7 @@ const mdPosts = (await getCollection('blog'))
 			gradient: isWord
 				? 'linear-gradient(135deg, #0d1117 0%, #1a2030 50%, #1e2a45 100%)'
 				: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
-			label: isWord ? (word ?? 'Word') : (post.data.tags?.[0] ?? 'Post'),
+			label: isWord ? (word || 'Word') : (post.data.tags?.[0] ?? 'Post'),
 			gcPath: `/insights/blog/${post.id}/`,
 			isWord,
 			word,
