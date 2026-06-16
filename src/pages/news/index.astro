@@ -57,12 +57,12 @@ const newsPosts = (await getCollection('blog', ({ data }) => !data.draft))
 				align-items: baseline;
 				padding: 1.1rem 0;
 				text-decoration: none;
-				color: rgb(var(--black));
+				color: inherit;
 				gap: 1rem;
 				transition: color 0.15s ease;
 			}
 			li a:hover {
-				color: rgb(var(--accent));
+				color: var(--accent);
 			}
 			.post-title {
 				font-size: 1.05rem;
